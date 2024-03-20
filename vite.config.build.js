@@ -65,8 +65,8 @@ export default defineConfig({
             },
             external: [
                 'vue',
-                'element-plus',
-                '@form-create/element-ui'
+                'naive-ui',
+                '@form-create/naive-ui'
             ],
 
         },

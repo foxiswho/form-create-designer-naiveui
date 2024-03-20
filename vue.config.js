@@ -15,6 +15,11 @@ module.exports = {
         }
     },
     configureWebpack: {
+        devServer: {
+            client: {
+                overlay: false,
+            },
+        },
         module: {
             rules: [
                 {

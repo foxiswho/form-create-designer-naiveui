@@ -1,51 +1,41 @@
-<p align="center">
-    <a href="http://www.form-create.com">
-        <img width="200" src="http://form-create.com/logo.png">
-    </a>
-</p>
-
-# form-create-designer v3
+# form-create-designer-naiveui
 
 **这个是 Vue3 版本**
 
-[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/xaboy/form-create-designer)
-[![github](https://img.shields.io/badge/Author-xaboy-blue.svg)](https://github.com/xaboy)
+[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/SX-Code/form-designer-naiveui)
+[![github](https://img.shields.io/badge/Author-sx-code-blue.svg)](https://github.com/SX-Code)
 
-**form-create-designer 是基于 [@form-create/element-ui](https://github.com/xaboy/form-create) vue3版本实现的表单设计器组件。可以通过拖拽的方式快速创建表单，提高开发者对表单的开发效率，节省开发者的时间。**
+**form-create-designer-naiveui 是基于 [@form-create/naive-ui](https://github.com/xaboy/form-create) vue3版本实现的表单设计器组件。可以通过拖拽的方式快速创建表单，提高开发者对表单的开发效率，节省开发者的时间。**
 
-**[更新说明](https://github.com/xaboy/form-create-designer/blob/next/CHANGELOG.md) | [文档](http://designer.form-create.com/guide/) | [在线演示](http://form-create.com/v3/designer?fr=github) | [form-create 文档](http://form-create.com/v3/guide/)**
+**[form-create-designer](https://github.com/xaboy/form-create) 是基于 [@form-create/element-ui](https://github.com/xaboy/form-create) 开发的表单设计器，本项目更换原项目的UI框架为 [Naive UI](https://www.naiveui.com) ，做出的更改如下：**
 
-> 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！本项目还在不断开发完善中,如有任何建议或问题[请在这里提出](https://github.com/xaboy/form-create-designer/issues/new)
+- Element Plus v2.0.1 -> Naive UI v2.34.3
+- codemirror v5.60.0 -> v6.0.1
+- 自定义ColorPicker组件，便于定制组件颜色
+- 更新部分组件为Vue 3版本
 
-> 本项目QQ讨论群[629709230](https://jq.qq.com/?_wv=1027&k=F1FlEFIV)
+**[文档](http://designer.form-create.com/guide/) | [在线演示](http://8.130.38.57:81/form-designer/) | [form-create 文档](http://form-create.com/v3/guide/)**
+
+> 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！本项目可继续完善,如有任何建议或问题[请在这里提出](https://github.com/SX-Code/form-designer-naiveui/issues)
 
 
 
-![demo1](http://form-create.com/img/designer-review.png)
+
+![demo1](https://cdn.staticaly.com/gh/sx-code/tuchuang@master/form-create-designer/designer-review.png)
 
 ## 引入
-
-**CDN:**
-
-```html
-<link href="https://unpkg.com/element-plus@2.0.1/dist/index.css"></link>
-<script src="https://unpkg.com/vue@next"></script>
-<script src="https://unpkg.com/element-plus@2.0.1/dist/index.full.js"></script>
-<script src="https://unpkg.com/@form-create/element-ui@next/dist/form-create.min.js"></script>
-<script src="https://unpkg.com/@form-create/designer@next/dist/index.umd.js"></script>
-```
 
 **NodeJs:**
 
 ```shell
-npm install @form-create/designer@next
+npm i form-designer-naiveui
 ```
 
-请自行导入`ElementPlus`并挂载
+请自行导入`NaiveUI`并挂载
 
 ```js
-import formCreate from '@form-create/element-ui'
-import FcDesigner from '@form-create/designer'
+import formCreate from '@form-create/naive-ui'
+import FcDesigner  from 'form-designer-naiveui'
 
 app.use(formCreate)
 app.use(FcDesigner)
@@ -66,7 +56,7 @@ app.use(FcDesigner)
 </template>
 
 <script>
-import En from "@form-create/designer/locale/en.js";
+import En from "form-designer-naiveui/locale/en";
 export default {
   data(){
     return {
@@ -152,13 +142,9 @@ export default {
     ```
 > **提示! 内置的三个组件分组`name`分别为: `main`,`aide`,`layout`**
 
-## 捐赠
-
-![donation.jpg](http://form-create.com/img/donation.jpg)
-
 ## 联系
 
-##### email : xaboy2005@qq.com
+##### email : 2627311935@qq.com
 
 ## License
 

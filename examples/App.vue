@@ -59,7 +59,6 @@ import 'codemirror/addon/lint/lint.css';
 import CodeMirror from 'codemirror/lib/codemirror';
 import 'codemirror/addon/lint/lint';
 import 'codemirror/addon/lint/json-lint';
-import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/vue/vue';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/css/css';
@@ -69,17 +68,23 @@ import 'codemirror/addon/selection/selection-pointer';
 import 'codemirror/mode/handlebars/handlebars';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/pug/pug';
+import { enUS, NConfigProvider, dateZhCN, zhCN } from 'naive-ui'
+import { basicSetup, EditorView } from "codemirror";
+import { json } from '@codemirror/lang-json';
+import { javascript } from "@codemirror/lang-javascript";
 
 import is from '@form-create/utils/lib/type';
-import formCreate from '@form-create/element-ui';
+import formCreate from "@form-create/naive-ui";
 import ZhCn from "../src/locale/zh-cn";
 import En from "../src/locale/en";
+import dateEnUs from 'naive-ui/es/locales/date/enUS';
 
 
 const TITLE = ['生成规则', '表单规则', '生成组件', '设置生成规则', '设置表单规则'];
 
 export default {
     name: 'app',
+  components: [ NConfigProvider ],
     data() {
         return {
             state: false,
@@ -90,6 +95,17 @@ export default {
             type: -1,
             lang:'cn',
             locale: null,
+            isLoading: false,
+            languageDict: {
+              cn: zhCN,
+              en: enUS
+            },
+            dateLanguageDict: {
+              cn: dateZhCN,
+              en: dateEnUs
+            },
+            naiveLanguage: zhCN,
+            dateLanguage: dateZhCN
         };
     },
     watch: {
@@ -108,9 +124,13 @@ export default {
             if (this.lang === 'cn') {
                 this.locale = En;
                 this.lang = 'en';
+                this.naiveLanguage = this.languageDict["en"];
+                this.dateLanguage = this.dateLanguageDict["en"]
             } else {
                 this.locale = ZhCn;
                 this.lang = 'cn';
+                this.naiveLanguage = this.languageDict["cn"];
+                this.dateLanguage = this.dateLanguageDict["cn"]
             }
         },
         load() {
@@ -122,18 +142,42 @@ export default {
             } else {
                 val = JSON.stringify(this.value, null, 2);
             }
-            this.$nextTick(() => {
-                this.editor = CodeMirror(this.$refs.editor, {
-                    lineNumbers: true,
-                    mode: this.type === 2 ? {name: 'vue'} : 'application/json',
-                    gutters: ['CodeMirror-lint-markers'],
-                    // lint: true,
-                    line: true,
-                    tabSize: 2,
-                    lineWrapping: true,
-                    value: val || ''
-                });
+          this.$nextTick(() => {
+            this.initCodeContent(val);
+          });
+        },
+        initCodeContent(val) {
+          this.isLoading = true;
+          setTimeout(() => {
+            if (this.editor) {
+              this.editor.destroy();
+            }
+            this.editor = new EditorView({
+              doc: val || 'Press Ctrl-Space in here...\n',
+              extensions: [
+                basicSetup,
+                javascript(),
+                json(),
+              ],
+              parent: this.$refs.editor,
+              options: {
+                lineNumbers: true,
+                line: true,
+                //括号匹配
+                matchBrackets: true,
+              },
             });
+            this.isLoading = false;
+          }, 500);
+        },
+        insertCommandContent(val) {
+          this.editor.dispatch({
+            changes: {
+              from: 0,
+              to: this.editor.state.doc.length,
+              insert: val || "Press Ctrl-Space in here...\n"
+            },
+          })
         },
         onValidationError(e) {
             this.err = e.length !== 0;
@@ -165,7 +209,7 @@ export default {
         },
         onOk() {
             if (this.err) return;
-            const json = this.editor.getValue();
+            const json = this.editor.state.doc;
             let val = JSON.parse(json);
             if (this.type === 3) {
                 if (!Array.isArray(val)) {
@@ -195,22 +239,26 @@ export default {
 </template>
 
 <script>
-import formCreate from "@form-create/element-ui";
+import formCreate from "@form-create/naive-ui";
+import { defineComponent, ref } from "vue";
 
-export default {
-  data () {
+export default defineComponent({
+  setup() {
+    const fapi = ref(null);
+    const rule = ref(formCreate.parseJson('${formCreate.toJson(rule).replaceAll("\\", "\\\\")}'));
+    const option = ref(formCreate.parseJson('${JSON.stringify(opt)}'));
+
+    function onSubmit (formData) {
+      // TODO 提交表单
+    }
+
     return {
-        fapi: null,
-        rule: formCreate.parseJson('${formCreate.toJson(rule).replaceAll('\\', '\\\\')}'),
-        option: formCreate.parseJson('${JSON.stringify(opt)}')
+      fapi,
+      rule,
+      option,
+      onSubmit,
     }
   },
-  methods: {
-    onSubmit (formData) {
-      //todo 提交表单
-    }
-  }
-}
 <\/script>`;
         }
     },
@@ -222,6 +270,9 @@ export default {
 </script>
 
 <style>
+#app {
+  height: 100%;
+}
 ._fc-t-header {
     height: 60px;
     margin: 0 20px;
@@ -282,8 +333,8 @@ body {
 }
 
 ._fc-t-dialog .CodeMirror-line {
-    line-height: 16px !important;
-    font-size: 13px !important;
+    //line-height: 16px !important;
+    //font-size: 13px !important;
 }
 
 .CodeMirror-lint-tooltip {

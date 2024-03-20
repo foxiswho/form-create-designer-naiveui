@@ -6,10 +6,11 @@ export default defineConfig({
     build: {
         cssCodeSplit: true,
         rollupOptions: {
+            input: 'examples/index.html',
             output: {
                 manualChunks: {
                     vue: ['vue'],
-                    'element-plus': ['element-plus'],
+                    'naive-ui': ['naive-ui'],
                 },
                 globals: {
                     vue: 'Vue',
