@@ -1,6 +1,6 @@
-import {Rule} from "@form-create/element-ui";
-import FormCreate from "@form-create/element-ui";
-import {Component, Plugin, Ref} from "@vue/runtime-core";
+import {Rule} from "@form-create/naive-ui";
+import FormCreate from "@form-create/naive-ui";
+import {App, Component, Plugin, Ref} from "@vue/runtime-core";
 
 export interface MenuItem {
     label: string,
