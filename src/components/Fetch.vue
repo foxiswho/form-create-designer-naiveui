@@ -10,6 +10,15 @@ import is from '@form-create/utils/lib/type';
 import {designerForm} from '../utils/form';
 import {defineComponent} from 'vue';
 
+const exampleParseFunction = `function (res){
+    const { data, code, message} = res;
+    if (code != 2000) return message;
+    const types = data.map(item => {
+        return { label: item.name, value: item.id };
+    })
+   return types;
+}`
+
 export default defineComponent({
     name: 'Fetch',
     props: {
@@ -28,6 +37,11 @@ export default defineComponent({
                 return {
                     action: val
                 };
+            }
+            if (!val._parse && val.parse) {
+                return {...val, _parse: '' + val.parse};
+            } else if (is.Function(val._parse)) {
+                return {...val, _parse: '' + val._parse};
             }
             return val;
         }
@@ -57,6 +71,7 @@ export default defineComponent({
                     type: 'select',
                     field: 'method',
                     title: t('fetch.method') + ': ',
+                    style: 'width:120px;',
                     value: 'GET',
                     options: [
                         {label: 'GET', value: 'GET'},
@@ -95,54 +110,44 @@ export default defineComponent({
                     title: t('fetch.headers') + ': ',
                     value: {},
                     props: {
-                        defaultValue: {},
+                        defaultValue: {"Authorization": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ"},
                     }
                 },
                 {
-                    type: 'Struct',
-                    field: 'parse',
+                    type: 'input',
+                    field: '_parse',
                     title: t('fetch.parse') + ': ',
                     info: t('fetch.parseInfo'),
-                    value: null,
+                    value: exampleParseFunction,
                     props: {
-                        defaultValue: function parse(res){
-                            return res
-},
-                    }
+                        type: 'textarea',
+                        rows: 12,
+                    },
+                    validate: [{
+                        validator: (_, v, cb) => {
+                            if (!v) return cb();
+                            try {
+                                this.parseFn(v);
+                            } catch (e) {
+                                return cb(false);
+                            }
+                            cb();
+                        }, message: t('fetch.parseValidate')
+                    }]
                 },
-                // {
-                //     type: 'input',
-                //     field: '_parse',
-                //     title: t('fetch.parse') + ': ',
-                //     info: t('fetch.parseInfo'),
-                //     value: 'function (res){\n   return res.data;\n}',
-                //     props: {
-                //         type: 'textarea',
-                //         rows: 8,
-                //     },
-                //     validate: [{
-                //         validator: (_, v, cb) => {
-                //             if (!v) return cb();
-                //             try {
-                //                 this.parseFn(v);
-                //             } catch (e) {
-                //                 return cb(false);
-                //             }
-                //             cb();
-                //         }, message: t('fetch.parseValidate')
-                //     }]
-                // },
             ]
         };
     },
     methods: {
         parseFn(v) {
-            return (new Function('return ' + v))();
+            return eval(`(function () {
+                return ${v}
+            })()`);
         },
         _input() {
             this.api.submit((formData) => {
                 formData.to = this.to || 'options';
-                // if (formData._parse) formData.parse = this.parseFn(formData._parse);
+                if (formData._parse) formData.parse = this.parseFn(formData._parse);
                 this.$emit('update:modelValue', formData);
             });
         },
@@ -156,15 +161,8 @@ export default defineComponent({
 });
 </script>
 <style>
-._fc_fetch .el-form-item__label {
-    float: left;
-    display: inline-block;
-    text-align: right;
-    padding-right: 5px;
-}
-
 ._fc_fetch {
-    background-color: #bfdaf7;
+    background-color: rgba(46, 51, 56, 0.05);
     padding: 10px;
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
-    <div class="_fc-required">
-        <ElSwitch v-model="required"></ElSwitch>
-        <ElInput v-model="requiredMsg" v-if="required" :placeholder="t('validate.requiredPlaceholder')"></ElInput>
-    </div>
+  <div class="_fc-required">
+    <n-space>
+        <n-switch v-model:value="required" size="small" />
+        <n-input v-model:value="requiredMsg" size="tiny" v-if="required" :placeholder="t('validate.requiredPlaceholder')" />
+    </n-space>
+  </div>
 </template>
-
 <script>
 import is from '@form-create/utils/lib/type';
 import {defineComponent} from 'vue';
@@ -55,13 +56,5 @@ export default defineComponent({
 ._fc-required {
     display: flex;
     align-items: center;
-}
-
-._fc-required .el-input {
-    margin-left: 15px;
-}
-
-._fc-required .el-switch {
-    height: 28px;
 }
 </style>

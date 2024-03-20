@@ -3,21 +3,46 @@
         <div class="drag-mask" v-if="mask"></div>
         <div class="drag-l">
             <div class="drag-btn _fc-drag-btn" v-if="state.active === id && dragBtn !== false" style="cursor: move;">
-                <i class="fc-icon icon-move"></i>
+                <n-tooltip trigger="hover">
+                    <template #trigger>
+                        <i class="fc-icon icon-move"></i>
+                    </template>
+                    拖拽
+                </n-tooltip>
             </div>
         </div>
         <div class="drag-r">
             <div class="drag-btn" @click="$emit('create')">
-                <i class="fc-icon icon-add"></i>
+                <n-tooltip trigger="hover">
+                    <template #trigger>
+                        <i class="fc-icon icon-add"></i>
+                    </template>
+                    增加
+                </n-tooltip>
             </div>
             <div class="drag-btn" @click="$emit('copy')">
-                <i class="fc-icon icon-copy"></i>
+                <n-tooltip trigger="hover">
+                    <template #trigger>
+                        <i class="fc-icon icon-copy"></i>
+                    </template>
+                    复制
+                </n-tooltip>
             </div>
             <div class="drag-btn" v-if="children" @click="$emit('addChild')">
-                <i class="fc-icon icon-add-child"></i>
+                <n-tooltip trigger="hover">
+                    <template #trigger>
+                        <i class="fc-icon icon-add-child"></i>
+                    </template>
+                    增加子元素
+                </n-tooltip>
             </div>
             <div class="drag-btn drag-btn-danger" @click="$emit('delete')">
-                <i class="fc-icon icon-delete"></i>
+                <n-tooltip trigger="hover">
+                    <template #trigger>
+                        <i class="fc-icon icon-delete"></i>
+                    </template>
+                    删除
+                </n-tooltip>
             </div>
         </div>
         <slot name="default"></slot>
@@ -25,12 +50,14 @@
 </template>
 
 <script>
+import { NTooltip } from 'naive-ui';
 import {computed, inject, toRefs, defineComponent} from 'vue';
 
 let uni = 1;
 export default defineComponent({
     name: 'DragTool',
     props: ['dragBtn', 'children', 'unique', 'mask'],
+    components: [ NTooltip ],
     setup(props) {
         const {unique} = toRefs(props);
         const id = computed(() => unique.value || uni++);
@@ -60,7 +87,8 @@ export default defineComponent({
     min-height: 20px;
     box-sizing: border-box;
     padding: 2px;
-    outline: 1px dashed #2E73FF;
+    outline: 1px dashed #18a058;
+    margin-bottom: 1px;
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-all;
@@ -75,7 +103,7 @@ export default defineComponent({
 }
 
 .drag-tool.active {
-    outline: 2px solid #2E73FF;
+    outline: 2px solid #18a058;
 }
 
 .drag-tool.active > div > .drag-btn {
@@ -105,7 +133,7 @@ export default defineComponent({
     height: 18px;
     width: 18px;
     color: #fff;
-    background-color: #2E73FF;
+    background-color: #18a058;
     text-align: center;
     line-height: 20px;
     padding-bottom: 1px;

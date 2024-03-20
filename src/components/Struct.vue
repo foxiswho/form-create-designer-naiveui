@@ -1,27 +1,44 @@
 <template>
-    <div class="_fc_struct">
-        <ElButton @click="visible=true" style="width: 100%;">{{ title || t('struct.title') }}</ElButton>
-        <ElDialog :title="title || t('struct.title')" v-model="visible" :close-on-click-modal="false" append-to-body>
-            <div ref="editor" v-if="visible"></div>
-            <template #footer>
-                <span class="dialog-footer">
-                    <span class="_fc_err" v-if="err">
-                        {{ t('struct.error') }}{{ err !== true ? err : '' }}</span>
-                    <ElButton @click="visible = false" size="small">{{ t('struct.cancel') }}</ElButton>
-                    <ElButton type="primary" @click="onOk" size="small">{{ t('struct.submit') }}</ElButton>
-                </span>
-            </template>
-        </ElDialog>
-    </div>
+  <div class="_fc_struct">
+    <n-button @click="visible = true" style="width: 100%">{{
+      title || t("struct.title")
+    }}</n-button>
+    <n-modal
+      v-model:show="visible"
+      preset="dialog"
+      :show-icon="false"
+      :title="title || t('struct.title')"
+      style="width: 500px"
+    >
+      <template v-if="isLoading">
+        <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
+      </template>
+      <div ref="editor" v-if="visible" v-show="!isLoading"></div>
+      <span class="_fc_err" v-if="err">
+        {{ t("struct.error") }}{{ err !== true ? err : "" }}
+      </span>
+      <template #action>
+        <span class="dialog-footer">
+          <n-space>
+            <n-button @click="visible = false" size="small">{{
+              t("struct.cancel")
+            }}</n-button>
+            <n-button type="primary" @click="onOk" size="small">{{
+              t("struct.submit")
+            }}</n-button>
+          </n-space>
+        </span>
+      </template>
+    </n-modal>
+  </div>
 </template>
-
 <script>
-import 'codemirror/lib/codemirror.css';
-import CodeMirror from 'codemirror/lib/codemirror';
-import 'codemirror/mode/javascript/javascript';
-import {deepParseFn, toJSON} from '../utils/index';
-import {deepCopy} from '@form-create/utils/lib/deepextend';
-import {defineComponent} from 'vue';
+import { javascript } from "@codemirror/lang-javascript";
+import { json } from "@codemirror/lang-json";
+import { basicSetup, EditorView } from "codemirror";
+import { deepParseFn, toJSON } from "../utils/index";
+import { deepCopy } from "@form-create/utils/lib/deepextend";
+import { defineComponent } from "vue";
 
 export default defineComponent({
     name: 'Struct',
@@ -29,7 +46,7 @@ export default defineComponent({
         modelValue: [Object, Array, Function],
         title: String,
         defaultValue: {
-            require: false
+            require: false,
         },
         validate: Function,
     },
@@ -41,6 +58,7 @@ export default defineComponent({
             err: false,
             oldVal: null,
             t: this.designer.setupState.t,
+            isLoading: false,
         };
     },
     watch: {
@@ -53,73 +71,88 @@ export default defineComponent({
             } else {
                 this.err = false;
             }
-        }
+        },
     },
     methods: {
         load() {
-            const val = toJSON(deepParseFn(this.modelValue ? deepCopy(this.modelValue) : this.defaultValue));
+            const val = toJSON(
+              this.modelValue
+                ? deepParseFn(deepCopy(this.modelValue))
+                : this.defaultValue
+            );
             this.oldVal = val;
             this.$nextTick(() => {
-                this.editor = CodeMirror(this.$refs.editor, {
-                    lineNumbers: true,
-                    mode: 'javascript',
-                    gutters: ['CodeMirror-lint-markers'],
-                    lint: true,
-                    line: true,
-                    tabSize: 2,
-                    lineWrapping: true,
-                    value: val || ''
-                });
+              this.initCodeContent(val);
             });
         },
-        onOk() {
-            const str = this.editor.getValue();
-            let val;
-            try {
-                val = (new Function('return ' + str))();
-            } catch (e) {
-                this.err = ` (${e})`;
-                return;
-            }
-            if (this.validate && false === this.validate(val)) {
-                this.err = true;
-                return;
-            }
-            this.visible = false;
-            if (toJSON(val, null, 2) !== this.oldVal) {
-                this.$emit('update:modelValue', val);
-            }
-        },
-    }
+      initCodeContent(val) {
+        this.isLoading = true;
+        setTimeout(() => {
+          if (this.editor) {
+            this.editor.destroy();
+          }
+          this.editor = new EditorView({
+            doc: val || 'Press Ctrl-Space in here...\n',
+            extensions: [
+              basicSetup,
+              javascript(),
+              json(),
+            ],
+            parent: this.$refs.editor,
+            options: {
+              lineNumbers: true,
+              line: true,
+              //括号匹配
+              matchBrackets: true,
+            },
+          });
+          this.isLoading = false;
+        }, 500);
+      },
+      onOk() {
+        const str = this.editor.state.doc;
+        let val;
+        try {
+          val = eval("(function (){return " + str + "}())");
+        } catch (e) {
+          this.err = ` (${e})`;
+          return;
+        }
+        console.log(this.validate);
+        if (this.validate && false === this.validate(val)) {
+          this.err = true;
+          return;
+        }
+        this.visible = false;
+        if (toJSON(val, null, 2) !== this.oldVal) {
+          this.$emit("update:modelValue", val);
+        }
+      },
+    },
 });
 </script>
 
 <style>
 ._fc_struct {
-    width: 100%;
+  width: 100%;
 }
-
 ._fc_struct .CodeMirror {
-    height: 450px;
+  height: 450px;
 }
-
 ._fc_struct .CodeMirror-line {
-    line-height: 16px !important;
-    font-size: 13px !important;
+  line-height: 16px !important;
+  font-size: 13px !important;
 }
 
 .CodeMirror-lint-tooltip {
-    z-index: 2021 !important;
+  z-index: 2021 !important;
 }
 
-._fc_struct .el-dialog__body {
-    padding: 0px 20px;
-}
 
 ._fc_err {
-    color: red;
-    float: left;
-    text-align: left;
-    width: 65%;
+  color: red;
+  float: left;
+  text-align: left;
+  width: 65%;
 }
 </style>
