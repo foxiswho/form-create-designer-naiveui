@@ -1,41 +1,69 @@
+<p align="center">
+    <a href="http://www.form-create.com">
+        <img width="200" src="http://form-create.com/logo.png">
+    </a>
+</p>
+
 # form-create-designer-naiveui
 
-**这个是 Vue3 版本**
+**form-create-designer-naiveui 是基于 [form-designer-naiveui](https://github.com/SX-Code/form-designer-naiveui) 和 [@form-create/element-ui](https://github.com/xaboy/form-create) vue3版本实现的表单设计器组件。可以通过拖拽的方式快速创建表单，提高开发者对表单的开发效率，节省开发者的时间。**
 
-[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/SX-Code/form-designer-naiveui)
-[![github](https://img.shields.io/badge/Author-sx-code-blue.svg)](https://github.com/SX-Code)
+**[form-create-designer-naiveui](https://github.com/foxiswho/form-create-designer-naiveui) 是基于 [@form-create/element-ui](https://github.com/xaboy/form-create) 开发的表单设计器，本项目更换原项目的UI框架为 [Naive UI](https://www.naiveui.com) ，做出的更改如下：**
 
-**form-create-designer-naiveui 是基于 [@form-create/naive-ui](https://github.com/xaboy/form-create) vue3版本实现的表单设计器组件。可以通过拖拽的方式快速创建表单，提高开发者对表单的开发效率，节省开发者的时间。**
-
-**[form-create-designer](https://github.com/xaboy/form-create) 是基于 [@form-create/element-ui](https://github.com/xaboy/form-create) 开发的表单设计器，本项目更换原项目的UI框架为 [Naive UI](https://www.naiveui.com) ，做出的更改如下：**
-
-- Element Plus v2.0.1 -> Naive UI v2.34.3
+- Element Plus v2.0.1 -> Naive UI v2.38.1
 - codemirror v5.60.0 -> v6.0.1
 - 自定义ColorPicker组件，便于定制组件颜色
 - 更新部分组件为Vue 3版本
 
-**[文档](http://designer.form-create.com/guide/) | [在线演示](http://8.130.38.57:81/form-designer/) | [form-create 文档](http://form-create.com/v3/guide/)**
+## 运行方式
+如果是第一次运行，请先下载依赖 `pnpm i`
+```bash
+pnpm dev
+```
 
-> 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！本项目可继续完善,如有任何建议或问题[请在这里提出](https://github.com/SX-Code/form-designer-naiveui/issues)
+
+
+# form-create-designer-naiveui v3
+**这个是 Vue3 版本**
+
+[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/xaboy/form-create-designer)
+[![github](https://img.shields.io/badge/Author-xaboy-blue.svg)](https://github.com/xaboy)
+
+**form-create-designer-naiveui 是基于 [form-designer-naiveui](https://github.com/SX-Code/form-designer-naiveui) 和 [@form-create/element-ui](https://github.com/xaboy/form-create) vue3版本实现的表单设计器组件。可以通过拖拽的方式快速创建表单，提高开发者对表单的开发效率，节省开发者的时间。**
+
+**[更新说明](https://github.com/xaboy/form-create-designer/blob/next/CHANGELOG.md) | [文档](http://designer.form-create.com/guide/) | [在线演示](http://form-create.com/v3/designer?fr=github) | [form-create 文档](http://form-create.com/v3/guide/)**
+
+> 如果对您有帮助，您可以点右上角 "Star" 支持一下 谢谢！本项目还在不断开发完善中,如有任何建议或问题[请在这里提出](https://github.com/xaboy/form-create-designer/issues/new)
+
+> 本项目QQ讨论群[629709230](https://jq.qq.com/?_wv=1027&k=F1FlEFIV)
 
 
 
-
-![demo1](https://cdn.staticaly.com/gh/sx-code/tuchuang@master/form-create-designer/designer-review.png)
+![demo1](http://form-create.com/img/designer-review.png)
 
 ## 引入
+
+**CDN:**
+
+```html
+<link href="https://unpkg.com/element-plus@2.0.1/dist/index.css"></link>
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://unpkg.com/element-plus@2.0.1/dist/index.full.js"></script>
+<script src="https://unpkg.com/@form-create/element-ui@next/dist/form-create.min.js"></script>
+<script src="https://unpkg.com/@form-create/designer@next/dist/index.umd.js"></script>
+```
 
 **NodeJs:**
 
 ```shell
-npm i form-designer-naiveui
+npm install @form-create/designer@next
 ```
 
-请自行导入`NaiveUI`并挂载
+请自行导入`ElementPlus`并挂载
 
 ```js
 import formCreate from '@form-create/naive-ui'
-import FcDesigner  from 'form-designer-naiveui'
+import FcDesigner from '@form-create/designer'
 
 app.use(formCreate)
 app.use(FcDesigner)
@@ -56,7 +84,7 @@ app.use(FcDesigner)
 </template>
 
 <script>
-import En from "form-designer-naiveui/locale/en";
+import En from "@form-create/designer/locale/en.js";
 export default {
   data(){
     return {
@@ -142,9 +170,13 @@ export default {
     ```
 > **提示! 内置的三个组件分组`name`分别为: `main`,`aide`,`layout`**
 
+## 捐赠
+
+![donation.jpg](http://form-create.com/img/donation.jpg)
+
 ## 联系
 
-##### email : 2627311935@qq.com
+##### email : xaboy2005@qq.com
 
 ## License
 
