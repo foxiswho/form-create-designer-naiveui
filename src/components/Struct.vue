@@ -41,94 +41,94 @@ import { deepCopy } from "@form-create/utils/lib/deepextend";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: 'Struct',
-    props: {
-        modelValue: [Object, Array, Function],
-        title: String,
-        defaultValue: {
-            require: false,
-        },
-        validate: Function,
+  name: "Struct",
+  props: {
+    modelValue: [Object, Array, Function],
+    title: String,
+    defaultValue: {
+      require: false,
     },
-    inject: ['designer'],
-    data() {
-        return {
-            editor: null,
-            visible: false,
-            err: false,
-            oldVal: null,
-            t: this.designer.setupState.t,
-            isLoading: false,
-        };
+    validate: Function,
+  },
+  inject: ["designer"],
+  data() {
+    return {
+      editor: null,
+      visible: false,
+      err: false,
+      oldVal: null,
+      t: this.designer.setupState.t,
+      isLoading: false,
+    };
+  },
+  watch: {
+    modelValue() {
+      this.load();
     },
-    watch: {
-        modelValue() {
-            this.load();
-        },
-        visible(n) {
-            if (n) {
-                this.load();
-            } else {
-                this.err = false;
-            }
-        },
+    visible(n) {
+      if (n) {
+        this.load();
+      } else {
+        this.err = false;
+      }
     },
-    methods: {
-        load() {
-            const val = toJSON(
-              this.modelValue
-                ? deepParseFn(deepCopy(this.modelValue))
-                : this.defaultValue
-            );
-            this.oldVal = val;
-            this.$nextTick(() => {
-              this.initCodeContent(val);
-            });
-        },
-      initCodeContent(val) {
-        this.isLoading = true;
-        setTimeout(() => {
-          if (this.editor) {
-            this.editor.destroy();
-          }
-          this.editor = new EditorView({
-            doc: val || 'Press Ctrl-Space in here...\n',
-            extensions: [
-              basicSetup,
-              javascript(),
-              json(),
-            ],
-            parent: this.$refs.editor,
-            options: {
-              lineNumbers: true,
-              line: true,
-              //括号匹配
-              matchBrackets: true,
-            },
-          });
-          this.isLoading = false;
-        }, 500);
-      },
-      onOk() {
-        const str = this.editor.state.doc;
-        let val;
-        try {
-          val = eval("(function (){return " + str + "}())");
-        } catch (e) {
-          this.err = ` (${e})`;
-          return;
+  },
+  methods: {
+    load() {
+      const val = toJSON(
+        this.modelValue
+          ? deepParseFn(deepCopy(this.modelValue))
+          : this.defaultValue
+      );
+      this.oldVal = val;
+      this.$nextTick(() => {
+        this.initCodeContent(val);
+      });
+    },
+    initCodeContent(val) {
+      this.isLoading = true;
+      setTimeout(() => {
+        if (this.editor) {
+          this.editor.destroy();
         }
-        console.log(this.validate);
-        if (this.validate && false === this.validate(val)) {
-          this.err = true;
-          return;
-        }
-        this.visible = false;
-        if (toJSON(val, null, 2) !== this.oldVal) {
-          this.$emit("update:modelValue", val);
-        }
-      },
+        this.editor = new EditorView({
+          doc: val || 'Press Ctrl-Space in here...\n',
+          extensions: [
+            basicSetup,
+            javascript(),
+            json(),
+          ],
+          parent: this.$refs.editor,
+          options: {
+            lineNumbers: true,
+            line: true,
+            //括号匹配
+            matchBrackets: true,
+          },
+        });
+        this.isLoading = false;
+      }, 500);
     },
+    onOk() {
+      const str = this.editor.state.doc;
+      let val;
+      try {
+        val = eval("(function (){return " + str + "}())");
+      } catch (e) {
+        this.err = ` (${e})`;
+        return;
+      }
+      console.log(this.validate);
+      if (this.validate && false === this.validate(val)) {
+        this.err = true;
+        return;
+      }
+      this.visible = false;
+      if (toJSON(val, null, 2) !== this.oldVal) {
+        this.$emit("update:modelValue", val);
+      }
+    },
+  },
 });
 </script>
 
@@ -136,19 +136,6 @@ export default defineComponent({
 ._fc_struct {
   width: 100%;
 }
-._fc_struct .CodeMirror {
-  height: 450px;
-}
-._fc_struct .CodeMirror-line {
-  line-height: 16px !important;
-  font-size: 13px !important;
-}
-
-.CodeMirror-lint-tooltip {
-  z-index: 2021 !important;
-}
-
-
 ._fc_err {
   color: red;
   float: left;

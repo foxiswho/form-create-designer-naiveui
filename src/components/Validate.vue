@@ -1,21 +1,21 @@
 <template>
   <DragForm
-      class="_fc-validate"
-      :rule="rule"
-      :option="option"
-      :modelValue="formValue"
-      @update:modelValue="onInput"
+    class="_fc-validate"
+    :rule="rule"
+    :option="option"
+    :modelValue="formValue"
+    @update:modelValue="onInput"
   ></DragForm>
 </template>
 
 <script>
-import {designerForm} from "../utils/form";
-import {defineComponent} from "vue";
-import {deepCopy} from "@form-create/utils/lib/deepextend";
+import { designerForm } from "../utils/form";
+import { defineComponent } from "vue";
+import { deepCopy } from "@form-create/utils/lib/deepextend";
 
 export default defineComponent({
-  name: 'Validate',
-  inject: ['designer'],
+  name: "Validate",
+  inject: ["designer"],
   props: {
     modelValue: Array,
   },
@@ -36,7 +36,6 @@ export default defineComponent({
         form: {
           labelPlacement: "top",
           size: "small",
-          labelWidth: '90px',
           showFeedback: true,
         },
         submitBtn: false,
@@ -50,17 +49,17 @@ export default defineComponent({
           value: "",
           title: t("validate.type"),
           options: [
-            {value: "", label: t("validate.typePlaceholder")},
-            {value: "string", label: "String"},
-            {value: "array", label: "Array"},
-            {value: "number", label: "Number"},
-            {value: "integer", label: "Integer"},
-            {value: "float", label: "Float"},
-            {value: "object", label: "Object"},
-            {value: "date", label: "Date"},
-            {value: "url", label: "url"},
-            {value: "hex", label: "hex"},
-            {value: "email", label: "email"},
+            { value: "", label: t("validate.typePlaceholder") },
+            { value: "string", label: "String" },
+            { value: "array", label: "Array" },
+            { value: "number", label: "Number" },
+            { value: "integer", label: "Integer" },
+            { value: "float", label: "Float" },
+            { value: "object", label: "Object" },
+            { value: "date", label: "Date" },
+            { value: "url", label: "url" },
+            { value: "hex", label: "hex" },
+            { value: "email", label: "email" },
           ],
           control: [
             {
@@ -73,7 +72,6 @@ export default defineComponent({
                   field: "validate",
                   props: {
                     expand: 1,
-                    sortBtn: false,
                     rule: [
                       {
                         type: "select",
@@ -81,9 +79,9 @@ export default defineComponent({
                         field: "trigger",
                         value: "change",
                         options: [
-                          {label: "change", value: "change"},
-                          {label: "submit", value: "submit"},
-                          {label: "blur", value: "blur"},
+                          { label: "change", value: "change" },
+                          { label: "submit", value: "submit" },
+                          { label: "blur", value: "blur" },
                         ],
                       },
                       {
@@ -104,9 +102,9 @@ export default defineComponent({
                             value: "pattern",
                             label: t("validate.modes.pattern"),
                           },
-                          {value: "min", label: t("validate.modes.min")},
-                          {value: "max", label: t("validate.modes.max")},
-                          {value: "len", label: t("validate.modes.len")},
+                          { value: "min", label: t("validate.modes.min") },
+                          { value: "max", label: t("validate.modes.max") },
+                          { value: "len", label: t("validate.modes.len") },
                         ],
                         value: "required",
                         control: [
@@ -176,16 +174,16 @@ export default defineComponent({
                             on: {
                               click: (inject) => {
                                 const title =
-                                    this.designer.setupState.activeRule.title;
+                                  this.designer.setupState.activeRule.title;
                                 if (this.designer.setupState.activeRule) {
                                   inject.api.setValue(
-                                      "message",
-                                      t(
-                                          inject.api.form.mode !== "required"
-                                              ? "validate.autoMode"
-                                              : "validate.autoRequired",
-                                          {title}
-                                      )
+                                    "message",
+                                    t(
+                                      inject.api.form.mode !== "required"
+                                        ? "validate.autoMode"
+                                        : "validate.autoRequired",
+                                      { title }
+                                    )
                                   );
                                 }
                               },
@@ -208,7 +206,7 @@ export default defineComponent({
   methods: {
     onInput: function (formData) {
       let val = [];
-      const {validate, type} = deepCopy(formData);
+      const { validate, type } = deepCopy(formData);
       if (type && (!validate || !validate.length)) {
         return;
       } else if (type) {
@@ -244,7 +242,6 @@ export default defineComponent({
 ._fc-validate .append-msg {
   cursor: pointer;
 }
-
 ._fc-validate .form-create .n-form-item {
   display: block;
   grid-template-rows: minmax(var(--n-label-height), auto) 1fr;
@@ -252,7 +249,6 @@ export default defineComponent({
   --n-blank-height: 28px !important;
   --n-label-height: 24px !important;
 }
-
 ._fc-validate .form-create .n-form-item .n-form-item-label {
   display: flex;
   align-items: flex-start;
@@ -262,15 +258,12 @@ export default defineComponent({
   --n-label-font-size: 13px;
   --n-label-padding: 0 0 6px 2px;
 }
-
 ._fc-validate .n-base-selection {
   --n-height: 28px !important;
 }
-
 ._fc-validate .n-input .n-input__input-el, ._fc-validate .n-input .n-input__suffix {
   --n-height: 28px !important;
 }
-
 ._fc-validate .n-grid > div:nth-child(2) {
   flex-direction: column;
   justify-content: center;

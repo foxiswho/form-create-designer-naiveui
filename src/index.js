@@ -1,32 +1,32 @@
-import FcDesigner from './components/FcDesigner.vue';
-import DragTool from './components/DragTool.vue';
-import Struct from './components/Struct.vue';
-import Fetch from './components/Fetch.vue';
-import Validate from './components/Validate.vue';
-import DragBox from './components/DragBox.vue';
-import Required from './components/Required.vue';
-import TableOptions from './components/TableOptions.vue';
-import {designerForm} from './utils/form';
-import FcEditor from '@form-create/component-wangeditor';
 import './style/index.css';
-import draggable from 'vuedraggable';
-import unique from '@form-create/utils/lib/unique';
-import {makeOptionsRule} from './utils/index';
 import formCreate from './utils/form';
+import {designerForm} from './utils/form';
+import Fetch from './components/Fetch.vue';
+import Struct from './components/Struct.vue';
+import {makeOptionsRule} from './utils/index';
+import DragBox from './components/DragBox.vue';
+import DragTool from './components/DragTool.vue';
+import Required from './components/Required.vue';
+import Validate from './components/Validate.vue';
+import unique from '@form-create/utils/lib/unique';
+import FcDesigner from './components/FcDesigner.vue';
+import draggable from 'vuedraggable';
 import ColorPicker from './components/ColorPicker.vue'
 import CustomAlert from './components/CustomAlert.vue';
+import FcEditor from '@form-create/component-wangeditor';
+import TableOptions from './components/TableOptions.vue';
 
 designerForm.component('draggable', draggable);
 designerForm.component('DragTool', DragTool);
 designerForm.component('DragBox', DragBox);
+designerForm.component('Required', Required);
 designerForm.component('Validate', Validate);
 designerForm.component('Struct', Struct);
-designerForm.component('Fetch', Fetch);
-designerForm.component('Required', Required);
 designerForm.component('TableOptions', TableOptions);
 designerForm.component('ColorPicker', ColorPicker);
 designerForm.component('CustomAlert', CustomAlert);
 designerForm.component('FcEditor', FcEditor);
+designerForm.component('Fetch', Fetch);
 formCreate.component('FcEditor', FcEditor);
 
 
