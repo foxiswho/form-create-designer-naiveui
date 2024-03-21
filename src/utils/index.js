@@ -62,7 +62,7 @@ export function makeOptionsRule(t, to, flag) {
         value: flag !== false ? 2 : 0,
         options,
         props: {
-            type: 'button'
+            type: 'button',
         },
         control
     };

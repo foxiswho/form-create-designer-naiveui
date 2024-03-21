@@ -7,12 +7,14 @@ const ZhCn = {
         control: '联动数据',
         clear: '清空值',
         refresh: '刷新',
-        labelPosition: '标签位置',
+        labelPlacement: '标签位置',
         size: '表单尺寸',
         labelWidth: '标签宽度',
-        hideRequiredAsterisk: '隐藏必填字段的标签旁边的红色星号',
-        showMessage: '显示校验错误信息',
-        inlineMessage: '以行内形式展示校验信息',
+        showRequireMark: '不显示必填的星号',
+        showRequireMarkInfo: '不可逆操作！！！',
+        hideRequireMarkLabel: '不显示',
+        placementRequireMark: '必填星号的位置',
+        showFeedback: '是否展示校验反馈',
         submitBtn: '是否显示表单提交按钮',
         resetBtn: '是否显示表单重置按钮',
         submit: '提交',
@@ -69,6 +71,7 @@ const ZhCn = {
             rule: '基础配置',
             props: '属性配置',
             validate: '验证配置',
+            event: '事件属性',
         },
     },
     menu: {
@@ -87,23 +90,6 @@ const ZhCn = {
         }
     },
     components: {
-        group: {
-            name: '子表单',
-            props: {
-                disabled: '是否禁用',
-                syncDisabled: '是否与子表单强制同步 disabled 状态',
-                expand: '设置默认展开几项',
-                button: '是否显示操作按钮',
-                sortBtn: '是否显示排序按钮',
-                min: '设置最小添加几项',
-                max: '设置最多添加几项',
-                mode: '组件类型',
-                modeOpts: {
-                    subform: '对象',
-                    group: '数组'
-                }
-            }
-        },
         radio: {
             name: '单选框',
             props: {
@@ -135,11 +121,8 @@ const ZhCn = {
                 clearable: '是否可清空',
                 showPassword: '是否显示切换密码图标',
                 disabled: '禁用',
-                prefixIcon: '输入框头部图标',
-                suffixIcon: '输入框尾部图标',
-                rowInfo: '只对 type="textarea" 有效',
+                rowsInfo: '只对 type="textarea" 有效',
                 rows: '输入框行数',
-                autocomplete: '自动补全',
                 readonly: '是否只读',
                 resize: '控制是否能被用户缩放',
                 autofocus: '自动获取焦点'
@@ -151,11 +134,12 @@ const ZhCn = {
                 min: '设置计数器允许的最小值',
                 max: '设置计数器允许的最大值',
                 step: '计数器步长',
+                precision: '数值保留的精度值',
                 stepStrictly: '是否只能输入 step 的倍数',
                 disabled: '是否禁用计数器',
-                controls: '是否使用控制按钮',
-                controlsPosition: '控制按钮位置',
-                placeholder: '输入框默认 placeholder'
+                showButton: '是否有按钮',
+                buttonPlacement: '加减按钮的位置',
+                placeholder: '提示信息',
             }
         },
         select: {
@@ -164,116 +148,104 @@ const ZhCn = {
                 multiple: '是否多选',
                 disabled: '是否禁用',
                 clearable: '是否可以清空选项',
-                collapseTags: '多选时是否将选中值按文字的形式展示',
-                multipleLimit: '多选时用户最多可以选择的项目数，为 0 则不限制',
-                autocomplete: 'autocomplete 属性',
+                maxTagCount: '多选标签的最大显示数量',
                 placeholder: '占位符',
-                filterable: '是否可搜索',
-                allowCreate: '是否允许用户创建新条目',
-                noMatchText: '搜索条件无匹配时显示的文字',
-                noDataText: '选项为空时显示的文字',
-                reserveKeyword: '多选且可搜索时，是否在选中一个选项后保留当前的搜索关键词',
-                defaultFirstOption: '在输入框按下回车，选择第一个匹配项',
-                popperAppendToBody: '是否将弹出框插入至 body 元素',
-                automaticDropdown: '对于不可搜索的 Select，是否在输入框获得焦点后自动弹出选项菜单'
+                filterable: '是否可以过滤',
+                tag: '是否允许用户创建新条目',
+                remote: '是否要异步获取选项',
+                remoteInfo: '注意开启该选项过滤和创建新条目将不再生效',
+                onSearch: '搜索时执行的回调',
+                clearFilterAfterSelect: '是否在可过滤和多选的情况下选中一个选项后保留当前的搜索关键词',
+                placement: '菜单的弹出位置',
             }
         },
         switch: {
             name: '开关',
             props: {
                 disabled: '是否禁用',
-                width: '宽度（px）',
-                activeText: 'switch 打开时的文字描述',
-                inactiveText: 'switch 关闭时的文字描述',
-                activeValue: 'switch 打开时的值',
-                inactiveValue: 'switch 关闭时的值',
-                activeColor: 'switch 打开时的背景色',
-                inactiveColor: 'switch 关闭时的背景色'
+                checkedValue: '选中时对应的值',
+                uncheckedValue: '未选中时对应的值',
+                size: '尺寸',
+                sizeInfo: '开关的尺寸不随着表单变化（Bug?）',
             }
         },
         slider: {
             name: '滑块',
             props: {
+                defaultValue: '默认值',
                 min: '最小值',
                 max: '最大值',
                 disabled: '是否禁用',
                 step: '步长',
-                showInput: '是否显示输入框，仅在非范围选择时有效',
-                showInputControls: '在显示输入框的情况下，是否显示输入框的控制按钮',
-                showStops: '是否显示间断点',
+                tooltip: '是否展示 tooltip',
                 range: '是否为范围选择',
-                vertical: '是否竖向模式',
-                height: 'Slider 高度，竖向模式时必填'
+                vertical: '是否启用垂直模式',
+                reverse: '是否倒转轨道',
+                placement: "Tooltip 的弹出位置",
+                showTooltip: '是否一直显示 tooltip',
+                showTooltipInfo: '仅对非 range 生效',
             }
         },
         timePicker: {
             name: '时间选择器',
             props: {
                 pickerOptions: '当前时间日期选择器特有的选项',
-                readonly: '完全只读',
+                inputReadonly: '设置输入框为只读',
+                inputReadonlyInfo: '避免在移动设备上打开虚拟键盘',
                 disabled: '禁用',
                 editable: '文本框可输入',
-                clearable: '是否显示清除按钮',
-                placeholder: '非范围选择时的占位内容',
-                startPlaceholder: '范围选择时开始日期的占位内容',
-                endPlaceholder: '范围选择时开始日期的占位内容',
-                isRange: '是否为时间范围选择',
-                arrowControl: '是否使用箭头进行时间选择',
-                align: '对齐方式',
-                prefixIcon: '自定义头部图标的类名',
-                clearIcon: '自定义清空图标的类名'
+                clearable: '是否可清空',
+                placeholder: '选择框的占位符',
+                'use-12-hours': '是否使用 12 小时制的面板',
+                timeZone: '格式化值时使用的市区',
+                placement: '菜单弹出的位置'
             }
         },
         datePicker: {
             name: '日期选择器',
             props: {
                 pickerOptions: '当前时间日期选择器特有的选项',
-                readonly: '完全只读',
+                inputReadonly: '设置输入框为只读',
+                inputReadonlyInfo: '避免在移动设备上打开虚拟键盘',
                 disabled: '禁用',
-                type: '显示类型',
-                editable: '文本框可输入',
-                clearable: '是否显示清除按钮',
-                placeholder: '非范围选择时的占位内容',
-                startPlaceholder: '范围选择时开始日期的占位内容',
-                endPlaceholder: '范围选择时结束日期的占位内容',
+                type: '日期选择器的类型',
+                clearable: '是否支持清除',
+                placeholder: '提示信息',
                 format: '显示在输入框中的格式',
-                align: '对齐方式',
-                rangeSeparator: '选择范围时的分隔符',
-                unlinkPanels: '在范围选择器里取消两个日期面板之间的联动',
-                prefixIcon: '自定义头部图标的类名',
-                clearIcon: '自定义清空图标的类名'
+                placement: '面板的弹出位置',
             }
         },
         rate: {
             name: '评分',
             props: {
-                max: '最大分值',
-                disabled: '是否为只读',
-                allowHalf: '是否允许半选',
-                voidColor: '未选中 icon 的颜色',
-                disabledVoidColor: '只读时未选中 icon 的颜色',
-                voidIconClass: '未选中 icon 的类名',
-                disabledVoidIconClass: '只读时未选中 icon 的类名',
-                showScore: '是否显示当前分数，show-score 和 show-text 不能同时为真',
-                textColor: '辅助文字的颜色',
-                scoreTemplate: '分数显示模板'
+                size: '图标尺寸',
+                sizeInfo: '评分的尺寸不随着表单变化（Bug?）',
+                count: '图标个数',
+                defaultValue: '默认已激活图标个数',
+                readonly: '只读，交互失效',
+                allowHalf: '允许只激活一半图标',
+                clearable: '是否可清空',
+                clearableInfo: '在点击当前值对应的图标后值会被设为 null',
+                color: '已激活图标颜色',
             }
         },
         colorPicker: {
             name: '颜色选择器',
             props: {
+                confirm: '确定',
+                clear: '清除',
                 disabled: '是否禁用',
-                showAlpha: '是否支持透明度选择',
-                colorFormat: '颜色的格式'
+                actions: '显示按钮',
+                showAlpha: '是否可调节 alpha 通道',
+                defaultValue: '默认的颜色值',
+                modes: '颜色选择器支持颜色的格式',
+                modesInfo: '注意一旦你在某个模式下选择了值，颜色选择器值的格式将跟随这个格式'
             }
         },
         row: {
             name: '栅格布局',
             props: {
                 gutter: '栅格间隔',
-                type: 'flex布局模式',
-                justify: 'flex 布局下的水平排列方式',
-                align: 'flex 布局下的垂直排列方式'
             }
         },
         col: {
@@ -287,28 +259,43 @@ const ZhCn = {
         },
         tab: {
             name: '标签页',
-            props: {
-                type: '风格类型',
+            props: {    
+                type: '标签类型',
+                size: '标签页的尺寸',
+                trigger: '触发 tab 的方式',
+                barWidth: '标签条的宽度',
                 closable: '标签是否可关闭',
-                tabPosition: '选项卡所在位置',
-                stretch: '标签的宽度是否自撑开'
+                animated: '标签页切换是否使用动画',
+                tabsPadding: '全部标签最左和最右的 padding',
+                defaultValue: '默认展示标签页的标识',
+                closableInfo: '只在标签的 type 为 card 时生效',
+                defaultValueInfo: '修改对应标签页标识后需要同时更新该值',
+                justifyContent: 'flex 布局下主轴的排列方式',
+                justifyContentInfo: "只对 'line' 和 'bar' 类型生效",
+
             }
         },
         'tab-pane': {
             name: '标签页',
             props: {
-                label: '选项卡标题',
+                name: '标签页标识',
+                tab: '选项卡标题',
                 disabled: '是否禁用',
-                name: '与选项卡绑定值 value 对应的标识符，表示选项卡别名',
-                lazy: '标签是否延迟渲染'
+                closable: '是否允许关闭标签',
+                nameInfo: '修改标识需要同步更新父组件的标识',
+                closableInfo: '只在标签的 type 为 card 时生效',
+                displayDirective: '选择性渲染使用的指令',
+                if: '内容会随切换重置',
+                show: '内容不随切换重置',
+                showLazy: '内容不随切换重置且延迟加载'
             }
         },
-        'el-divider': {
+        'n-divider': {
             name: '分割线',
             props: {
-                direction: '设置分割线方向',
+                vertical: '是否垂直分隔',
                 formCreateChild: '设置分割线文案',
-                contentPosition: '设置分割线文案的位置'
+                titlePlacement: '标题的位置'
             }
         },
         cascader: {
@@ -316,74 +303,94 @@ const ZhCn = {
             props: {
                 props: '配置选项',
                 size: '尺寸',
-                placeholder: '输入框占位文本',
+                cascade: '在多选时是否关联选项',
+                placeholder: '提示信息',
                 disabled: '是否禁用',
                 clearable: '是否支持清空选项',
-                showAllLevels: '输入框中是否显示选中值的完整路径',
-                collapseTags: '多选模式下是否折叠Tag',
-                separator: '选项分隔符'
+                filterable: '是否可搜索',
+                filterableInfo: 'remote 被设定时不生效',
+                showPath: '是否在选择器中显示选项路径',
+                multiple: '是否支持多选',
+                clearFilterAfterSelect: '是否在可过滤和多选的情况下选中一个选项后保留当前的搜索关键词',
+                placement:'菜单的弹出位置',
+                maxTagCount: '多选标签的最大显示数量',
+                separator: '数据分隔符',
+                checkStrategy: '勾选策略',
+                checkStrategyInfo: '指定显示的勾选节点',
+                all: '显示全部选中节点',
+                parent: '只显示父节点',
+                parentInfo: '当父节点下所有子节点都选中时，对于单选无效',
+                child: '只显示子节点',
             }
         },
         upload: {
             name: '上传',
             props: {
-                uploadType: '上传类型',
-                action: '上传的地址(必填)',
-                headers: '设置上传的请求头部',
-                multiple: '是否支持多选文件',
-                data: '上传时附带的额外参数',
-                name: '上传的文件字段名',
-                withCredentials: '支持发送 cookie 凭证信息',
-                accept: '接受上传的文件类型（thumbnail-mode 模式下此参数无效）',
-                autoUpload: '是否在选取文件后立即进行上传',
+                action: '请求提交的地址(必填)',
+                headers: 'HTTP 请求需要附加的 Headers',
+                multiple: '是否支持多个文件',
+                data: '提交表单需要附加的数据',
+                name: '文件在提交表单中的字段名',
+                withCredentials: '是否携带 Cookie',
+                accept: '接受的文件类型（thumbnail-mode 模式下此参数无效）',
+                acceptInfo: '参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file#accept',
+                defaultUpload: '选择文件时候是否默认上传',
                 disabled: '是否禁用',
-                limit: '最大允许上传个数'
+                max: '限制上传文件数量',
+                showCancelButton: '是否显示取消按钮',
+                showDownloadButton: '是否显示下载按钮',
+                showRemoveButton: '是否显示删除按钮',
+                showRetryButton: '是否显示重新上传按钮',
+                showFileList: '是否显示文件列表',
+                showPreviewButton: '是否允许显示预览按钮',
+                showPreviewButtonInfo: '在 list-type 为 image-card 时生效',
             }
         },
-        'el-transfer': {
+        'n-transfer': {
             name: '穿梭框',
             props: {
                 data: 'Transfer 的数据源',
-                filterable: '是否可搜索',
-                filterPlaceholder: '搜索框占位符',
-                targetOrder: '右侧列表元素的排序策略',
-                titles: '自定义列表标题',
-                buttonTexts: '自定义按钮文案',
-                format: '列表顶部勾选状态文案',
-                props: '数据源的字段别名',
-                leftDefaultChecked: '初始状态下左侧列表的已勾选项的 key 数组',
-                rightDefaultChecked: '初始状态下右侧列表的已勾选项的 key 数组'
+                defaultValue: '默认值',
+                showSelected: '是否显示源列表中选中的项',
+                sourceFilterable: '源项是否可过滤',
+                sourceFilterPlaceholder: '源项搜索框中的占位符',
+                targetFilterable: '目标项是否可过滤',
+                targetFilterPlaceholder: '目标项搜索框中的占位符',
+                targetTitle: '目标项标题',
+                sourceTitle: '源项标题',
             }
         },
         tree: {
             name: '树形控件',
             props: {
-                emptyText: '内容为空的时候展示的文本',
-                props: '配置选项，具体看下表',
-                renderAfterExpand: '是否在第一次展开某个树节点后才渲染其子节点',
-                defaultExpandAll: '是否默认展开所有节点',
-                expandOnClickNode: '是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。',
-                checkOnClickNode: '是否在点击节点的时候选中节点，默认值为 false，即只有在点击复选框时才会选中节点。',
-                autoExpandParent: '展开子节点的时候是否自动展开父节点',
-                checkStrictly: '在显示复选框的情况下，是否严格的遵循父子不互相关联的做法，默认为 false',
-                accordion: '是否每次只打开一个同级树节点展开',
-                indent: '相邻级节点间的水平缩进，单位为像素',
-                iconClass: '自定义树节点的图标',
-                nodeKey: '每个树节点用来作为唯一标识的属性，整棵树应该是唯一的'
+                accordion: '是否使用手风琴展开模式',
+                animated: '是否有展开动画',
+                cancelable: '选中之后是否允许取消',
+                cascade: '是否关联选项',
+                checkable: '是否显示选择框',
+                checkboxPlacement: '复选框的位置',
+                checkStrategy: '勾选策略',
+                checkStrategyInfo: '指定勾选回调返回的值',
+                all: '回调函数值为全部选中节点',
+                parent: '回调函数值为父节点',
+                child: '回调函数值为子节点',
+                childrenField: '自定义 children 字段名',
+                keyField: '自定义 key 字段名',
+                labelField: '自定义 label 字段名',
+                disabledField: '自定义 disabled 字段名',
             }
         },
-        'el-alert': {
+        'n-alert': {
             name: '提示',
             description: 'description',
             props: {
                 title: '标题',
-                type: '主题',
-                description: '辅助性文字',
+                type: '类型',
+                description: '描述',
                 closable: '是否可关闭',
-                center: '文字是否居中',
-                closeText: '关闭按钮自定义文本',
                 showIcon: '是否显示图标',
-                effect: '选择提供的主题'
+                center: '组件居中',
+                width: '设置宽度'
             }
         },
         span: {
@@ -399,18 +406,26 @@ const ZhCn = {
                 height: '高度',
             }
         },
-        'el-button': {
+        'n-button': {
             name: '按钮',
             props: {
-                formCreateChild: '内容',
-                size: '尺寸',
-                type: '类型',
-                plain: '是否朴素按钮',
-                round: '是否圆角按钮',
-                circle: '是否圆形按钮',
-                loading: '是否加载中状态',
-                disabled: '是否禁用状态',
-                icon: '图标类名'
+                formCreateChild: '按钮的内容',
+                size: '按钮的尺寸',
+                type: '按钮的类型',
+                color: '按钮颜色',
+                textColor: '按钮文字颜色',
+                round: '按钮是否显示圆角',
+                circle: '按钮是否为圆形',
+                loading: '按钮是否显示加载状态',
+                disabled: '按钮是否禁用',
+                secondary: '是否是次要按钮',
+                tertiary: '是否是三级按钮',
+                quaternary: '是否是四级按钮',
+                text: '是否显示为文本按钮',
+                dashed: '按钮边框是否为虚线',
+                ghost: '按钮是否透明',
+                tag: '按钮需要被渲染成什么标签',
+                strong: '按钮文字是否加粗'
             }
         },
         'fc-editor': {
@@ -419,7 +434,22 @@ const ZhCn = {
                 disabled: '是否禁用'
             }
         }
-    }
+    },
+    aboutTime: {
+        date: '日期',
+        datetime: '日期时间',
+        daterange: '日期范围',
+        datetimerange: '日期时间范围',
+        month: '月份',
+        monthrange: '月份范围',
+        year: '年份',
+        yearrange: '年份范围',
+        quarter: '季度',
+        quarterrange: '季度范围',
+    },
+    bug: {
+        transfter: "跟我隔这玩呢？(NaiveUI's BUG)"
+    },
 };
 
 export default ZhCn;
