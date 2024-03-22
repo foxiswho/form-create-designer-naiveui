@@ -84,7 +84,5 @@ export declare const FcDesigner: import("vue").DefineComponent<{
 }> & FcDesignerProtoType & Plugin & Record<string, any>;
 
 
-export default FcDesigner;
-
 export const formCreate: typeof FormCreate;
 export const designerForm: typeof FormCreate;
