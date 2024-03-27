@@ -25,6 +25,11 @@ pnpm dev
 ```bash
 pnpm build:all
 ```
+## 预览
+
+```bash
+pnpm preview
+```
 
 # form-create-designer-naiveui v3
 **这个是 Vue3 版本**

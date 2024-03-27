@@ -11,6 +11,8 @@
             <n-button size="small" secondary type="info" @click="showJson">生成JSON</n-button>
             <n-button size="small" secondary type="success" @click="showOption">生成Options</n-button>
             <n-button size="small" secondary type="error" @click="showTemplate">生成组件</n-button>
+            <n-button size="small" type="info" @click="showSaveData">保存</n-button>
+            <n-button size="small" ghost @click="showApiSetting">设置</n-button>
             <n-button size="small" ghost @click="changeLocale">中英切换</n-button>
           </n-space>
         </div>
@@ -37,12 +39,52 @@
           </n-space>
         </template>
       </n-modal>
+      <n-modal
+          v-model:show="stateApi"
+          preset="dialog"
+          :show-icon="false"
+          title="设置"
+          class="_fc-t-dialog"
+          style="width: 600px"
+      >
+        <template v-if="isLoading">
+          <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
+        </template>
+        <div ref="editor" v-if="stateApi" v-show="isLoading === false">
+          <form-create
+              v-model:api="apiUrlApi"
+              v-model="apiUrlData"
+              :rule="apiUrlRule"
+              :option="apiUrlOption"
+              @submit="onApiSubmit"
+          ></form-create>
+        </div>
+        <template #action >
+          <n-space>
+            <n-button @click="stateApi = false" size="small">取 消</n-button>
+            <n-button type="primary" @click="onApiSubmit2" size="small">确 定</n-button>
+          </n-space>
+        </template>
+      </n-modal>
+      <n-modal
+          v-model:show="stateApiSave"
+          preset="dialog"
+          :show-icon="false"
+          title="提示"
+          class="_fc-t-dialog"
+          style="width: 600px"
+      >
+        <template v-if="isLoading">
+          <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
+        </template>
+        <span style="color: red;" v-if="err">{{err}}</span>
+      </n-modal>
     </div>
   </n-config-provider>
 </template>
 
 <script>
-import { enUS, NConfigProvider, dateZhCN, zhCN } from 'naive-ui'
+import { enUS, NConfigProvider, dateZhCN, zhCN, } from 'naive-ui'
 import is from '@form-create/utils/lib/type';
 import jsonlint from "jsonlint-mod";
 import { javascript } from "@codemirror/lang-javascript";
@@ -53,6 +95,23 @@ import formCreate from "@form-create/naive-ui";
 import ZhCn from "./locale/zh-cn";
 import En from "./locale/en";
 import dateEnUs from 'naive-ui/es/locales/date/enUS';
+import { computed, defineComponent, ref } from 'vue'
+import {
+  createDiscreteApi,
+  lightTheme
+} from 'naive-ui'
+
+const themeRef = ref<'light' | 'dark'>('dark')
+const configProviderPropsRef = computed(() => ({
+  theme: lightTheme
+}))
+
+const { message, notification, dialog, loadingBar, modal } = createDiscreteApi(
+    ['message', 'dialog', 'notification', 'loadingBar', 'modal'],
+    {
+      configProviderProps: configProviderPropsRef
+    }
+)
 
 const TITLE = [
   "生成规则",
@@ -85,7 +144,15 @@ export default {
         en: dateEnUs
       },
       naiveLanguage: zhCN,
-      dateLanguage: dateZhCN
+      dateLanguage: dateZhCN,
+      stateApi: false,
+      stateApiSave: false,
+      apiUrlApi: null,
+      apiUrlData:{
+        url: '1'
+      },
+      apiUrlRule:formCreate.parseJson('[{"type":"input","field":"url","title":"接口地址","info":"","$required":false,"_fc_drag_tag":"input","hidden":false,"display":true},{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true}]'),
+      apiUrlOption:formCreate.parseJson('{"form":{"labelPlacement":"left","requireMarkPlacement":"right","size":"small","labelWidth":"100","show-feedback":true},"submitBtn":{"show":true,"innerText":"提交"},"resetBtn":{"show":false,"innerText":"重置"}}'),
     };
   },
   watch: {
@@ -187,6 +254,80 @@ export default {
       this.type = 4;
       this.value = { form: {} };
     },
+    showSaveData() {
+      //this.value = this.saveData();
+      //const notification = useNotification()
+      this.stateApiSave = false
+      const rule = this.$refs.designer.getRule();
+      const opt = this.$refs.designer.getOption();
+      const ruleJson= formCreate.toJson(rule).replaceAll("\\", "\\\\")
+      const optJson = JSON.stringify(opt)
+      console.log('rule',rule)
+      console.log('opt',opt)
+      // console.log('rule',ruleJson)
+      // console.log('opt',optJson)
+      const data={content:ruleJson,form:optJson,formSingle:false}
+      this.initApiData()
+      if (!this.apiUrlData.url){
+        this.err ="接口地址不能为空"
+        this.stateApiSave = true
+        return
+      }
+
+      fetch(this.apiUrlData.url,{
+        method:"POST",
+        body:JSON.stringify(data),
+      })
+          .then(response=>{
+        console.log('response',response)
+        if (response.ok) {
+          return response.json()
+        } else {
+          return Promise.reject({
+            status: response.status,
+            statusText: response.statusText
+          })
+        }
+      })
+          .then(data=>{
+            notification.success({
+              content: '操作成功',
+              duration: 2500,
+              keepAliveOnHover: true
+            })
+          })
+          .catch(error =>{
+            if (error.status === 404) {
+              notification.error({
+                content: '无法访问该地址 404',
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }else{
+              notification.error({
+                content: error.statusText,
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }
+          });
+    },
+    showApiSetting() {
+      this.stateApi = true;
+      this.type = 5;
+      this.initApiData()
+    },
+    initApiData(){
+      let url=localStorage.getItem('URL');
+      console.log('localStorage:URL',url)
+      if (url !== undefined&&url){
+         this.apiUrlData.url = url;
+      }else{
+        let env= __APP_ENV__;
+        this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_BASE_URL+env.VITE_DESIGNER_URL
+      }
+      console.log('__APP_ENV__',__APP_ENV__)
+    },
     onOk() {
       if (this.err) return;
       const json = this.editor.state.doc;
@@ -241,10 +382,18 @@ export default defineComponent({
   },
 <\/script>`;
     },
+    onApiSubmit(formData){
+      console.log('xxxx',formData)
+      localStorage.setItem('URL',formData.url);
+    },
+    onApiSubmit2(){
+      this.apiUrlApi.submit()
+    }
   },
   beforeCreate() {
     window.jsonlint = jsonlint;
   },
+
 };
 </script>
 

@@ -35,6 +35,7 @@ import {
     NTimePicker,
     NDatePicker,
     NConfigProvider,
+    NNotificationProvider,
     NSlider,
     NRate,
     NColorPicker,
@@ -58,7 +59,7 @@ const naive = create({
         NFormItem, NRadio, NRadioGroup, NInput, NSwitch, NSelect, NInputNumber,
         NPopover, NIcon, NGrid, NGridItem, NRadioButton, NDataTable, NCheckboxGroup,
         NCheckbox, NSkeleton, NTimePicker, NDatePicker, NConfigProvider, NSlider, NRate,
-        NColorPicker, NCascader, NUpload, NText, NP, NUploadDragger, NTransfer, NTree,
+        NColorPicker, NCascader, NUpload, NText, NP, NUploadDragger, NTransfer, NTree,NNotificationProvider,
         NAlert, NTooltip, NTabs, NTabPane, NTab]
 })
 
