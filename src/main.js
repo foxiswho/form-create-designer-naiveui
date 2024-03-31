@@ -67,6 +67,4 @@ const app = createApp(App);
 app.use(naive, { size: 'small' });
 app.use(formCreate);
 app.use(FcDesigner);
-
-
 app.mount('#app')

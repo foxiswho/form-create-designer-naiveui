@@ -27,5 +27,6 @@ export default defineConfig(({ command, mode })=>{
     define: {
       __APP_ENV__: JSON.stringify(env),
     },
+    base: './',
     plugins: [vue(), ...extnedsPlugins]}
 })

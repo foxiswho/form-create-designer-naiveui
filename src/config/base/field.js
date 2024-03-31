@@ -3,6 +3,25 @@ import { markRaw } from 'vue';
 
 export default function field({ t }) {
   return [
+    // {
+    //   type: 'select',
+    //   field: 'formType',
+    //   value: 'string',
+    //   title: t("validate.type"),
+    //   options: [
+    //     { value: "", label: t("validate.typePlaceholder") },
+    //     { value: "string", label: "String" },
+    //     { value: "array", label: "Array" },
+    //     { value: "number", label: "Number" },
+    //     { value: "integer", label: "Integer" },
+    //     { value: "float", label: "Float" },
+    //     { value: "object", label: "Object" },
+    //     { value: "date", label: "Date" },
+    //     { value: "url", label: "url" },
+    //     { value: "hex", label: "hex" },
+    //     { value: "email", label: "email" },
+    //   ]
+    // },
     {
       type: 'input',
       field: 'field',

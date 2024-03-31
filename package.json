@@ -2,6 +2,7 @@
     "name": "form-designer-naiveui",
     "version": "1.0.10",
     "description": "好用的vue可视化表单设计器组件",
+    "type": "module",
     "unpkg": "./dist/index.umd.js",
     "jsdelivr": "./dist/index.umd.js",
     "typings": "./types/index.d.ts",

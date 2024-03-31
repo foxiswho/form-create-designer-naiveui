@@ -96,6 +96,7 @@ import ZhCn from "./locale/zh-cn";
 import En from "./locale/en";
 import dateEnUs from 'naive-ui/es/locales/date/enUS';
 import { computed, defineComponent, ref } from 'vue'
+import { GetRequest } from './utils/tools'
 import {
   createDiscreteApi,
   lightTheme
@@ -149,10 +150,13 @@ export default {
       stateApiSave: false,
       apiUrlApi: null,
       apiUrlData:{
-        url: '1'
+        url: '',
+        urlDetail: '',
+        dictionary: '',
       },
-      apiUrlRule:formCreate.parseJson('[{"type":"input","field":"url","title":"接口地址","info":"","$required":false,"_fc_drag_tag":"input","hidden":false,"display":true},{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true}]'),
-      apiUrlOption:formCreate.parseJson('{"form":{"labelPlacement":"left","requireMarkPlacement":"right","size":"small","labelWidth":"100","show-feedback":true},"submitBtn":{"show":true,"innerText":"提交"},"resetBtn":{"show":false,"innerText":"重置"}}'),
+      apiUrlRule:formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]'),
+      apiUrlOption:formCreate.parseJson('{"form":{"labelPlacement":"left","requireMarkPlacement":"right","size":"small","labelWidth":"120","show-feedback":true},"submitBtn":{"show":true,"innerText":"提交"},"resetBtn":{"show":false,"innerText":"重置"}}'),
+      routerParam:{id:''},
     };
   },
   watch: {
@@ -243,6 +247,7 @@ export default {
       this.state = true;
       this.type = 2;
       this.value = this.makeTemplate();
+      console.log('$route',this.$router)
     },
     setJson() {
       this.state = true;
@@ -273,9 +278,30 @@ export default {
         this.stateApiSave = true
         return
       }
+      let env= __APP_ENV__;
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+      });
+      //根据 环境变量取 本地缓存数据
+      if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
+        let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
+        if(tokenKey){
+          //是否存在内部 键值，如果存在，则按内部键值取值
+          if(env.VITE_TOKEN_KEY_ACCESS){
+            let obj = JSON.parse(tokenKey)
+            if(obj){
+              headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
+            }
+          }else{
+            //直接填充值内容
+            headers.set(env.VITE_HEADER_KEY,tokenKey)
+          }
+        }
+      }
 
       fetch(this.apiUrlData.url,{
         method:"POST",
+        headers: headers,
         body:JSON.stringify(data),
       })
           .then(response=>{
@@ -324,7 +350,9 @@ export default {
          this.apiUrlData.url = url;
       }else{
         let env= __APP_ENV__;
-        this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_BASE_URL+env.VITE_DESIGNER_URL
+        this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL
+        this.apiUrlData.urlDetail = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DETAIL
+        this.apiUrlData.dictionary = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DICTIONARY
       }
       console.log('__APP_ENV__',__APP_ENV__)
     },
@@ -388,12 +416,104 @@ export default defineComponent({
     },
     onApiSubmit2(){
       this.apiUrlApi.submit()
+    },
+    // 获取数据
+    loadData(){
+      if(this.routerParam.id){
+        this.initApiData()
+        let env= __APP_ENV__;
+        let headers = new Headers({
+          'Content-Type': 'application/json',
+        });
+        //根据 环境变量取 本地缓存数据
+        if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
+          let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
+          if(tokenKey){
+            //是否存在内部 键值，如果存在，则按内部键值取值
+            if(env.VITE_TOKEN_KEY_ACCESS){
+              let obj = JSON.parse(tokenKey)
+              if(obj){
+                headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
+              }
+            }else{
+              //直接填充值内容
+              headers.set(env.VITE_HEADER_KEY,tokenKey)
+            }
+          }
+        }
+
+        fetch(this.apiUrlData.url+'Get?id='+this.routerParam.id,{
+          method:"POST",
+          headers: headers,
+          body:JSON.stringify(this.routerParam),
+        })
+            .then(response=>{
+              console.log('response',response)
+              if (response.ok) {
+                return response.json()
+              } else {
+                return Promise.reject({
+                  status: response.status,
+                  statusText: response.statusText
+                })
+              }
+            })
+            .then(data=>{
+              if(data.content){
+                let val = JSON.parse(data.content);
+                if (!Array.isArray(val)) {
+                  return;
+                }
+                this.$refs.designer.setRule(formCreate.parseJson(data.content));
+                if(data.form){
+                  let val2 = JSON.parse(data.form);
+                  if (!is.Object(val2) || !val2.form) {
+                    return;
+                  }
+                  this.$refs.designer.setOption(val2);
+                }
+              }
+              notification.success({
+                content: '获取成功',
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            })
+            .catch(error =>{
+              if (error.status === 404) {
+                notification.error({
+                  content: '无法访问该地址 404',
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
+              }else{
+                notification.error({
+                  content: error.statusText,
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
+              }
+            });
+      }
     }
   },
   beforeCreate() {
     window.jsonlint = jsonlint;
+    this.routerParam = GetRequest('')
+    console.log('GetRequest',this.routerParam)
   },
+  beforeMount() {
 
+  },
+  mounted(){
+    this.routerParam = GetRequest('')
+    console.log('beforeMount',this.routerParam)
+    this.loadData()
+    this.$nextTick(() => {
+      this.$refs.designer.setRule(this.apiUrlRule);
+    });
+
+  }
 };
 </script>
 
