@@ -344,10 +344,12 @@ export default {
       this.initApiData()
     },
     initApiData(){
-      let url=localStorage.getItem('URL');
+      let url=localStorage.getItem('URL'),urlDetail=localStorage.getItem('URL-detail'),dictionary=localStorage.getItem('URL-dictionary');
       console.log('localStorage:URL',url)
       if (url !== undefined&&url){
          this.apiUrlData.url = url;
+         this.apiUrlData.urlDetail = urlDetail;
+         this.apiUrlData.dictionary = dictionary;
       }else{
         let env= __APP_ENV__;
         this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL
@@ -355,6 +357,7 @@ export default {
         this.apiUrlData.dictionary = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DICTIONARY
       }
       console.log('__APP_ENV__',__APP_ENV__)
+      console.log('apiUrlData',this.apiUrlData)
     },
     onOk() {
       if (this.err) return;
@@ -441,8 +444,8 @@ export default defineComponent({
             }
           }
         }
-
-        fetch(this.apiUrlData.url+'Get?id='+this.routerParam.id,{
+        console.log('apiUrlData222',this.apiUrlData)
+        fetch(this.apiUrlData.urlDetail+'?id='+this.routerParam.id,{
           method:"POST",
           headers: headers,
           body:JSON.stringify(this.routerParam),
