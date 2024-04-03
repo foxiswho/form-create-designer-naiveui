@@ -83,7 +83,7 @@
   </n-config-provider>
 </template>
 
-<script setup>
+<script>
 import { enUS, NConfigProvider, dateZhCN, zhCN, } from 'naive-ui'
 import is from '@form-create/utils/lib/type';
 import jsonlint from "jsonlint-mod";
@@ -95,7 +95,7 @@ import formCreate from "@form-create/naive-ui";
 import ZhCn from "./locale/zh-cn";
 import En from "./locale/en";
 import dateEnUs from 'naive-ui/es/locales/date/enUS';
-import { computed, defineComponent, ref,watch,nextTick,onMounted } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { GetRequest } from './utils/tools'
 import {
   createDiscreteApi,
@@ -121,270 +121,264 @@ const TITLE = [
   "设置生成规则",
   "设置表单规则",
 ];
-const state = ref(false)
-const value = ref(null)
-const title = ref(TITLE)
-const editor = ref(null)
-const err = ref(false)
-const type = ref(-1)
-const lang = ref("cn")
-const locale = ref(null)
-const isLoading = ref(false)
-const languageDict = ref({
-  cn: zhCN,
-  en: enUS
-})
-const dateLanguageDict=ref({
-  cn: dateZhCN,
-  en: dateEnUs
-})
-const naiveLanguage=ref(zhCN)
-const dateLanguage=ref(dateZhCN)
-const stateApi=ref(false)
-const stateApiSave=ref(false)
-const apiUrlApi=ref(null)
-const apiUrlData=ref({
-  url: '',
-  urlDetail: '',
-  dictionary: '',
-})
-const apiUrlRule= ref({})
-const apiUrlOption= ref({})
-const routerParam= ref({id:''})
-const designer= ref(null)
-apiUrlRule.value = formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]')
-apiUrlOption.value = formCreate.parseJson('{"form":{"labelPlacement":"left","requireMarkPlacement":"right","size":"small","labelWidth":"120","show-feedback":true},"submitBtn":{"show":true,"innerText":"提交"},"resetBtn":{"show":false,"innerText":"重置"}}')
 
-watch(()=>state.value,(newValue, oldValue) =>{
-  if (!newValue) {
-    value.value = null;
-    err.value = false;
-  }
-})
-watch(()=>value.value,(newValue, oldValue) =>{
-  load()
-})
-
-function changeLocale() {
-  if (lang.value === "cn") {
-    locale.value = En;
-    lang.value = "en";
-    naiveLanguage.value = languageDict.value["en"];
-    dateLanguage.value = dateLanguageDict.value["en"]
-  } else {
-    locale.value = ZhCn;
-    lang.value = "cn";
-    naiveLanguage.value = this.languageDict.value["cn"];
-    dateLanguage.value = this.dateLanguageDict.value["cn"]
-  }
-}
-
-function load() {
-  let val;
-  if (type.value === 2) {
-    val = value.value;
-  } else if (type.value === 0) {
-    val = formCreate.toJson(value.value, 2);
-  } else {
-    val = JSON.stringify(value.value, null, 2);
-  }
-  nextTick(() => {
-    initCodeContent(val);
-  });
-}
-function initCodeContent(val) {
-  isLoading.value = true;
-  setTimeout(() => {
-    if (editor.value) {
-      editor.value.destroy();
-    }
-    editor.value = new EditorView({
-      doc: val || 'Press Ctrl-Space in here...\n',
-      extensions: [
-        basicSetup,
-        javascript(),
-        json(),
-      ],
-      parent: editor.value,
-      options: {
-        lineNumbers: true,
-        line: true,
-        //括号匹配
-        matchBrackets: true,
+export default {
+  name: "app",
+  components: [ NConfigProvider ],
+  data() {
+    return {
+      state: false,
+      value: null,
+      title: TITLE,
+      editor: null,
+      err: false,
+      type: -1,
+      lang: "cn",
+      locale: null,
+      isLoading: false,
+      languageDict: {
+        cn: zhCN,
+        en: enUS
       },
-    });
-    isLoading.value = false;
-  }, 500);
-}
-function insertCommandContent(val) {
-  editor.value.dispatch({
-    changes: {
-      from: 0,
-      to: editor.value.state.doc.length,
-      insert: val || "Press Ctrl-Space in here...\n"
-    },
-  })
-}
-function onValidationError(e) {
-  err.value = e.length !== 0;
-}
-function showJson() {
-  state.value = true;
-  type.value = 0;
-  value.value = designer.value.getRule();
-}
-function showOption() {
-  state.value = true;
-  type.value = 1;
-  value.value = designer.value.getOption();
-}
-function showTemplate() {
-  state.value = true;
-  type.value = 2;
-  value.value = this.makeTemplate();
-}
-function setJson() {
-  state.value = true;
-  type.value = 3;
-  value.value = [];
-}
-function setOption() {
-  state.value = true;
-  type.value = 4;
-  value.value = { form: {} };
-}
-function showSaveData() {
-  //this.value = this.saveData();
-  //const notification = useNotification()
-  stateApiSave.value = false
-  const rule = designer.value.getRule();
-  const opt = designer.value.getOption();
-  const ruleJson= formCreate.toJson(rule).replaceAll("\\", "\\\\")
-  const optJson = JSON.stringify(opt)
-  console.log('rule',rule)
-  console.log('opt',opt)
-  // console.log('rule',ruleJson)
-  // console.log('opt',optJson)
-
-  initApiData()
-  if (!apiUrlData.value.url){
-    err.value ="接口地址不能为空"
-    stateApiSave.value = true
-    return
-  }
-  if(!routerParam.value.id){
-    notification.error({
-      content: 'id 不能为空',
-      duration: 2500,
-      keepAliveOnHover: true
-    })
-    return
-  }
-  const data={content:ruleJson,form:optJson,formSingle:false,id:this.routerParam.id}
-  let env= __APP_ENV__;
-  let headers = new Headers({
-    'Content-Type': 'application/json',
-  });
-  //根据 环境变量取 本地缓存数据
-  if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
-    let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
-    if(tokenKey){
-      //是否存在内部 键值，如果存在，则按内部键值取值
-      if(env.VITE_TOKEN_KEY_ACCESS){
-        let obj = JSON.parse(tokenKey)
-        if(obj){
-          headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
-        }
-      }else{
-        //直接填充值内容
-        headers.set(env.VITE_HEADER_KEY,tokenKey)
+      dateLanguageDict: {
+        cn: dateZhCN,
+        en: dateEnUs
+      },
+      naiveLanguage: zhCN,
+      dateLanguage: dateZhCN,
+      stateApi: false,
+      stateApiSave: false,
+      apiUrlApi: null,
+      apiUrlData:{
+        url: '',
+        urlDetail: '',
+        dictionary: '',
+      },
+      apiUrlRule:formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]'),
+      apiUrlOption:formCreate.parseJson('{"form":{"labelPlacement":"left","requireMarkPlacement":"right","size":"small","labelWidth":"120","show-feedback":true},"submitBtn":{"show":true,"innerText":"提交"},"resetBtn":{"show":false,"innerText":"重置"}}'),
+      routerParam:{id:''},
+    };
+  },
+  watch: {
+    state(n) {
+      if (!n) {
+        this.value = null;
+        this.err = false;
       }
-    }
-  }
-
-  fetch(apiUrlData.value.url,{
-    method:"POST",
-    headers: headers,
-    body:JSON.stringify(data),
-  })
-      .then(response=>{
-        console.log('response',response)
-        if (response.ok) {
-          return response.json()
-        } else {
-          return Promise.reject({
-            status: response.status,
-            statusText: response.statusText
-          })
-        }
-      })
-      .then(data=>{
-        notification.success({
-          content: '操作成功',
-          duration: 2500,
-          keepAliveOnHover: true
-        })
-      })
-      .catch(error =>{
-        if (error.status === 404) {
-          notification.error({
-            content: '无法访问该地址 404',
-            duration: 2500,
-            keepAliveOnHover: true
-          })
-        }else{
-          notification.error({
-            content: error.statusText,
-            duration: 2500,
-            keepAliveOnHover: true
-          })
-        }
+    },
+    value() {
+      this.load();
+    },
+  },
+  methods: {
+    changeLocale() {
+      if (this.lang === "cn") {
+        this.locale = En;
+        this.lang = "en";
+        this.naiveLanguage = this.languageDict["en"];
+        this.dateLanguage = this.dateLanguageDict["en"]
+      } else {
+        this.locale = ZhCn;
+        this.lang = "cn";
+        this.naiveLanguage = this.languageDict["cn"];
+        this.dateLanguage = this.dateLanguageDict["cn"]
+      }
+    },
+    load() {
+      let val;
+      if (this.type === 2) {
+        val = this.value;
+      } else if (this.type === 0) {
+        val = formCreate.toJson(this.value, 2);
+      } else {
+        val = JSON.stringify(this.value, null, 2);
+      }
+      this.$nextTick(() => {
+        this.initCodeContent(val);
       });
-}
-function showApiSetting() {
-  stateApi.value = true;
-  type.value = 5;
-  initApiData()
-}
-function initApiData(){
-  let url=localStorage.getItem('URL'),urlDetail=localStorage.getItem('URL-detail'),dictionary=localStorage.getItem('URL-dictionary');
-  console.log('localStorage:URL',url)
-  if (url !== undefined&&url){
-    apiUrlData.value.url = url;
-    apiUrlData.value.urlDetail = urlDetail;
-    apiUrlData.value.dictionary = dictionary;
-  }else{
-    let env= __APP_ENV__;
-    apiUrlData.value.url = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL
-    apiUrlData.value.urlDetail = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DETAIL
-    apiUrlData.value.dictionary = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DICTIONARY
-  }
-  console.log('__APP_ENV__',__APP_ENV__)
-  console.log('apiUrlData',apiUrlData.value)
-}
-function onOk() {
-  if (err.value) return;
-  const json = editor.value.state.doc;
-  let val = JSON.parse(json);
-  if (type.value === 3) {
-    if (!Array.isArray(val)) {
-      this.err = true;
-      return;
-    }
-    designer.value.value.setRule(formCreate.parseJson(json));
-  } else {
-    if (!is.Object(val) || !val.form) {
-      this.err = true;
-      return;
-    }
-    designer.value.setOption(val);
-  }
-  state.value = false;
-}
-function makeTemplate() {
-  const rule = designer.value.getRule();
-  const opt = designer.value.getOption();
-  return `<template>
+    },
+    initCodeContent(val) {
+      this.isLoading = true;
+      setTimeout(() => {
+        if (this.editor) {
+          this.editor.destroy();
+        }
+        this.editor = new EditorView({
+          doc: val || 'Press Ctrl-Space in here...\n',
+          extensions: [
+            basicSetup,
+            javascript(),
+            json(),
+          ],
+          parent: this.$refs.editor,
+          options: {
+            lineNumbers: true,
+            line: true,
+            //括号匹配
+            matchBrackets: true,
+          },
+        });
+        this.isLoading = false;
+      }, 500);
+    },
+    insertCommandContent(val) {
+      this.editor.dispatch({
+        changes: {
+          from: 0,
+          to: this.editor.state.doc.length,
+          insert: val || "Press Ctrl-Space in here...\n"
+        },
+      })
+    },
+    onValidationError(e) {
+      this.err = e.length !== 0;
+    },
+    showJson() {
+      this.state = true;
+      this.type = 0;
+      this.value = this.$refs.designer.getRule();
+    },
+    showOption() {
+      this.state = true;
+      this.type = 1;
+      this.value = this.$refs.designer.getOption();
+    },
+    showTemplate() {
+      this.state = true;
+      this.type = 2;
+      this.value = this.makeTemplate();
+      console.log('$route',this.$router)
+    },
+    setJson() {
+      this.state = true;
+      this.type = 3;
+      this.value = [];
+    },
+    setOption() {
+      this.state = true;
+      this.type = 4;
+      this.value = { form: {} };
+    },
+    showSaveData() {
+      //this.value = this.saveData();
+      //const notification = useNotification()
+      this.stateApiSave = false
+      const rule = this.$refs.designer.getRule();
+      const opt = this.$refs.designer.getOption();
+      const ruleJson= formCreate.toJson(rule).replaceAll("\\", "\\\\")
+      const optJson = JSON.stringify(opt)
+      console.log('rule',rule)
+      console.log('opt',opt)
+      // console.log('rule',ruleJson)
+      // console.log('opt',optJson)
+      const data={id:'',data:{content:ruleJson,form:optJson,formSingle:false}}
+      this.initApiData()
+      if (!this.apiUrlData.url){
+        this.err ="接口地址不能为空"
+        this.stateApiSave = true
+        return
+      }
+      let env= __APP_ENV__;
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+      });
+      //根据 环境变量取 本地缓存数据
+      if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
+        let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
+        if(tokenKey){
+          //是否存在内部 键值，如果存在，则按内部键值取值
+          if(env.VITE_TOKEN_KEY_ACCESS){
+            let obj = JSON.parse(tokenKey)
+            if(obj){
+              headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
+            }
+          }else{
+            //直接填充值内容
+            headers.set(env.VITE_HEADER_KEY,tokenKey)
+          }
+        }
+      }
+
+      fetch(this.apiUrlData.url,{
+        method:"POST",
+        headers: headers,
+        body:JSON.stringify(data),
+      })
+          .then(response=>{
+            console.log('response',response)
+            if (response.ok) {
+              return response.json()
+            } else {
+              return Promise.reject({
+                status: response.status,
+                statusText: response.statusText
+              })
+            }
+          })
+          .then(data=>{
+            notification.success({
+              content: '操作成功',
+              duration: 2500,
+              keepAliveOnHover: true
+            })
+          })
+          .catch(error =>{
+            if (error.status === 404) {
+              notification.error({
+                content: '无法访问该地址 404',
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }else{
+              notification.error({
+                content: error.statusText,
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }
+          });
+    },
+    showApiSetting() {
+      this.stateApi = true;
+      this.type = 5;
+      this.initApiData()
+    },
+    initApiData(){
+      let url=localStorage.getItem('URL');
+      console.log('localStorage:URL',url)
+      if (url !== undefined&&url){
+        this.apiUrlData.url = url;
+      }else{
+        let env= __APP_ENV__;
+        this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL
+        this.apiUrlData.urlDetail = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DETAIL
+        this.apiUrlData.dictionary = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DICTIONARY
+      }
+      console.log('__APP_ENV__',__APP_ENV__)
+    },
+    onOk() {
+      if (this.err) return;
+      const json = this.editor.state.doc;
+      let val = JSON.parse(json);
+      if (this.type === 3) {
+        if (!Array.isArray(val)) {
+          this.err = true;
+          return;
+        }
+        this.$refs.designer.setRule(formCreate.parseJson(json));
+      } else {
+        if (!is.Object(val) || !val.form) {
+          this.err = true;
+          return;
+        }
+        this.$refs.designer.setOption(val);
+      }
+      this.state = false;
+    },
+    makeTemplate() {
+      const rule = this.$refs.designer.getRule();
+      const opt = this.$refs.designer.getOption();
+      return `<template>
   <form-create
     v-model="fapi"
     :rule="rule"
@@ -415,112 +409,116 @@ export default defineComponent({
     }
   },
 <\/script>`;
-}
-function onApiSubmit(formData){
-  console.log('xxxx',formData)
-  localStorage.setItem('URL',formData.url);
-}
-function onApiSubmit2(){
-  apiUrlApi.value.submit()
-}
-// 获取数据
-function loadData(){
-  if(routerParam.value.id){
-    this.initApiData()
-    let env= __APP_ENV__;
-    let headers = new Headers({
-      'Content-Type': 'application/json',
-    });
-    //根据 环境变量取 本地缓存数据
-    if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
-      let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
-      if(tokenKey){
-        //是否存在内部 键值，如果存在，则按内部键值取值
-        if(env.VITE_TOKEN_KEY_ACCESS){
-          let obj = JSON.parse(tokenKey)
-          if(obj){
-            headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
+    },
+    onApiSubmit(formData){
+      console.log('xxxx',formData)
+      localStorage.setItem('URL',formData.url);
+    },
+    onApiSubmit2(){
+      this.apiUrlApi.submit()
+    },
+    // 获取数据
+    loadData(){
+      if(this.routerParam.id){
+        this.initApiData()
+        let env= __APP_ENV__;
+        let headers = new Headers({
+          'Content-Type': 'application/json',
+        });
+        //根据 环境变量取 本地缓存数据
+        if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
+          let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
+          if(tokenKey){
+            //是否存在内部 键值，如果存在，则按内部键值取值
+            if(env.VITE_TOKEN_KEY_ACCESS){
+              let obj = JSON.parse(tokenKey)
+              if(obj){
+                headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
+              }
+            }else{
+              //直接填充值内容
+              headers.set(env.VITE_HEADER_KEY,tokenKey)
+            }
           }
-        }else{
-          //直接填充值内容
-          headers.set(env.VITE_HEADER_KEY,tokenKey)
         }
+
+        fetch(this.apiUrlData.VITE_DESIGNER_URL_DETAIL+'?id='+this.routerParam.id,{
+          method:"POST",
+          headers: headers,
+          body:JSON.stringify(this.routerParam),
+        })
+            .then(response=>{
+              console.log('response',response)
+              if (response.ok) {
+                return response.json()
+              } else {
+                return Promise.reject({
+                  status: response.status,
+                  statusText: response.statusText
+                })
+              }
+            })
+            .then(data=>{
+              if(data.content){
+                let val = JSON.parse(data.content);
+                if (!Array.isArray(val)) {
+                  return;
+                }
+                this.$refs.designer.setRule(formCreate.parseJson(data.content));
+                if(data.form){
+                  let val2 = JSON.parse(data.form);
+                  if (!is.Object(val2) || !val2.form) {
+                    return;
+                  }
+                  this.$refs.designer.setOption(val2);
+                }
+              }
+              notification.success({
+                content: '获取成功',
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            })
+            .catch(error =>{
+              if (error.status === 404) {
+                notification.error({
+                  content: '无法访问该地址 404',
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
+              }else{
+                notification.error({
+                  content: error.statusText,
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
+              }
+            });
       }
     }
-    console.log('apiUrlData222',apiUrlData.value)
-    fetch(apiUrlData.value.urlDetail+'?id='+routerParam.value.id,{
-      method:"POST",
-      headers: headers,
-      body:JSON.stringify(this.routerParam),
-    })
-        .then(response=>{
-          console.log('response',response)
-          if (response.ok) {
-            return response.json()
-          } else {
-            return Promise.reject({
-              status: response.status,
-              statusText: response.statusText
-            })
-          }
-        })
-        .then(data=>{
-          if(data.content){
-            let val = JSON.parse(data.content);
-            if (!Array.isArray(val)) {
-              return;
-            }
-            designer.value.setRule(formCreate.parseJson(data.content));
-            if(data.form){
-              let val2 = JSON.parse(data.form);
-              if (!is.Object(val2) || !val2.form) {
-                return;
-              }
-              designer.value.setOption(val2);
-            }
-          }
-          notification.success({
-            content: '获取成功',
-            duration: 2500,
-            keepAliveOnHover: true
-          })
-        })
-        .catch(error =>{
-          if (error.status === 404) {
-            notification.error({
-              content: '无法访问该地址 404',
-              duration: 2500,
-              keepAliveOnHover: true
-            })
-          }else{
-            notification.error({
-              content: error.statusText,
-              duration: 2500,
-              keepAliveOnHover: true
-            })
-          }
-        });
+  },
+  beforeCreate() {
+    window.jsonlint = jsonlint;
+    this.routerParam = GetRequest('')
+    console.log('GetRequest',this.routerParam)
+  },
+  beforeMount() {
+
+  },
+  mounted(){
+    this.routerParam = GetRequest('')
+    console.log('beforeMount',this.routerParam)
+    this.loadData()
+    // const that=this
+    // setTimeout(()=>{
+    //   that.$refs.designer.setRule([]);
+    // },2000)
+    // this.$nextTick(() => {
+    //   this.$refs.designer.setRule(this.apiUrlRule);
+    // });
+
   }
-}
-
-window.jsonlint = jsonlint;
-routerParam.value = GetRequest('')
-console.log('GetRequest',routerParam.value)
-loadData()
-
-const tmp=formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]')
-// setTimeout(()=>{
-//   designer.value.setRule([]);
-//   designer.value.setOption([]);
-// },500)
-
-onMounted(() => {
-  // designer.value.setRule([]);
-  // designer.value.setOption([]);
-})
-// this.$nextTick(() => {
-//   this.$refs.designer.setRule(this.apiUrlRule);
-// });
+};
 </script>
 
 <style>
