@@ -271,13 +271,22 @@ export default {
       console.log('opt',opt)
       // console.log('rule',ruleJson)
       // console.log('opt',optJson)
-      const data={id:'',data:{content:ruleJson,form:optJson,formSingle:false}}
       this.initApiData()
       if (!this.apiUrlData.url){
         this.err ="接口地址不能为空"
         this.stateApiSave = true
         return
       }
+      if(!this.routerParam.id){
+        notification.error({
+          content: "id 不能为空",
+          duration: 2500,
+          keepAliveOnHover: true
+        })
+        return;
+      }
+      const data={id:this.routerParam.id,data:{content:ruleJson,form:optJson,formSingle:false}}
+      
       let env= __APP_ENV__;
       let headers = new Headers({
         'Content-Type': 'application/json',
@@ -316,11 +325,21 @@ export default {
             }
           })
           .then(data=>{
-            notification.success({
-              content: '操作成功',
-              duration: 2500,
-              keepAliveOnHover: true
-            })
+            console.log('data',data)
+            if ('200' == data.code) {
+              notification.success({
+                content: '操作成功',
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }else{
+              notification.error({
+                content: data.message,
+                duration: 2500,
+                keepAliveOnHover: true
+              })
+            }
+
           })
           .catch(error =>{
             if (error.status === 404) {
@@ -442,7 +461,7 @@ export default defineComponent({
           }
         }
 
-        fetch(this.apiUrlData.VITE_DESIGNER_URL_DETAIL+'?id='+this.routerParam.id,{
+        fetch(this.apiUrlData.urlDetail+'?id='+this.routerParam.id,{
           method:"POST",
           headers: headers,
           body:JSON.stringify(this.routerParam),
