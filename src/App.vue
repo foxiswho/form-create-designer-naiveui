@@ -113,7 +113,7 @@ const { message, notification, dialog, loadingBar, modal } = createDiscreteApi(
       configProviderProps: configProviderPropsRef
     }
 )
-
+const CACHE_KEY = "fc-config-$101"
 const TITLE = [
   "生成规则",
   "表单规则",
@@ -146,6 +146,7 @@ export default {
       },
       naiveLanguage: zhCN,
       dateLanguage: dateZhCN,
+      autoSaveId: null,
       stateApi: false,
       stateApiSave: false,
       apiUrlApi: null,
@@ -171,6 +172,39 @@ export default {
     },
   },
   methods: {
+    getCache() {
+      function u() {
+        return {
+          opt: null,
+          rule: null
+        }
+      }
+      try {
+        let s = localStorage.getItem(CACHE_KEY);
+        return s ? (s = JSON.parse(s),
+            s.rule = formCreate.parseJson(s.rule),
+            s.opt.submitBtn = !1,
+            s) : u()
+      } catch {
+        return u()
+      }
+    },
+    setCache({opt: u, rule: s}) {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        opt: u,
+        rule: formCreate.toJson(s)
+      }))
+    },
+    loadAutoSave() {
+      const u = this.autosave;
+      u !== !1 && (this.autoSaveId = setInterval(()=>{
+            this.setCache({
+              opt: this.$refs.designer.getOption(),
+              rule: this.$refs.designer.getRule()
+            })
+          }
+          , is.Number(u) ? u : 2e3))
+    },
     changeLocale() {
       if (this.lang === "cn") {
         this.locale = En;
@@ -247,7 +281,6 @@ export default {
       this.state = true;
       this.type = 2;
       this.value = this.makeTemplate();
-      console.log('$route',this.$router)
     },
     setJson() {
       this.state = true;
@@ -286,7 +319,7 @@ export default {
         return;
       }
       const data={id:this.routerParam.id,data:{content:ruleJson,form:optJson,formSingle:false}}
-      
+
       let env= __APP_ENV__;
       let headers = new Headers({
         'Content-Type': 'application/json',
@@ -437,7 +470,8 @@ export default defineComponent({
       this.apiUrlApi.submit()
     },
     // 获取数据
-    loadData(){
+    async loadData(){
+      const that = this
       if(this.routerParam.id){
         this.initApiData()
         let env= __APP_ENV__;
@@ -461,7 +495,7 @@ export default defineComponent({
           }
         }
 
-        fetch(this.apiUrlData.urlDetail+'?id='+this.routerParam.id,{
+        await fetch(this.apiUrlData.urlDetail+'?id='+this.routerParam.id,{
           method:"POST",
           headers: headers,
           body:JSON.stringify(this.routerParam),
@@ -478,25 +512,40 @@ export default defineComponent({
               }
             })
             .then(data=>{
-              if(data.content){
-                let val = JSON.parse(data.content);
-                if (!Array.isArray(val)) {
-                  return;
-                }
-                this.$refs.designer.setRule(formCreate.parseJson(data.content));
-                if(data.form){
-                  let val2 = JSON.parse(data.form);
-                  if (!is.Object(val2) || !val2.form) {
+              console.log('data',data.data)
+              if ('200' === data.code) {
+                if(data.data &&data.data.data.content){
+                  const obj= data.data.data
+                  console.log('data.content',obj)
+                  let info={opt:{},rule:[]}
+
+                  let val = JSON.parse(obj.content);
+                  if (!Array.isArray(val)) {
                     return;
                   }
-                  this.$refs.designer.setOption(val2);
+                  info.rule = formCreate.parseJson(obj.content)
+                  if(obj.form){
+                    info.opt = JSON.parse(obj.form);
+                    if (!is.Object(info.opt) || !info.opt) {
+                      return;
+                    }
+                  }
+                  that.setCache(info)
                 }
+                notification.success({
+                  content: '获取成功',
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
+              }else{
+                notification.error({
+                  content: data.message,
+                  duration: 2500,
+                  keepAliveOnHover: true
+                })
               }
-              notification.success({
-                content: '获取成功',
-                duration: 2500,
-                keepAliveOnHover: true
-              })
+
+
             })
             .catch(error =>{
               if (error.status === 404) {
@@ -524,18 +573,25 @@ export default defineComponent({
   beforeMount() {
 
   },
-  mounted(){
+  async mounted() {
     this.routerParam = GetRequest('')
-    console.log('beforeMount',this.routerParam)
-    this.loadData()
-    // const that=this
-    // setTimeout(()=>{
-    //   that.$refs.designer.setRule([]);
-    // },2000)
-    // this.$nextTick(() => {
-    //   this.$refs.designer.setRule(this.apiUrlRule);
-    // });
+    console.log('beforeMount', this.routerParam)
+    await this.loadData()
+    const u = this.getCache();
+    if (u) {
+      u.rule && this.$refs.designer.setRule(u.rule)
+      u.opt && this.$refs.designer.setOption(u.opt)
+      this.$nextTick(() => {
+            this.loadAutoSave()
+          }
+      )
+    }
 
+
+  },
+  beforeDestroy(){
+    const u = this.autoSaveId;
+    u && clearInterval(u)
   }
 };
 </script>

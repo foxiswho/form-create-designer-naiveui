@@ -141,9 +141,9 @@
         "@codemirror/lang-javascript": "^6.2.2",
         "@codemirror/lang-json": "^6.0.1",
         "@codemirror/theme-one-dark": "^6.1.2",
-        "@form-create/component-wangeditor": "^3.1.20",
-        "@form-create/naive-ui": "^3.1.28",
-        "@form-create/utils": "^3.1.23",
+        "@form-create/component-wangeditor": "^3.1",
+        "@form-create/naive-ui": "^3.1.29",
+        "@form-create/utils": "^3.1.29",
         "codemirror": "^6.0.1",
         "vite-plugin-html": "^3.2.2",
         "vuedraggable": "^4.1.0"

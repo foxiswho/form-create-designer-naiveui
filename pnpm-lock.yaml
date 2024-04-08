@@ -18,23 +18,20 @@ dependencies:
     specifier: ^6.1.2
     version: 6.1.2
   '@form-create/component-wangeditor':
-    specifier: ^3.1.20
+    specifier: ^3.1
     version: 3.1.20
   '@form-create/naive-ui':
-    specifier: ^3.1.28
-    version: 3.1.28(vue@3.4.21)
+    specifier: ^3.1.29
+    version: 3.1.29(vue@3.4.21)
   '@form-create/utils':
-    specifier: ^3.1.23
-    version: 3.1.23
+    specifier: ^3.1.29
+    version: 3.1.29
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.2.1)
   vite-plugin-html:
     specifier: ^3.2.2
     version: 3.2.2(vite@5.2.2)
-  vue-router:
-    specifier: ^4.3.0
-    version: 4.3.0(vue@3.4.21)
   vuedraggable:
     specifier: ^4.1.0
     version: 4.1.0(vue@3.4.21)
@@ -2087,34 +2084,34 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@form-create/component-naive-checkbox@3.1.24:
-    resolution: {integrity: sha512-7skllwOioDwLoagsKAOcKUI0hfWUls9IO2hjEWiG+GfOptusa85rtShKZlsaN6Zu+8Dw76ddTmS14NkBctuhOA==}
+  /@form-create/component-naive-checkbox@3.1.29:
+    resolution: {integrity: sha512-rO1U+rdwy0PnL2NqaOUJkYZZWxeaQZgPYczlrWCIyCKYdWSGoahYIqHBL9Sv5eqzUhYyaqAVDQLJtiDVFlkKhA==}
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
     dev: false
 
-  /@form-create/component-naive-frame@3.1.26:
-    resolution: {integrity: sha512-aliSy6IraaLCRgjqWD+IEw+O+71r6umOOx+RbbqZImMrSfUTkxNL2xfXSvEdXMyZPgWYXAPSCPNDp5YsYFCxbA==}
+  /@form-create/component-naive-frame@3.1.29:
+    resolution: {integrity: sha512-7ZDGhVHg2lgWewRRDpySdcDOq08nx1NrSN0YQPZsbwmR/T5LzKAZft3AJequsmH57kjbkjmonFBr78UCJz9hZA==}
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
     dev: false
 
-  /@form-create/component-naive-group@3.1.27:
-    resolution: {integrity: sha512-/XnqPGn1Jv705pI2+aByUtHGJoYsDDTiJSD0gH9sdvZQjOUu/pBhryT2lfWxR2hb3GToXlOTSFH5nMkvL6VN6g==}
+  /@form-create/component-naive-group@3.1.29:
+    resolution: {integrity: sha512-Sk6SLVvrcONp5M1txIJR7bwOL8mTJLX2euVVBxT4JmqhpnOb9bfYqszUEGsI/gH7smv26/aCs3K+U3Ub2zu3+w==}
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
     dev: false
 
-  /@form-create/component-naive-radio@3.1.24:
-    resolution: {integrity: sha512-Jc6r2oAQpcNAhGNrnHKDs/cBGsegP+ubALYOcsmP8U+k4acMTuTOZ8G8Oi6eOG0vQ+ZAD4LcUohYIme4t22S9w==}
+  /@form-create/component-naive-radio@3.1.29:
+    resolution: {integrity: sha512-cQ1mWEkq3xo5ix0QmwPHfdRQfH/nukWJRaipOobpJGO2E3snxskOuhfX/jIo7sY8JgWq5PEYIHLT6ytSxv2lQw==}
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
     dev: false
 
-  /@form-create/component-naive-upload@3.1.24:
-    resolution: {integrity: sha512-ac09ovLfTFLa7sQQTPMguZFLiL9RHDnRXcA/ALVYsN+Ehg+2OBTV2XfoKpt1nWRNm1/EYq60rrKw7RslfOn/bA==}
+  /@form-create/component-naive-upload@3.1.29:
+    resolution: {integrity: sha512-CQticxQQt0VyzvKLdkfSmDHO6gEmr5sav2aKt+JyCttSe8e1v+FNemDN7KzPFxE0kXZltx38/ur29xWjV6J2qw==}
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
     dev: false
 
   /@form-create/component-subform@3.1.5:
@@ -2127,33 +2124,33 @@ packages:
       wangeditor: 4.7.15
     dev: false
 
-  /@form-create/core@3.1.28(vue@3.4.21):
-    resolution: {integrity: sha512-Ndbn+L59CNd19Gz/8pwN1V3ygfHOYaVnpQJdOj8R/yuXlVTVTzSSGU4HSOIDbudo+3ZI9GAOSNcCFMKguPhR6A==}
+  /@form-create/core@3.1.29(vue@3.4.21):
+    resolution: {integrity: sha512-nPFFdiEmATIKeocnP8pubKSwMSegc+tcN5PU+cSuXl5RJ1w3k0UZr80Dx2yPUmw8sv4XwSMmMUkHUojz10hqFg==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
-      '@form-create/utils': 3.1.23
+      '@form-create/utils': 3.1.29
       vue: 3.4.21(typescript@5.4.3)
     dev: false
 
-  /@form-create/naive-ui@3.1.28(vue@3.4.21):
-    resolution: {integrity: sha512-sCfh3NsKW9uYljDI1sOlH54m/yICI+Zo/2SUoOZGYHtBzt+5k2GgxBTiGlcgBjQVbqXToNi01pVRdKn81whX/g==}
+  /@form-create/naive-ui@3.1.29(vue@3.4.21):
+    resolution: {integrity: sha512-er0zyCfvLkpQV85fAMu8VpQpSQoh9UVa6xXiY5+rOWn3uF0E6HeFZR9mNsv8r3yM4dQ1YPNsqDyeJK9KibVPOg==}
     peerDependencies:
       vue: ^3.1.0
     dependencies:
-      '@form-create/component-naive-checkbox': 3.1.24
-      '@form-create/component-naive-frame': 3.1.26
-      '@form-create/component-naive-group': 3.1.27
-      '@form-create/component-naive-radio': 3.1.24
-      '@form-create/component-naive-upload': 3.1.24
+      '@form-create/component-naive-checkbox': 3.1.29
+      '@form-create/component-naive-frame': 3.1.29
+      '@form-create/component-naive-group': 3.1.29
+      '@form-create/component-naive-radio': 3.1.29
+      '@form-create/component-naive-upload': 3.1.29
       '@form-create/component-subform': 3.1.5
-      '@form-create/core': 3.1.28(vue@3.4.21)
-      '@form-create/utils': 3.1.23
+      '@form-create/core': 3.1.29(vue@3.4.21)
+      '@form-create/utils': 3.1.29
       vue: 3.4.21(typescript@5.4.3)
     dev: false
 
-  /@form-create/utils@3.1.23:
-    resolution: {integrity: sha512-MmzCbWi1CuzB8oqpbHgPV/8152iUWdxzVKSuwrcl8nsVqMlSzxhydVLN5Au7uWDqCHhe/xzHBeIOxOtar8qjkw==}
+  /@form-create/utils@3.1.29:
+    resolution: {integrity: sha512-CsD3htq2qyuvqc3kJipUk2OFZA5eg+Fwna9zZPoi8T8UuEKBkfgR5fp2s0AgZ87i2a5NgwCk87kfVntijnxvPw==}
     dev: false
 
   /@hapi/hoek@9.3.0:
@@ -3170,10 +3167,6 @@ packages:
       - walrus
       - whiskers
     dev: true
-
-  /@vue/devtools-api@6.6.1:
-    resolution: {integrity: sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==}
-    dev: false
 
   /@vue/reactivity@3.4.21:
     resolution: {integrity: sha512-UhenImdc0L0/4ahGCyEzc/pZNwVgcglGy9HVzJ1Bq2Mm9qXOpP8RyNTjookw/gOCUlXSEtuZ2fUg5nrHcoqJcw==}
@@ -11590,15 +11583,6 @@ packages:
       watchpack: 2.4.1
       webpack: 5.91.0
     dev: true
-
-  /vue-router@4.3.0(vue@3.4.21):
-    resolution: {integrity: sha512-dqUcs8tUeG+ssgWhcPbjHvazML16Oga5w34uCUmsk7i0BcnskoLGwjpa15fqMr2Fa5JgVBrdL2MEgqz6XZ/6IQ==}
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      '@vue/devtools-api': 6.6.1
-      vue: 3.4.21(typescript@5.4.3)
-    dev: false
 
   /vue-style-loader@4.1.3:
     resolution: {integrity: sha512-sFuh0xfbtpRlKfm39ss/ikqs9AbKCoXZBpHeVZ8Tx650o0k0q/YCM7FRvigtxpACezfq6af+a7JeqVTWvncqDg==}

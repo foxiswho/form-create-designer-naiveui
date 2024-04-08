@@ -187,6 +187,7 @@ import {
   computed,
   reactive,
   toRefs,
+  toRef,
   ref,
   getCurrentInstance,
   provide,
@@ -202,12 +203,13 @@ import { deepCopy } from "@form-create/utils/lib/deepextend";
 import is, { hasProperty } from "@form-create/utils/lib/type";
 import {lower} from '@form-create/utils/lib/tocase';
 import ruleList from "../config/rule";
-import draggable from "vuedraggable";
+import draggable from 'vuedraggable/src/vuedraggable';
 import createMenu from "../config/menu";
 import { upper, useLocale } from "../utils/index";
 import { designerForm } from "../utils/form";
 import viewForm from "../utils/form";
 import { resetId } from "../utils/tabname";
+import {t as globalT} from '../utils/locale';
 
 export default defineComponent({
   name: "FcDesigner",
@@ -218,17 +220,43 @@ export default defineComponent({
   },
   props: ["menu", "height", "config", "mask", "locale"],
   setup(props) {
-    const { menu, height, config, mask, locale } = toRefs(props);
+    const { menu, height, mask, locale } = toRefs(props);
     const vm = getCurrentInstance();
     provide("fcx", ref({ active: null }));
     provide("designer", vm);
 
+    const config = toRef(props, 'config', {});
+    const baseRule = toRef(config.value, 'baseRule', null);
+    const componentRule = toRef(config.value, 'componentRule', {});
+    const validateRule = toRef(config.value, 'validateRule', null);
+    const formRule = toRef(config.value, 'formRule', null);
     const dragHeight = computed(() => {
       const h = height.value;
       if (!h) return "100%";
       return is.Number(h) ? `${h}px` : h;
     });
-    const t = useLocale(locale).t;
+    let _t = globalT;
+    if (locale.value) {
+      _t = useLocale(locale).t
+    }
+    const t = (...args) => _t(...args);
+
+    const tidyRuleConfig = (orgRule, configRule, ...args) => {
+      if (configRule) {
+        if (is.Function(configRule)) {
+          return configRule(...args);
+        }
+        if (configRule.rule) {
+          let rule = configRule.rule(...args);
+          if (configRule.append) {
+            rule = [...rule, ...orgRule(...args)];
+          }
+          return rule;
+        }
+      }
+      return orgRule(...args);
+    }
+
     const data = reactive({
       cacheProps: {},
       moveRule: null,
@@ -242,6 +270,7 @@ export default defineComponent({
       visible: {
         preview: false,
       },
+      t,
       preview: {
         state: false,
         rule: [],
@@ -252,7 +281,7 @@ export default defineComponent({
         api: {},
       }),
       form: {
-        rule: form({ t }),
+        rule: tidyRuleConfig(form, formRule.value, {t}),
         api: {},
         option: {
           form: {
@@ -264,6 +293,7 @@ export default defineComponent({
         value: {
           form: {
             inline: false,
+            hideRequiredAsterisk: false,
             labelPlacement: "left",
             size: "small",
             labelWidth: '100',
@@ -274,7 +304,7 @@ export default defineComponent({
         },
       },
       baseForm: {
-        rule: field({ t }),
+        rule: tidyRuleConfig(field, baseRule.value, {t}),
         api: {},
         options: {
           form: {
@@ -289,7 +319,7 @@ export default defineComponent({
         },
       },
       validateForm: {
-        rule: validate({ t }),
+        rule: tidyRuleConfig(validate, validateRule.value, {t}),
         api: {},
         options: {
           form: {
@@ -306,6 +336,7 @@ export default defineComponent({
       propsForm: {
         rule: [],
         api: {},
+        value: {},
         options: {
           form: {
             labelPlacement: "top",
@@ -346,25 +377,48 @@ export default defineComponent({
       }
     );
 
+    let unWatchActiveRule = null;
+
     watch(
       () => locale.value,
-      () => {
+      (n) => {
+        _t = n ? useLocale(locale).t : globalT;
         const formVal = data.form.api.formData && data.form.api.formData();
-        const baseFormVal =
-          data.baseForm.api.formData && data.baseForm.api.formData();
-        const validateFormVal =
-          data.validateForm.api.formData && data.validateForm.api.formData();
-        data.validateForm.rule = validate({ t });
-        data.baseForm.rule = field({ t });
-        data.form.rule = form({ t });
+        const baseFormVal = data.baseForm.api.formData && data.baseForm.api.formData();
+        const validateFormVal = data.validateForm.api.formData && data.validateForm.api.formData();
+        data.validateForm.rule = tidyRuleConfig(validate, validateRule.value, {t});
+        data.baseForm.rule = tidyRuleConfig(field, baseRule.value, {t});
+        data.form.rule = tidyRuleConfig(form, formRule.value, {t});
+        data.cacheProps = {};
+        const rule = data.activeRule;
+        let propsVal = null;
+        if (rule) {
+          propsVal = data.propsForm.api.formData && data.propsForm.api.formData();
+          data.propsForm.rule = data.cacheProps[rule._id] =
+              tidyRuleConfig(rule.config.config.props, componentRule.value && componentRule.value[rule.config.config.name], rule, {
+                t,
+                api: data.dragForm.api
+              });
+        }
         nextTick(() => {
           formVal && data.form.api.setValue(formVal);
           baseFormVal && data.baseForm.api.setValue(baseFormVal);
           validateFormVal && data.validateForm.api.setValue(validateFormVal);
+          propsVal && data.propsForm.api.setValue(propsVal);
         });
       }
     );
     const methods = {
+      unWatchActiveRule() {
+        unWatchActiveRule && unWatchActiveRule();
+        unWatchActiveRule = null;
+      },
+      watchActiveRule() {
+        methods.unWatchActiveRule();
+        unWatchActiveRule = watch(() => data.activeRule, function (n) {
+          n && methods.updateRuleFormData()
+        }, {deep: true, flush: 'post'});
+      },
       makeChildren(children) {
         return reactive({ children }).children;
       },
@@ -398,7 +452,7 @@ export default defineComponent({
       appendMenuItem(name, item) {
         data.menuList.forEach((v) => {
           if (v.name === name) {
-            v.list.push(item);
+            v.list.push(...(Array.isArray(item) ? item : [item]));
           }
         });
       },
@@ -469,8 +523,7 @@ export default defineComponent({
         methods.setRule([]);
       },
       makeDragRule(children) {
-        return methods.makeChildren([
-          methods.makeDrag(true, "draggable", children, {
+        return methods.makeChildren([methods.makeDrag(true, "draggable", children, {
             add: (inject, evt) => methods.dragAdd(children, evt),
             end: (inject, evt) => methods.dragEnd(children, evt),
             start: (inject, evt) => methods.dragStart(children, evt),
@@ -522,13 +575,37 @@ export default defineComponent({
         if (!rules) {
           rules = [];
         }
-        data.children = methods.makeChildren(
-          methods.loadRule(
-            is.String(rules) ? designerForm.parseJson(rules) : deepCopy(rules)
-          )
-        );
+        data.children = ref(methods.loadRule(is.String(rules) ? designerForm.parseJson(rules) : deepCopy(rules)));
         methods.clearActiveRule();
-        data.dragForm.rule = methods.makeDragRule(data.children);
+        data.dragForm.rule = methods.makeDragRule(methods.makeChildren(data.children));
+      },
+      setBaseRuleConfig(rule, append) {
+        baseRule.value = {rule, append};
+        data.baseForm.rule = tidyRuleConfig(field, baseRule.value, {t});
+      },
+      setComponentRuleConfig(name, rule, append) {
+        componentRule.value[name] = {rule, append};
+        data.cacheProps = {};
+        const activeRule = data.activeRule;
+        if (activeRule) {
+          const propsVal = data.propsForm.api.formData && data.propsForm.api.formData();
+          data.propsForm.rule = data.cacheProps[activeRule._id] =
+              tidyRuleConfig(activeRule.config.config.props, componentRule.value && componentRule.value[activeRule.config.config.name], activeRule, {
+                t,
+                api: data.dragForm.api
+              });
+          nextTick(() => {
+            propsVal && data.propsForm.api.setValue(propsVal);
+          });
+        }
+      },
+      setValidateRuleConfig(rule, append) {
+        validateRule.value = {rule, append};
+        data.validateForm.rule = tidyRuleConfig(field, validateRule.value, {t});
+      },
+      setFormRuleConfig(rule, append) {
+        formRule.value = {rule, append};
+        data.form.rule = tidyRuleConfig(field, formRule.value, {t});
       },
       clearActiveRule() {
         data.activeRule = null;
@@ -536,15 +613,11 @@ export default defineComponent({
       },
       setOption(opt) {
         let option = { ...opt };
-        option.form.formCreateSubmitBtn =
-          typeof option.submitBtn === "object"
-            ? option.submitBtn.show === undefined
+        option.form.formCreateSubmitBtn = typeof option.submitBtn === "object" ? option.submitBtn.show === undefined
               ? true
               : !!option.submitBtn.show
             : !!option.submitBtn;
-        option.form.formCreateResetBtn =
-          typeof option.resetBtn === "object"
-            ? !!option.resetBtn.show
+        option.form.formCreateResetBtn = typeof option.resetBtn === "object" ? !!option.resetBtn.show
             : !!option.resetBtn;
         option._resetBtn = option.resetBtn;
         option.resetBtn = false;
@@ -562,6 +635,7 @@ export default defineComponent({
             return loadRule.push(rule);
           }
           const config = ruleList[rule._fc_drag_tag] || ruleList[rule.type];
+          config && config.loadRule && config.loadRule(rule);
           const _children = rule.children;
           rule.children = [];
           if (rule.control) {
@@ -608,7 +682,9 @@ export default defineComponent({
 
           delete rule._id;
           delete rule.key;
+          delete rule.component;
           if (rule.config) {
+            rule.config.config && rule.config.config.parseRule && rule.config.config.parseRule(rule);
             delete rule.config.config;
           }
           if (rule.effect) {
@@ -634,7 +710,9 @@ export default defineComponent({
       },
       baseChange(field, value, _, fapi) {
         if (data.activeRule && fapi[data.activeRule._id] === data.activeRule) {
+          methods.unWatchActiveRule();
           data.activeRule[field] = value;
+          methods.watchActiveRule();
           data.activeRule.config.config?.watch?.["$" + field]?.({
             field,
             value,
@@ -645,6 +723,7 @@ export default defineComponent({
       },
       propRemoveField(field, _, fapi) {
         if (data.activeRule && fapi[data.activeRule._id] === data.activeRule) {
+          methods.unWatchActiveRule();
           const org = field;
           data.dragForm.api.sync(data.activeRule);
           if (field.indexOf("formCreate") === 0) {
@@ -653,11 +732,10 @@ export default defineComponent({
             field = lower(field);
             if (field.indexOf("effect") === 0 && field.indexOf(">") > -1) {
               delete data.activeRule.effect[field.split(">")[1]];
-            } else if (
-              field.indexOf("props") === 0 &&
-              field.indexOf(">") > -1
-            ) {
+            } else if (field.indexOf("props") === 0 && field.indexOf(">") > -1) {
               delete data.activeRule.props[field.split(">")[1]];
+            } else if (field.indexOf('attrs') === 0 && field.indexOf('>') > -1) {
+              delete data.activeRule.attrs[field.split('>')[1]];
             } else if (field === "child") {
               delete data.activeRule.children[0];
             } else if (field) {
@@ -666,6 +744,7 @@ export default defineComponent({
           } else {
             delete data.activeRule.props[field];
           }
+          methods.watchActiveRule();
           data.activeRule.config.config?.watch?.[org]?.({
             field: org,
             value: undefined,
@@ -676,6 +755,7 @@ export default defineComponent({
       },
       propChange(field, value, _, fapi) {
         if (data.activeRule && fapi[data.activeRule._id] === data.activeRule) {
+          methods.unWatchActiveRule();
           const org = field;
           if (field.indexOf("formCreate") === 0) {
             field = field.replace("formCreate", "");
@@ -683,11 +763,10 @@ export default defineComponent({
             field = lower(field);
             if (field.indexOf("effect") === 0 && field.indexOf(">") > -1) {
               data.activeRule.effect[field.split(">")[1]] = value;
-            } else if (
-              field.indexOf("props") === 0 &&
-              field.indexOf(">") > -1
-            ) {
+            } else if (field.indexOf("props") === 0 && field.indexOf(">") > -1) {
               data.activeRule.props[field.split(">")[1]] = value;
+            } else if (field.indexOf('attrs') === 0 && field.indexOf('>') > -1) {
+              data.activeRule.attrs[field.split('>')[1]] = value;
             } else if (field === "child") {
               data.activeRule.children[0] = value;
             } else {
@@ -696,6 +775,7 @@ export default defineComponent({
           } else {
             data.activeRule.props[field] = value;
           }
+          methods.watchActiveRule();
           data.activeRule.config.config?.watch?.[org]?.({
             field: org,
             value,
@@ -713,10 +793,12 @@ export default defineComponent({
         data.activeRule.validate = formData.validate || [];
         data.dragForm.api.refreshValidate();
         data.dragForm.api.nextTick(() => {
-          data.dragForm.api.clearValidateState(data.activeRule.field);
+          data.dragForm.api.clearValidateState(data.activeRule.__fc__.id);
+          //data.dragForm.api.clearValidateState(data.activeRule.field);
         });
       },
       toolActive(rule) {
+        methods.unWatchActiveRule();
         if (data.activeRule) {
           delete data.propsForm.api[data.activeRule._id];
           delete data.baseForm.api[data.activeRule._id];
@@ -736,43 +818,44 @@ export default defineComponent({
         });
 
         if (!data.cacheProps[rule._id]) {
-          data.cacheProps[rule._id] = rule.config.config.props(rule, {
+          data.cacheProps[rule._id] = tidyRuleConfig(rule.config.config.props, componentRule.value && componentRule.value[rule.config.config.name], rule, {
             t,
-            api: data.dragForm.api,
+            api: data.dragForm.api
           });
         }
 
         data.propsForm.rule = data.cacheProps[rule._id];
-
-        const formData = { ...rule.props, formCreateChild: rule.children[0] };
-        Object.keys(rule).forEach((k) => {
-          if (["effect", "config", "payload", "id", "type"].indexOf(k) < 0)
-            formData["formCreate" + upper(k)] = rule[k];
+        methods.updateRuleFormData();
+        methods.watchActiveRule();
+      },
+      updateRuleFormData() {
+        const rule = data.activeRule;
+        const formData = {...rule.props, formCreateChild: deepCopy(rule.children[0])};
+        Object.keys(rule).forEach(k => {
+          if (['effect', 'config', 'payload', 'id', 'type'].indexOf(k) < 0)
+            formData['formCreate' + upper(k)] = deepCopy(rule[k]);
         });
-        ["props", "effect"].forEach((name) => {
-          rule[name] &&
-            Object.keys(rule[name]).forEach((k) => {
-              formData["formCreate" + upper(name) + ">" + k] = rule[name][k];
-            });
+        ['props', 'effect', 'attrs'].forEach(name => {
+          rule[name] && Object.keys(rule[name]).forEach(k => {
+            formData['formCreate' + upper(name) + '>' + k] = deepCopy(rule[name][k]);
+          });
         });
-        data.propsForm.options.formData = formData;
+        data.propsForm.value = formData;
 
-        data.showBaseRule =
-          hasProperty(rule, "field") &&
-          rule.input !== false &&
-          (!config.value || config.value.showBaseForm !== false);
+        data.showBaseRule = hasProperty(rule, 'field') && rule.input !== false && (!config.value || config.value.showBaseForm !== false);
 
         if (data.showBaseRule) {
-          data.baseForm.options.formData = {
+          data.baseForm.value = {
             field: rule.field,
-            title: rule.title || "",
+            title: rule.title || '',
             info: rule.info,
             _control: rule._control,
           };
-
-          data.validateForm.options.formData = {
-            validate: rule.validate ? [...rule.validate] : [],
-          };
+          data.validateForm.value = {validate: rule.validate ? [...rule.validate] : []};
+          data.dragForm.api.refreshValidate();
+          data.dragForm.api.nextTick(() => {
+            data.dragForm.api.clearValidateState(rule.__fc__.id);
+          });
         }
       },
       dragStart(children) {
@@ -816,6 +899,9 @@ export default defineComponent({
       makeRule(config, _rule) {
         const rule = _rule || config.rule({ t });
         rule.config = { config };
+        if (config.component) {
+          rule.component = markRaw(config.component);
+        }
         if (!rule.effect) rule.effect = {};
         rule.effect._fc = true;
         rule._fc_drag_tag = config.name;
@@ -823,23 +909,13 @@ export default defineComponent({
         let drag;
 
         if (config.drag) {
-          rule.children.push(
-            (drag = methods.makeDrag(
-              config.drag,
-              rule.type,
-              methods.makeChildren([]),
-              {
-                end: (inject, evt) =>
-                  methods.dragEnd(inject.self.children, evt),
-                add: (inject, evt) =>
-                  methods.dragAdd(inject.self.children, evt),
-                start: (inject, evt) =>
-                  methods.dragStart(inject.self.children, evt),
-                unchoose: (inject, evt) =>
-                  methods.dragUnchoose(inject.self.children, evt),
+          rule.children.push(drag = methods.makeDrag(config.drag,rule.type,methods.makeChildren([]),{
+                end: (inject, evt) => methods.dragEnd(inject.self.children, evt),
+                add: (inject, evt) => methods.dragAdd(inject.self.children, evt),
+                start: (inject, evt) => methods.dragStart(inject.self.children, evt),
+                unchoose: (inject, evt) => methods.dragUnchoose(inject.self.children, evt),
               }
-            ))
-          );
+            ));
         }
 
         if (config.children && !_rule) {
@@ -927,7 +1003,7 @@ export default defineComponent({
             on: {
               delete: ({ self }) => {
                 // Reset TabPane.name 
-                resetId();
+                //resetId();
                 vm.emit("delete", self.children[0]);
                 self.__fc__.rm();
                 methods.clearActiveRule();
