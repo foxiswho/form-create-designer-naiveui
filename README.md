@@ -15,6 +15,8 @@
 - 自定义ColorPicker组件，便于定制组件颜色
 - 更新部分组件为Vue 3版本
 
+[在线演示 http://designer.fenbaoya.com/fc-naiveui/](http://designer.fenbaoya.com/fc-naiveui/)
+
 ## 运行方式
 如果是第一次运行，请先下载依赖 `pnpm i`
 ```bash
