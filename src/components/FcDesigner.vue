@@ -2,7 +2,7 @@
   <n-layout class="_fc-designer" :style="'height:' + dragHeight">
     <n-layout-content>
       <n-layout style="height: 100%" has-sider>
-        <n-layout-sider content-style="padding: 0 10px;border-top: 1px solid #ECECEC" width="266" :native-scrollbar="false">
+        <n-layout-sider content-style="padding: 0 10px;border-top: 1px solid #ECECEC" class="_fc-l" width="266" :native-scrollbar="false">
           <template v-for="(item, index) in menuList" :key="index">
             <div class="_fc-l-group">
               <n-divider title-placement="left" class="_fc-l-title">{{ item.title }}</n-divider>
@@ -136,6 +136,7 @@
                   v-model:api="baseForm.api"
                   :rule="baseForm.rule"
                   :option="baseForm.options"
+                  :modelValue="baseForm.value"
                   @change="baseChange"
                 ></DragForm>
                 <n-divider>{{ t("designer.config.props") }}</n-divider>
@@ -143,6 +144,7 @@
                   v-model:api="propsForm.api"
                   :rule="propsForm.rule"
                   :option="propsForm.options"
+                  :modelValue="propsForm.value"
                   @change="propChange"
                   @removeField="propRemoveField"
                 ></DragForm>
@@ -154,6 +156,7 @@
                   v-model:api="validateForm.api"
                   :rule="validateForm.rule"
                   :option="validateForm.options"
+                  :modelValue="validateForm.value"
                   @update:modelValue="validateChange"
                 ></DragForm>
                 <n-divider v-if="showBaseRule" >{{
@@ -287,8 +290,8 @@ export default defineComponent({
         api: {},
         option: {
           form: {
-            labelPlacement: "top",
-            size: "small",
+            labelPlacement: 'top',
+            size: 'small'
           },
           submitBtn: false
         },
@@ -296,8 +299,8 @@ export default defineComponent({
           form: {
             inline: false,
             hideRequiredAsterisk: false,
-            labelPlacement: "left",
-            size: "small",
+            labelPlacement: 'left',
+            size: 'small',
             labelWidth: '100',
             formCreateSubmitBtn: true,
             formCreateResetBtn: false
@@ -311,8 +314,8 @@ export default defineComponent({
         value: {},
         options: {
           form: {
-            labelPlacement: "top",
-            size: "small",
+            labelPlacement: 'top',
+            size: 'small'
           },
           submitBtn: false,
           mounted: (fapi) => {
@@ -327,15 +330,15 @@ export default defineComponent({
         value: [],
         options: {
           form: {
-            labelPlacement: "top",
-            size: "small",
+            labelPlacement: 'top',
+            size: 'small'
           },
           submitBtn: false,
           mounted: (fapi) => {
             fapi.activeRule = data.activeRule;
             fapi.setValue(fapi.options.formData || {});
-          },
-        },
+          }
+        }
       },
       propsForm: {
         rule: [],
