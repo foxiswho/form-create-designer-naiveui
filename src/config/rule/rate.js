@@ -16,7 +16,12 @@ export default {
       title: t('components.rate.name'),
       info: '',
       $required: false,
-      props: {},
+      props: {
+        size:'medium',
+        count:5,
+        defaultValue:0,
+        color:'#FFCC33',
+      },
     };
   },
   props(_, { t }) {

@@ -20,7 +20,9 @@ export default {
         fetch: ''
       },
       $required: false,
-      props: {},
+      props: {
+        type:'default',
+      },
       options: [1, 2].map(value => {
         return {
           label: opt + value,

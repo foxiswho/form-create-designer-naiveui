@@ -15,7 +15,9 @@ export default {
       title: t('components.input.name'),
       info: '',
       $required: false,
-      props: {}
+      props: {
+          type:'text',
+      }
     };
   },
   props(_, { t }) {

@@ -16,7 +16,11 @@ export default {
       title: t('components.inputNumber.name'),
       info: '',
       $required: false,
-      props: {}
+      props: {
+        precision:0,
+        step:1,
+        showButton:true,
+      }
     }
   },
   props(_, { t }) {

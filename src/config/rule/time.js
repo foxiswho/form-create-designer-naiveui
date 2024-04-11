@@ -12,11 +12,13 @@ export default {
     return {
       type: name,
       field: uniqueId(),
-      dbType: 'time',
+      dbType: 'string',
       title: t('components.timePicker.name'),
       info: '',
       $required: false,
-      props: {},
+      props: {
+        'use-12-hours':false,
+      },
     };
   },
   props(_, { t }) {

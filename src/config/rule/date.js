@@ -16,7 +16,9 @@ export default {
       title: t('components.datePicker.name'),
       info: '',
       $required: false,
-      props: {},
+      props: {
+        type:'date',
+      },
     };
   },
   props(_, { t }) {

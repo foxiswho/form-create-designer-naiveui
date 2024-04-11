@@ -15,7 +15,11 @@ export default {
       title: t('components.colorPicker.name'),
       info: '',
       $required: false,
-      props: {},
+      props: {
+        showAlpha:true,
+        defaultValue:'#000000',
+        modes:['rgb','hex','hsl'],
+      },
     };
   },
   props(_, { t }) {

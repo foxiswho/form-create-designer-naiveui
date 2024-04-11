@@ -16,7 +16,10 @@ export default {
       title: t('components.switch.name'),
       info: '',
       $required: false,
-      props: {},
+      props: {
+        checkedValue:1,
+        uncheckedValue:2,
+      },
     };
   },
   props(_, { t }) {
@@ -45,11 +48,13 @@ export default {
       {
         type: 'input',
         field: 'checkedValue',
+        value: 1,
         title: '选中时对应的值'
       },
       {
         type: 'input',
         field: 'uncheckedValue',
+        value: 2,
         title: '未选中时对应的值'
       },
     ]);
