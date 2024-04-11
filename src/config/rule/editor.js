@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'string',
       title: t('components.fc-editor.name'),
       info: '',
       $required: false,

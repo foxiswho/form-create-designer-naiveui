@@ -37,6 +37,7 @@ const ZhCn = {
         autoRequired: '请输入{title}',
         autoMode: '请输入正确的{title}',
         requiredPlaceholder: '请输入提示语',
+        typeDb: 'db存储类型',
     },
     tableOptions: {
         handle: '操作',

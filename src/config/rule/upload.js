@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'string',
       title: t('components.upload.name'),
       info: '',
       $required: false,

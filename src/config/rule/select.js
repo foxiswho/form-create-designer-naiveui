@@ -13,6 +13,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'integer',
       title: t('components.select.name'),
       info: '',
       effect: {

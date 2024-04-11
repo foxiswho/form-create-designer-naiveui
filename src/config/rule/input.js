@@ -10,6 +10,7 @@ export default {
   rule({ t }) {
     return {
       type: name,
+      dbType: 'string',
       field: uniqueId(),
       title: t('components.input.name'),
       info: '',

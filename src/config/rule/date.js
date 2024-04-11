@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'datetime',
       title: t('components.datePicker.name'),
       info: '',
       $required: false,

@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'integer',
       title: t('components.switch.name'),
       info: '',
       $required: false,

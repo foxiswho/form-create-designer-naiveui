@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'number',
       title: t('components.rate.name'),
       info: '',
       $required: false,

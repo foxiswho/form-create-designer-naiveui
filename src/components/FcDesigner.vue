@@ -266,7 +266,7 @@ export default defineComponent({
       cacheProps: {},
       moveRule: null,
       addRule: null,
-      added: null,
+      added: true,
       activeTab: 'form',
       activeRule: null,
       children: ref([]),

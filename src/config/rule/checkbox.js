@@ -13,6 +13,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'array[integer]',
       title: t('components.checkbox.name'),
       info: '',
       effect: {

@@ -13,6 +13,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'integer',
       title: t('components.radio.name'),
       info: '',
       effect: {

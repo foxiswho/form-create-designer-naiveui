@@ -12,6 +12,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
+      dbType: 'time',
       title: t('components.timePicker.name'),
       info: '',
       $required: false,
