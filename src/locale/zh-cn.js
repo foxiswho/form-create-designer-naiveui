@@ -13,6 +13,7 @@ const ZhCn = {
         showRequireMark: '不显示必填的星号',
         showRequireMarkInfo: '不可逆操作！！！',
         hideRequireMarkLabel: '不显示',
+        showRequireMarkLabel: '显示',
         placementRequireMark: '必填星号的位置',
         showFeedback: '是否展示校验反馈',
         submitBtn: '是否显示表单提交按钮',

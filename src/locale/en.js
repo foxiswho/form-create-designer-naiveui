@@ -13,6 +13,7 @@ const En = {
         showRequireMark: 'The required asterisk is not displayed',
         showRequireMarkInfo: 'It is irreversible!!!',
         hideRequireMarkLabel: 'hide',
+        showRequireMarkLabel: 'show',
         placementRequireMark: 'Require mark placement',
         showFeedback: 'Display verification Feedback',
         submitBtn: 'Whether to display the form submit button',

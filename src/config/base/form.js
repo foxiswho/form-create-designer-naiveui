@@ -29,6 +29,7 @@ export default function form({ t }) {
       info: t('form.showRequireMarkInfo'),
       options: [
         { value: false, label: t('form.hideRequireMarkLabel') },
+        { value: true, label: t('form.showRequireMarkLabel') },
       ]
     },
     {
