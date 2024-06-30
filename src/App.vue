@@ -17,7 +17,8 @@
           </n-space>
         </div>
       </div>
-      <fc-designer ref="designer" :locale="locale" />
+      <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
+      </fc-designer>
 
       <n-modal
           v-model:show="state"
@@ -135,6 +136,18 @@ export default {
       type: -1,
       lang: "cn",
       locale: null,
+      config: {
+        fieldReadonly: false,
+        showSaveBtn: true,
+      },
+      handle: [
+        {
+          label: '中英切换',
+          handle: () => {
+            this.changeLocale();
+          },
+        },
+      ],
       isLoading: false,
       languageDict: {
         cn: zhCN,
@@ -173,20 +186,20 @@ export default {
   },
   methods: {
     getCache() {
-      function u() {
-        return {
-          opt: null,
-          rule: null
-        }
+      function def() {
+        return {opt: null, rule: null};
       }
       try {
-        let s = localStorage.getItem(CACHE_KEY);
-        return s ? (s = JSON.parse(s),
-            s.rule = formCreate.parseJson(s.rule),
-            s.opt.submitBtn = !1,
-            s) : u()
-      } catch {
-        return u()
+        let cache = localStorage.getItem(CACHE_KEY);
+        if (!cache) {
+          return def();
+        }
+        cache = JSON.parse(cache);
+        cache.rule = formCreate.parseJson(cache.rule);
+        cache.opt.submitBtn = false;
+        return cache;
+      } catch (e) {
+        return def();
       }
     },
     setCache({opt: u, rule: s}) {
@@ -196,14 +209,11 @@ export default {
       }))
     },
     loadAutoSave() {
-      const u = this.autosave;
-      u !== !1 && (this.autoSaveId = setInterval(()=>{
-            this.setCache({
-              opt: this.$refs.designer.getOption(),
-              rule: this.$refs.designer.getRule()
-            })
-          }
-          , is.Number(u) ? u : 2e3))
+      const s = this.autosave;
+      if (s === false) return;
+      this.autoSaveId = setInterval(() => {
+        this.setCache({opt: this.$refs.designer.getOption(), rule: this.$refs.designer.getRule()});
+      }, is.Number(s) ? s : 2000);
     },
     changeLocale() {
       if (this.lang === "cn") {
@@ -460,6 +470,7 @@ export default defineComponent({
       onSubmit,
     }
   },
+  })
 <\/script>`;
     },
     onApiSubmit(formData){

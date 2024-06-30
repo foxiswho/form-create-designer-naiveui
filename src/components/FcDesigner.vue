@@ -1,191 +1,328 @@
 <template>
-  <n-layout class="_fc-designer" :style="'height:' + dragHeight">
+  <n-layout class="_fc-designer" @dragenter="handleDragenter" @dragleave="handleDragleave" @drop="handleDrop">
     <n-layout-content>
-      <n-layout style="height: 100%" has-sider>
-        <n-layout-sider content-style="padding: 0 10px;border-top: 1px solid #ECECEC" class="_fc-l" width="266" :native-scrollbar="false">
-          <template v-for="(item, index) in menuList" :key="index">
-            <div class="_fc-l-group">
-              <n-divider title-placement="left" class="_fc-l-title">{{ item.title }}</n-divider>
-              <draggable
-                :group="{ name: 'default', pull: 'clone', put: false }"
-                :sort="false"
-                itemKey="name"
-                :list="item.list"
+      <n-layout has-sider style="height: 100%;" :key="locale && locale.name">
+        <n-layout-sider class="_fc-l" width="266px">
+          <n-layout style="height: 100%;">
+            <n-layout-header height="40px" class="_fc-l-tabs">
+              <div class="_fc-l-tab" :class="{active: activeMenuTab==='menu'}"
+                   @click="activeMenuTab='menu'"> {{ t('menu.component') }}
+              </div>
+              <div class="_fc-l-tab" :class="{active: activeMenuTab==='tree'}"
+                   @click="activeMenuTab='tree'"> {{ t('menu.tree') }}
+              </div>
+            </n-layout-header>
+            <n-layout-content v-show="activeMenuTab === 'menu'">
+              <template v-for="(item, index) in menuList">
+                <div class="_fc-l-group" :key="index"
+                     v-if="hiddenMenu.indexOf(item.name) === -1">
+                  <h4 class="_fc-l-title" @click="item.hidden = !item.hidden">
+                    {{ t('menu.' + item.name) || item.title }}
+                    <i class="fc-icon icon-arrow" :class="{down: !item.hidden}"/>
+                  </h4>
+                  <draggable :group="{name:'default', pull:'clone', put:false}" :sort="false"
+                             itemKey="name"
+                             class="_fc-l-list"
+                             :list="item.list" v-show="!item.hidden">
+                    <template #item="{element}">
+                      <div class="_fc-l-item" v-if="hiddenItem.indexOf(element.name) === -1"
+                           @click="clickMenu(element)">
+                        <div class="_fc-l-icon">
+                          <i class="fc-icon" :class="element.icon || 'icon-input'"></i>
+                        </div>
+                        <span class="_fc-l-name">{{
+                            t('com.' + element.name + '.name') || element.label
+                          }}</span>
+                      </div>
+                    </template>
+                  </draggable>
+                </div>
+              </template>
+            </n-layout-content>
+            <n-layout-content v-if="activeMenuTab === 'tree'">
+              <n-tree
+                  ref="treeRef"
+                  :data="treeInfo"
+                  default-expand-all
+                  :expand-on-click-node="false"
+                  @currentChange="treeChange"
               >
-                <template #item="{ element }">
-                  <div class="_fc-l-item">
-                    <div class="_fc-l-icon">
-                      <i
-                        class="fc-icon"
-                        :class="element.icon || 'icon-input'"
-                      ></i>
+                <template #default="{ node, data }">
+                  <div class="_fc-tree-node" :class="{active: activeRule === data.rule}">
+                    <div class="_fc-tree-label">
+                      <i class="fc-icon"
+                         :class="(data.rule._menu && data.rule._menu.icon) || 'icon-cell'"></i>
+                      <span>{{
+                          (data.rule.title || '').trim() || (data.rule.props && data.rule.props.label) || t('com.' + (data.rule._menu && data.rule._menu.name) + '.name') || data.rule.type
+                        }}</span>
                     </div>
-                    <span class="_fc-l-name">{{
-                      t("components." + element.name + ".name") || element.label
-                    }}</span>
+                    <div class="_fc-tree-more" @click.stop v-if="!data.slot">
+<!--                      <n-dropdown trigger="click" size="default">-->
+<!--                        <i class="fc-icon icon-more"></i>-->
+<!--                        <template #dropdown>-->
+<!--&lt;!&ndash;                          <n-dropdown-menu>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <n-dropdown-item v-if="data.rule._fc_drag_tag !== '_'" key="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              @click="toolHandle(data.rule ,'copy')">&ndash;&gt;-->
+<!--&lt;!&ndash;                              {{ t('props.copy') }}&ndash;&gt;-->
+<!--&lt;!&ndash;                            </n-dropdown-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-dropdown-item&ndash;&gt;-->
+<!--&lt;!&ndash;                                v-if="data.rule._menu && data.rule._menu.children && data.rule._fc_drag_tag !== '_'"&ndash;&gt;-->
+<!--&lt;!&ndash;                                key="2"&ndash;&gt;-->
+<!--&lt;!&ndash;                                @click="toolHandle(data.rule, 'addChild')">&ndash;&gt;-->
+<!--&lt;!&ndash;                              {{ t('form.appendChild') }}&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-dropdown-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <el-dropdown-item key="3"&ndash;&gt;-->
+<!--&lt;!&ndash;                                              @click="toolHandle(data.rule, 'delete')">&ndash;&gt;-->
+<!--&lt;!&ndash;                              {{ t('props.delete') }}&ndash;&gt;-->
+<!--&lt;!&ndash;                            </el-dropdown-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                          </n-dropdown-menu>&ndash;&gt;-->
+<!--                        </template>-->
+<!--                      </n-dropdown>-->
+                    </div>
                   </div>
                 </template>
-              </draggable>
-            </div>
-          </template>
+              </n-tree>
+            </n-layout-content>
+          </n-layout>
         </n-layout-sider>
         <n-layout class="_fc-m">
-          <!-- 中间部分上方按钮组 -->
-          <n-layout-header class="_fc-m-tools" style="padding: 0 20px">
-            <slot name="handle"></slot>
-            <n-space>
-              <n-button
-                type="primary"
-                round
-                ghost
-                size="tiny"
-                @click="previewFc"
-              >
-                <i class="fc-icon icon-preview"></i>
-                {{ t("designer.preview") }}
-              </n-button>
-              <n-popconfirm
-                :negative-text="t('designer.clearCancel')"
-                :positive-text="t('designer.clearConfirm')"
-                :negative-button-props="{ size: 'tiny' }"
-                :positive-button-props="{ size: 'tiny' }"
-                @positive-click="clearDragRule"
-                style="width: 200px"
-              >
-                <template #trigger>
-                  <n-button type="warning" round ghost size="tiny">
-                    <i class="fc-icon icon-delete"></i>
-                    {{ t("designer.clear") }}
-                  </n-button>
+          <n-layout-header class="_fc-m-tools" height="45">
+            <div class="_fc-m-tools-l">
+              <template v-if="!inputForm.state">
+                <template v-if="getConfig('showDevice') !== false">
+                  <template v-if="device !== 'pc'">
+                    <svg @click="device = 'pc'" class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M15.04 783.36h986.88v49.28H15.04zM163.2 191.36h690.88c27.2 0 49.28 22.08 49.28 49.28v542.72H113.92V240.64c0-27.2 22.08-49.28 49.28-49.28z"
+                          fill="#7F7F7F"></path>
+                      <path d="M163.2 240.64h690.88v493.44H163.2z" fill="#E5E5E5"></path>
+                    </svg>
+                  </template>
+                  <template v-if="device === 'pc'">
+                    <svg class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M15.04 783.36h986.88v49.28H15.04zM163.2 191.36h690.88c27.2 0 49.28 22.08 49.28 49.28v542.72H113.92V240.64c0-27.2 22.08-49.28 49.28-49.28z"
+                          fill="#2E73FF"></path>
+                      <path d="M163.2 240.64h690.88v493.44H163.2z" fill="#E0EAFF"></path>
+                    </svg>
+                  </template>
+                  <template v-if="device !== 'pad'">
+                    <svg @click="device = 'pad'" class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M217.28 29.76h589.44c29.44 0 53.44 24 53.44 53.44v857.28c0 29.44-24 53.44-53.44 53.44H217.28c-29.44 0-53.44-24-53.44-53.44V83.52c0-29.76 24-53.76 53.44-53.76z"
+                          fill="#7F7F7F"></path>
+                      <path d="M217.28 136.96h589.44v750.08H217.28z" fill="#E5E5E5"></path>
+                    </svg>
+                  </template>
+                  <template v-if="device === 'pad'">
+                    <svg class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M217.28 29.76h589.44c29.44 0 53.44 24 53.44 53.44v857.28c0 29.44-24 53.44-53.44 53.44H217.28c-29.44 0-53.44-24-53.44-53.44V83.52c0-29.76 24-53.76 53.44-53.76z"
+                          fill="#2E73FF"></path>
+                      <path d="M217.28 136.96h589.44v750.08H217.28z" fill="#E0EAFF"></path>
+                    </svg>
+                  </template>
+                  <template v-if="device !== 'mobile'">
+                    <svg @click="device = 'mobile'" class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M271.68 31.04h480.96c29.44 0 53.44 24 53.44 53.44v854.72c0 29.44-24 53.44-53.44 53.44H271.68c-29.44 0-53.44-24-53.44-53.44V84.48c0-29.44 23.68-53.44 53.44-53.44z"
+                          fill="#7F7F7F"></path>
+                      <path d="M271.68 137.92h480.96v747.84H271.68z" fill="#E5E5E5"></path>
+                    </svg>
+                  </template>
+                  <template v-if="device === 'mobile'">
+                    <svg class="icon" viewBox="0 0 1024 1024">
+                      <path
+                          d="M271.68 31.04h480.96c29.44 0 53.44 24 53.44 53.44v854.72c0 29.44-24 53.44-53.44 53.44H271.68c-29.44 0-53.44-24-53.44-53.44V84.48c0-29.44 23.68-53.44 53.44-53.44z"
+                          fill="#2E73FF"></path>
+                      <path d="M271.68 137.92h480.96v747.84H271.68z" fill="#E0EAFF"></path>
+                    </svg>
+                  </template>
+                  <div class="line"></div>
                 </template>
-                {{ t("designer.clearConfirmTitle") }}
-              </n-popconfirm>
-            </n-space>
+                <div>
+                  <i class="fc-icon icon-pre-step"
+                     :class="{disabled: !operation.list[operation.idx - 1]}"
+                     @click="prevOperationRecord"></i>
+                  <i class="fc-icon icon-next-step"
+                     :class="{disabled: !operation.list[operation.idx + 1]}"
+                     @click="nextOperationRecord"></i>
+                </div>
+              </template>
+            </div>
+            <div class="_fc-m-tools-r">
+              <template v-if="!inputForm.state">
+                <slot name="handle"></slot>
+                <n-button v-if="getConfig('showSaveBtn', false)" type="success" plain size="small"
+                           @click="handleSave"><i class="fc-icon icon-save-online"></i> {{
+                    t('props.save')
+                  }}
+                </n-button>
+                <n-button type="primary" plain size="small"
+                           @click="openPreview"><i class="fc-icon icon-preview"></i> {{
+                    t('props.preview')
+                  }}
+                </n-button>
+                <n-popconfirm
+                    :title="t('designer.clearWarn')"
+                    width="200px"
+                    :confirm-button-text="t('props.clear')"
+                    :cancel-button-text="t('props.cancel')"
+                    @confirm="clearDragRule">
+                  <template #reference>
+                    <n-button type="danger" plain size="small"><i
+                        class="fc-icon icon-delete"></i>{{ t('props.clear') }}
+                    </n-button>
+                  </template>
+                </n-popconfirm>
+<!--                <n-dropdown trigger="click" size="default" v-if="handle && handle.length">-->
+<!--                  <n-button class="_fd-m-extend" plain size="small">-->
+<!--                    <i class="fc-icon icon-more"></i>-->
+<!--                  </n-button>-->
+<!--                  <template #dropdown>-->
+<!--&lt;!&ndash;                    <n-dropdown-menu>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <n-dropdown-item v-for="item in handle" @click.stop="triggerHandle(item)">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div>{{ item.label }}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                      </n-dropdown-item>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </n-dropdown-menu>&ndash;&gt;-->
+<!--                  </template>-->
+<!--                </n-dropdown>-->
+
+              </template>
+              <div class="line"></div>
+              <div class="_fd-input-btn">
+                <i class="fc-icon icon-check" v-if="inputCheckStatus"></i><span>{{
+                  t('props.inputData')
+                }}：</span>
+                <n-switch size="small" :model-value="inputForm.state" inline-prompt
+                           @update:model-value="openInputData"/>
+              </div>
+            </div>
           </n-layout-header>
-          <!-- 中间拖拽组件实现部分 -->
-          <n-layout-content content-style="background: #F5F5F5;padding: 20px;">
-            <div class="_fc-m-drag">
-              <DragForm
-                :rule="dragForm.rule"
-                :option="form.value"
-                v-model:api="dragForm.api"
-              />
+          <n-layout-content class="_fc-m-con">
+            <a :key="activeRule ? activeRule._fc_id : ''" style="background-image: url(data:image/png;base64,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) !important;background-repeat: no-repeat !important;background-size: cover !important;background-position: center !important;position: absolute !important;overflow: hidden !important;left: 50% !important;width: 160px!important;right: 0 !important;top: auto !important;bottom: 9px !important;display: block !important;height: 17px !important;text-align: center !important;opacity: 1 !important;visibility: visible !important;margin: 0 0 0 -80px !important;padding: 0 !important;" target="_blank" href="https://form-create.com/"></a>
+            <div class="_fc-m-drag" :class="device"
+                 ref="dragCon"
+                 :style="{'--fc-drag-empty': `'${t('designer.dragEmpty')}'`,'--fc-child-empty': `'${t('designer.childEmpty')}'`, height: dragHeight}">
+              <div class="_fc-m-input" v-if="inputForm.state">
+                <ViewForm :key="inputForm.key" :rule="inputForm.rule" :option="inputForm.option"
+                          v-model:api="inputForm.api" :disabled="false"></ViewForm>
+              </div>
+              <DragForm v-else :rule="dragForm.rule" :option="formOptions"
+                        v-model:api="dragForm.api"></DragForm>
+            </div>
+            <div class="_fc-m-input-handle" v-if="inputForm.state">
+              <n-button plain @click="inputClear()">{{ t('props.clear') }}</n-button>
+              <n-button plain @click="inputReset()">{{ t('props.reset') }}</n-button>
+              <n-button type="primary" plain @click="inputSave()">{{ t('props.save') }}</n-button>
             </div>
           </n-layout-content>
         </n-layout>
-        <!-- 右边组件属性设置部分 -->
-        <n-layout-sider
-          class="_fc-r"
-          width="320"
-          v-if="!config || config.showConfig !== false"
-        >
-        <div style="height: 100%; position: relative">
-          <n-layout style="width: 100%;" class="_fc-r-tabs" position="absolute">
-            <!-- 右侧边栏标题 -->
-            <n-layout-header
-              style="height: 40px;"
-              class="_fc-r-tabs"
-              position="absolute"
-            >
-            <n-tabs 
-              type="line"
-              tab-style="height: 39px"
-              justify-content="space-evenly"
-              v-model:value="activeTab"
-              :class="!!activeRule || (config && config.showFormConfig === false) ? '' : 'single'"
-            >
-              <n-tab name="props" v-if="
-                  !!activeRule || (config && config.showFormConfig === false)
-                ">
-                {{ t("designer.config.component") }}
-              </n-tab>
-              <n-tab name="form" v-if="!config || config.showFormConfig !== false">
-                {{ t("designer.config.form") }}
-              </n-tab>
-            </n-tabs>
-            </n-layout-header>
-            <!-- Form -->
-            <n-layout
-              v-show="activeTab === 'form'"
-              v-if="!config || config.showFormConfig !== false"
-              style="padding: 20px;top:40px"
-              :native-scrollbar="false"
-              position="absolute"
-            >
-              <DragForm
-                :rule="form.rule"
-                :option="form.option"
-                v-model="form.value.form"
-                v-model:api="form.api"
-              ></DragForm>
-            </n-layout>
-            <!-- Props -->
-            <n-layout
-              v-show="activeTab === 'props'"
-              :key="activeRule ? activeRule._id : ''"
-              style="padding: 0 20px;top:40px"
-              :native-scrollbar="false"
-              position="absolute"
-            >
-              <div class="props-set">
-                <n-divider v-if="showBaseRule">{{
-                  t("designer.config.rule")
-                }}</n-divider>
-                <DragForm
-                  v-show="showBaseRule"
-                  v-model:api="baseForm.api"
-                  :rule="baseForm.rule"
-                  :option="baseForm.options"
-                  :modelValue="baseForm.value"
-                  @change="baseChange"
-                ></DragForm>
-                <n-divider>{{ t("designer.config.props") }}</n-divider>
-                <DragForm
-                  v-model:api="propsForm.api"
-                  :rule="propsForm.rule"
-                  :option="propsForm.options"
-                  :modelValue="propsForm.value"
-                  @change="propChange"
-                  @removeField="propRemoveField"
-                ></DragForm>
-                <n-divider v-if="showBaseRule">{{
-                  t("designer.config.validate")
-                }}</n-divider>
-                <DragForm
-                  v-show="showBaseRule"
-                  v-model:api="validateForm.api"
-                  :rule="validateForm.rule"
-                  :option="validateForm.options"
-                  :modelValue="validateForm.value"
-                  @update:modelValue="validateChange"
-                ></DragForm>
-                <n-divider v-if="showBaseRule" >{{
-                    t("designer.config.event")
-                  }}</n-divider>
-                <DragForm
-                    v-show="showBaseRule"
-                    v-model:api="eventForm.api"
-                    :rule="eventForm.rule"
-                    :option="eventForm.options"
-                    @update:modelValue="validateChange"
-                ></DragForm>
+        <n-layout-sider class="_fc-r" width="320px" v-if="!config || config.showConfig !== false">
+          <n-layout style="height: 100%;">
+            <n-layout-header height="40px" class="_fc-r-tabs">
+              <div class="_fc-r-tab" :class="{active: activeTab==='props'}"
+                   v-if="!!activeRule || customForm.isShow || (config && config.showFormConfig === false)"
+                   @click="activeTab='props'"> {{ t('designer.component') }}
               </div>
-            </n-layout>
+              <div class="_fc-r-tab" v-if="!config || config.showFormConfig !== false"
+                   :class="{active: activeTab==='form' && (!!activeRule || customForm.isShow)}"
+                   @click="activeTab='form'">{{ t('designer.form') }}
+              </div>
+            </n-layout-header>
+            <n-layout-content class="_fc-r-tab-form" v-show="activeTab==='form'"
+                     v-if="!config || config.showFormConfig !== false">
+              <DragForm :rule="form.rule" :option="form.option"
+                        :modelValue="form.value" @change="formOptChange"
+                        v-model:api="form.api"></DragForm>
+            </n-layout-content>
+            <n-layout-content class="_fc-r-tab-props" v-show="activeTab==='props'"
+                     :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
+              <template
+                  v-if="activeRule || (customForm.config && (customForm.config.name || customForm.config.label))">
+                <p class="_fc-r-title">{{ t('designer.type') }}</p>
+                <n-tag type="success" >
+                  <template v-if="activeRule">
+                    {{ t('com.' + (activeRule._menu.name) + '.name') || activeRule._menu.label }}
+                  </template>
+                  <template v-else>
+                    {{
+                      t('com.' + (customForm.config.name) + '.name') || customForm.config.label || customForm.config.name
+                    }}
+                  </template>
+                </n-tag>
+                <template
+                    v-if="(activeRule && activeRule.name)">
+                  <p class="_fc-r-title">{{ t('designer.name') }}</p>
+                  <n-input size="small" class="_fc-r-name-input"
+                            :model-value="activeRule.name"
+                            readonly>
+                    <template #append>
+                      <i class="fc-icon icon-auto" @click="updateName"></i>
+                    </template>
+                  </n-input>
+                </template>
+              </template>
+              <n-divider v-if="baseForm.isShow">{{ t('designer.rule') }}</n-divider>
+              <DragForm v-show="baseForm.isShow" v-model:api="baseForm.api"
+                        :rule="baseForm.rule"
+                        :option="baseForm.options"
+                        :modelValue="baseForm.value"
+                        @change="baseChange"></DragForm>
+              <n-divider v-if="propsForm.isShow">{{ t('designer.props') }}</n-divider>
+              <DragForm v-show="propsForm.isShow" v-model:api="propsForm.api" :rule="propsForm.rule"
+                        :option="propsForm.options"
+                        :modelValue="propsForm.value"
+                        @change="propChange" @removeField="propRemoveField"></DragForm>
+              <n-divider v-if="customForm.isShow && customForm.propsShow">
+                {{ t('designer.props') }}
+              </n-divider>
+              <DragForm v-if="customForm.isShow && customForm.propsShow" v-model:api="customForm.api"
+                        :rule="customForm.rule"
+                        :option="customForm.options" :key="customForm.key"
+                        @change="customFormChange"></DragForm>
+              <n-divider
+                  v-if="eventShow">
+                {{ t('designer.event') }}
+              </n-divider>
+              <EventConfig
+                  v-if="eventShow"
+                  :event-name="(activeRule && activeRule._menu.event) || []"
+                  :component-name="(activeRule && activeRule._menu.name) || ''"
+                  :model-value="(activeRule && activeRule._on) || {}"
+                  @update:modelValue="changeEvent"></EventConfig>
+              <template v-if="activeRule">
+                <n-divider v-if="validateForm.isShow">{{
+                    t('designer.validate')
+                  }}
+                </n-divider>
+                <DragForm v-if="validateForm.isShow" v-model:api="validateForm.api"
+                          :rule="validateForm.rule"
+                          :option="validateForm.options"
+                          :modelValue="validateForm.value"
+                          @change="validateChange"
+                          :key="activeRule._fc_id"></DragForm>
+              </template>
+            </n-layout-content>
           </n-layout>
-        </div>
         </n-layout-sider>
-        <n-modal v-model:show="preview.state" preset="dialog" :show-icon="false" title="预览" style="width: 800px">
-          <ViewForm
-            :rule="preview.rule"
-            :option="preview.option"
-            v-if="preview.state"
-          />
-        </n-modal>
+        <n-dialog v-model="preview.state" width="800px" class="_fd-preview-dialog" append-to-body>
+          <n-tabs class="_fd-preview-tabs" v-model="previewStatus">
+            <n-tab-pane :label="t('form.formMode')" name="form"></n-tab-pane>
+            <n-tab-pane :label="t('form.componentMode')" name="component"></n-tab-pane>
+          </n-tabs>
+          <template v-if="previewStatus === 'form'">
+            <ViewForm :rule="preview.rule" :option="preview.option" v-model:api="preview.api"
+                      v-if="preview.state"></ViewForm>
+          </template>
+          <pre class="_fd-preview-code" v-else><code v-html="preview.html"></code></pre>
+        </n-dialog>
       </n-layout>
     </n-layout-content>
   </n-layout>
 </template>
 <script>
+import { NTag,NDialog } from 'naive-ui';
 import form from '../config/base/form';
 import field from '../config/base/field';
 import validate from '../config/base/validate';
@@ -238,6 +375,8 @@ export default defineComponent({
     DragForm: designerForm.$form(),
     ViewForm: viewForm.$form(),
     EventConfig,
+    NTag,
+    NDialog,
   },
   props: {
     menu: Array,

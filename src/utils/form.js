@@ -1,4 +1,4 @@
-import formCreate from '@form-create/element-ui';
+import formCreate from '@form-create/naive-ui';
 
 const viewForm = formCreate;
 

@@ -1,12 +1,7 @@
-import {ElMessage} from 'element-plus';
-
+import {useMessage} from 'naive-ui';
+const message = useMessage();
 const errorMessage = (msg) => {
-    return ElMessage({
-        message: msg,
-        type: 'error',
-        customClass: '_fc-message-error',
-    });
-
+    return message.error(msg);
 };
 
 export default errorMessage;

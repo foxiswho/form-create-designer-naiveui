@@ -1,50 +1,53 @@
 <template>
-    <div class="drag-tool" @click.stop="active" :class="{active: state.active === id}">
+    <div class="drag-tool" @click.stop="active" :class="{active: fcx.active === id}">
         <div class="drag-mask" v-if="mask"></div>
-        <div class="drag-l">
-            <div class="drag-btn _fc-drag-btn" v-if="state.active === id && dragBtn !== false" style="cursor: move;">
-                <n-tooltip trigger="hover">
-                    <template #trigger>
-                        <i class="fc-icon icon-move"></i>
-                    </template>
-                    拖拽
-                </n-tooltip>
-            </div>
+      <div class="_fd-drag-l" v-if="!hiddenBtn">
+        <div class="_fd-drag-btn" v-if="fcx.active === id && dragBtn !== false" style="cursor: move;">
+<!--          <i class="fc-icon icon-move"></i>-->
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <i class="fc-icon icon-move"></i>
+            </template>
+            拖拽
+          </n-tooltip>
         </div>
-        <div class="drag-r">
-            <div class="drag-btn" @click="$emit('create')">
-                <n-tooltip trigger="hover">
-                    <template #trigger>
-                        <i class="fc-icon icon-add"></i>
-                    </template>
-                    增加
-                </n-tooltip>
-            </div>
-            <div class="drag-btn" @click="$emit('copy')">
-                <n-tooltip trigger="hover">
-                    <template #trigger>
-                        <i class="fc-icon icon-copy"></i>
-                    </template>
-                    复制
-                </n-tooltip>
-            </div>
-            <div class="drag-btn" v-if="children" @click="$emit('addChild')">
-                <n-tooltip trigger="hover">
-                    <template #trigger>
-                        <i class="fc-icon icon-add-child"></i>
-                    </template>
-                    增加子元素
-                </n-tooltip>
-            </div>
-            <div class="drag-btn drag-btn-danger" @click="$emit('delete')">
-                <n-tooltip trigger="hover">
-                    <template #trigger>
-                        <i class="fc-icon icon-delete"></i>
-                    </template>
-                    删除
-                </n-tooltip>
-            </div>
-        </div>
+      </div>
+      <div class="drag-r" v-if="btns !== false && !hiddenMenu">
+        <slot name="handle">
+          <div class="_fd-drag-btn" v-if="isCreate && (btns === true || btns.indexOf('create') > -1)"
+               @click="$emit('create')">
+            <i class="fc-icon icon-add"></i>
+          </div>
+          <div class="_fd-drag-btn" v-if="!only && (btns === true || btns.indexOf('copy') > -1)"
+               @click="$emit('copy')">
+<!--            <i class="fc-icon icon-copy"></i>-->
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <i class="fc-icon icon-add"></i>
+              </template>
+              增加
+            </n-tooltip>
+          </div>
+          <div class="_fd-drag-btn" v-if="children && (btns === true || btns.indexOf('addChild') > -1)"
+               @click="$emit('addChild')">
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <i class="fc-icon icon-add-child"></i>
+              </template>
+              增加子元素
+            </n-tooltip>
+          </div>
+          <div class="_fd-drag-btn _fd-drag-danger" v-if="btns === true || btns.indexOf('delete') > -1"
+               @click="$emit('delete')">
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <i class="fc-icon icon-delete"></i>
+              </template>
+              删除
+            </n-tooltip>
+          </div>
+        </slot>
+      </div>
         <slot name="default"></slot>
     </div>
 </template>
@@ -56,110 +59,152 @@ import {computed, inject, toRefs, defineComponent} from 'vue';
 let uni = 1;
 export default defineComponent({
     name: 'DragTool',
-    props: ['dragBtn', 'children', 'unique', 'mask'],
+    emits: ['create', 'copy', 'addChild', 'delete', 'active', 'fc.el'],
+    props: {
+      dragBtn: Boolean,
+      children: String,
+      mask: Boolean,
+      handleBtn: [Boolean, Array],
+      formCreateInject: Object,
+      unique: String,
+      only: Boolean
+    },
     components: [ NTooltip ],
-    setup(props) {
-        const {unique} = toRefs(props);
-        const id = computed(() => unique.value || uni++);
-        const state = inject('fcx');
-        return {
-            id,
-            state
-        };
+    inject: {
+      fcx: {
+        default: null
+      },
+      designer: {
+        default: null
+      },
+      dragTool: {
+        default: null
+      },
+    },
+    provide() {
+      return {
+        dragTool: this
+      }
+    },
+    computed: {
+      isCreate() {
+        return this.dragTool ? !!this.dragTool.children : false;
+      },
+      btns() {
+        if (Array.isArray(this.handleBtn)) {
+          return this.handleBtn.length ? this.handleBtn : false;
+        }
+        return this.handleBtn !== false;
+      },
+      id() {
+        return this.unique || this.formCreateInject.id;
+      },
+      hiddenMenu() {
+        return this.designer.ctx.hiddenDragMenu;
+      },
+      hiddenBtn() {
+        return this.designer.ctx.hiddenDragBtn;
+      },
     },
     methods: {
-        active() {
-            if (this.state.active === this.id) return;
-            this.state.active = this.id;
-            this.$emit('active');
-        }
+      active() {
+        if (this.fcx.active === this.id) return;
+        this.fcx.active = this.id;
+        this.$emit('active');
+      }
     },
-    beforeDestroy() {
-        this.state = {};
-    }
+    mounted() {
+      this.$emit('fc.el', this);
+    },
 });
 </script>
 
 <style>
-.drag-tool {
-    position: relative;
-    display: flex;
-    min-height: 20px;
-    box-sizing: border-box;
-    padding: 2px;
-    outline: 1px dashed #18a058;
-    margin-bottom: 1px;
-    overflow: hidden;
-    word-wrap: break-word;
-    word-break: break-all;
+._fd-drag-tool {
+  position: relative;
+  display: block;
+  min-height: 20px;
+  box-sizing: border-box;
+  padding: 2px;
+  outline: 1px dashed var(--fc-tool-border-color);
+  overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-all;
+  transition: outline-color 0.3s ease;
 }
 
-.drag-tool .drag-tool {
-    margin: 5px;
+._fd-drag-tool ._fd-drag-tool {
+  height: calc(100% - 6px);
+  margin: 3px;
 }
 
-.drag-tool + .drag-tool {
-    margin-top: 5px;
+._fd-drag-tool + ._fd-drag-tool {
+  margin-top: 5px;
 }
 
-.drag-tool.active {
-    outline: 2px solid #18a058;
+._fd-drag-tool.active {
+  outline: 2px solid #2E73FF;
 }
 
-.drag-tool.active > div > .drag-btn {
-    display: flex;
+._fd-drag-tool.active > div > ._fd-drag-btn {
+  display: flex;
 }
 
-.drag-tool .drag-btn {
-    display: none;
+._fd-drag-tool._fd-drop-hover ._fd-drag-box {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+._fd-drag-tool ._fd-drag-btn {
+  display: none;
 }
 
 .drag-r {
-    position: absolute;
-    right: 2px;
-    bottom: 2px;
-    z-index: 1904;
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  z-index: 1904;
 }
 
-.drag-l {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1904
+._fd-drag-l {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1904
 
 }
 
-.drag-btn {
-    height: 18px;
-    width: 18px;
-    color: #fff;
-    background-color: #18a058;
-    text-align: center;
-    line-height: 20px;
-    padding-bottom: 1px;
-    float: left;
-    cursor: pointer;
-    justify-content: center;
+._fd-drag-btn {
+  height: 18px;
+  width: 18px;
+  color: #fff;
+  background-color: #2E73FF;
+  text-align: center;
+  line-height: 20px;
+  padding-bottom: 1px;
+  float: left;
+  cursor: pointer;
+  justify-content: center;
 }
 
-.drag-btn + .drag-btn {
-    margin-left: 2px;
+._fd-drag-btn + ._fd-drag-btn {
+  margin-left: 2px;
 }
 
-.drag-btn-danger {
-    background-color: #FF2E2E;
+._fd-drag-danger {
+  background-color: #FF2E2E;
 }
 
-.drag-btn i {
-    font-size: 13px;
+._fd-drag-btn i {
+  font-size: 14px;
 }
 
-.drag-mask {
-    z-index: 1900;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;;
+._fd-drag-mask {
+  z-index: 1900;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;;
 }
 </style>

@@ -12,14 +12,6 @@
             "import": "./dist/index.es.js",
             "types": "./types/index.d.ts",
             "require": "./dist/index.umd.js"
-        },
-        "./locale/en": {
-            "import": "./locale/en.mjs",
-            "require": "./locale/en.umd.js"
-        },
-        "./locale/zh-cn": {
-            "import": "./locale/zh-cn.mjs",
-            "require": "./locale/zh-cn.umd.js"
         }
     },
     "scripts": {
@@ -65,7 +57,7 @@
     "bugs": {
         "url": "https://github.com/foxiswho/form-create-designer-naiveui/issues"
     },
-    "homepage": "http://designer.form-create.com",
+    "homepage": "https://designer.form-create.com",
     "publishConfig": {
         "access": "public"
     },
@@ -82,6 +74,7 @@
         "babel-eslint": "^10.1.0",
         "chalk": "^5.3.0",
         "commander": "^12.0.0",
+        "codemirror": "^6.65.7",
         "commitizen": "^4.3.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.10.0",
@@ -113,7 +106,7 @@
         "stringify-author": "^0.1.3",
         "tslib": "^2.6.2",
         "typescript": "^5.4.2",
-        "vite": "^5.2.0",
+        "vite": "^5.2.6",
         "vite-plugin-banner": "^0.7.1",
         "vite-plugin-css-injected-by-js": "^3.5.0",
         "vue": "^3.4.21",
@@ -145,7 +138,6 @@
         "@form-create/component-wangeditor": "^3.1",
         "@form-create/naive-ui": "^3.1.29",
         "@form-create/utils": "^3.1.29",
-        "codemirror": "^6.65.7",
         "vite-plugin-html": "^3.2.2",
         "vuedraggable": "^4.1.0"
     }
