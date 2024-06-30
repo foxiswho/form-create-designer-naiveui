@@ -27,6 +27,17 @@ export default defineConfig(({ command, mode })=>{
     define: {
       __APP_ENV__: JSON.stringify(env),
     },
+    server: {
+      proxy: {
+        //匹配路由
+        '/pg2lq':{
+          // 目标地址 --> 服务器地址
+          target:'http://localhost:9780',
+          // 允许跨域
+          changeOrigin: true,
+        }
+      }
+    },
     base: './',
     plugins: [vue(), ...extnedsPlugins]}
 })

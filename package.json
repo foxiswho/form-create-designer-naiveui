@@ -2,7 +2,6 @@
     "name": "form-designer-naiveui",
     "version": "1.0.10",
     "description": "好用的vue可视化表单设计器组件",
-    "type": "module",
     "unpkg": "./dist/index.umd.js",
     "jsdelivr": "./dist/index.umd.js",
     "typings": "./types/index.d.ts",
@@ -11,6 +10,7 @@
     "exports": {
         ".": {
             "import": "./dist/index.es.js",
+            "types": "./types/index.d.ts",
             "require": "./dist/index.umd.js"
         },
         "./locale/en": {
@@ -25,6 +25,7 @@
     "scripts": {
         "clean": "rimraf dist/",
         "dev": "vite",
+        "dev3": "vue-cli-service serve",
         "rollup": "rollup -c ./rollup.config.ts",
         "build": "vite build --config ./vite.config.build.js",
         "build:locale": "gulp -f gulpfile.js",
@@ -144,7 +145,7 @@
         "@form-create/component-wangeditor": "^3.1",
         "@form-create/naive-ui": "^3.1.29",
         "@form-create/utils": "^3.1.29",
-        "codemirror": "^6.0.1",
+        "codemirror": "^6.65.7",
         "vite-plugin-html": "^3.2.2",
         "vuedraggable": "^4.1.0"
     }

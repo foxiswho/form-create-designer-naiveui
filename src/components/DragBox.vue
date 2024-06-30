@@ -24,7 +24,7 @@ export default defineComponent({
             })
         }
 
-        return h(draggable, subRule, {
+        return h(resolveComponent('draggable'), subRule, {
             item: ({element}) => {
                 return h('div', {}, keys[element.__fc__.key + 'fc'])
             }

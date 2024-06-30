@@ -207,7 +207,7 @@ import { deepCopy } from "@form-create/utils/lib/deepextend";
 import is, { hasProperty } from "@form-create/utils/lib/type";
 import {lower} from '@form-create/utils/lib/tocase';
 import ruleList from "../config/rule";
-import draggable from 'vuedraggable/src/vuedraggable';
+import draggable from 'vuedraggable';
 import createMenu from "../config/menu";
 import { upper, useLocale } from "../utils/index";
 import { designerForm } from "../utils/form";

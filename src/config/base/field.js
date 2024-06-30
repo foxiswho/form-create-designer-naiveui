@@ -17,6 +17,7 @@ export default function field({ t }) {
         { value: "dateTime", label: "dateTime" },
         { value: "time", label: "time" },
         { value: "object", label: "Object" },
+        { value: "boolean", label: "boolean" },
         { value: "array|string", label: "Array<string>" },
         { value: "array|number", label: "Array<number>" },
         { value: "array|integer", label: "Array<integer>" },

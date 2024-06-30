@@ -576,15 +576,20 @@ export default defineComponent({
   async mounted() {
     this.routerParam = GetRequest('')
     console.log('beforeMount', this.routerParam)
-    await this.loadData()
+    // await this.loadData()
+    let tmp=formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]')
+    this.$refs.designer.setRule(tmp)
     const u = this.getCache();
     if (u) {
-      u.rule && this.$refs.designer.setRule(u.rule)
+      //u.rule && this.$refs.designer.setRule(u.rule)
       u.opt && this.$refs.designer.setOption(u.opt)
-      this.$nextTick(() => {
-            this.loadAutoSave()
-          }
-      )
+      // await this.$nextTick(() => {
+      //       this.loadAutoSave()
+      //     }
+      // )
+      setTimeout(()=>{
+        this.loadAutoSave()
+      }, 2000)
     }
 
 
