@@ -18,6 +18,10 @@
         </div>
       </div>
       <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
+        <template #handle>
+          <n-button size="small" ghost @click="setJson"> 导入JSON</n-button>
+          <n-button size="small" ghost @click="setOption"> 导入Options</n-button>
+        </template>
       </fc-designer>
 
       <n-modal
@@ -616,6 +620,64 @@ export default defineComponent({
 #app {
   height: 100%;
 }
+._fc-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #282828;
+  position: relative;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 0 none;
+}
+
+.top_img {
+  cursor: pointer;
+}
+
+._fc-top .close {
+  position: absolute;
+  right: 15px;
+  top: 6px;
+  color: #FFFFFF;
+  background-color: #c6c6c652;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+._fc-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 20px;
+}
+
+._fc-top-copyright {
+  display: flex;
+}
+
+._fc-top-link {
+}
+
+._fc-top a {
+  height: 35px;
+  font-size: 14px;
+  line-height: 35px;
+  color: #aaa;
+  text-decoration: none;
+}
+
+._fc-top a + a {
+  margin-left: 20px;
+}
+
 ._fc-t-header {
   height: 60px;
   margin: 0 20px;
@@ -631,8 +693,8 @@ export default defineComponent({
 
 ._fc-t-name {
   display: inline-block;
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 20px;
+  color: #fff;
+  font-size: 18px;
   font-weight: 600;
   margin-left: 5px;
 }
@@ -644,6 +706,20 @@ export default defineComponent({
 
 ._fc-t-menu i {
   font-size: 12px;
+}
+
+.handle {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+._fc-t-menu .el-dropdown, .handle .el-dropdown {
+  cursor: pointer;
+}
+
+.handle .el-icon {
+  margin-left: 0;
 }
 
 body {
@@ -666,7 +742,7 @@ body {
   align-items: center;
   padding: 0 20px;
   font-size: 16px;
-  border-top: 1px solid #ececec;
+  border-top: 1px solid #ECECEC;
   background-color: #fff;
   cursor: pointer;
 }
@@ -674,14 +750,10 @@ body {
 ._fc-t-dialog .CodeMirror {
   height: 450px;
 }
-.CodeMirror-line {
-  /* line-height: 16px !important; */
-  /* font-size: 13px !important; */
-}
 
-.CodeMirror-sizer {
-  /* line-height: 16px !important; */
-  /* font-size: 13px !important; */
+._fc-t-dialog .CodeMirror-line {
+  line-height: 16px !important;
+  font-size: 13px !important;
 }
 
 .CodeMirror-lint-tooltip {
@@ -694,5 +766,39 @@ body {
 
 ._fc-b-item {
   display: flex;
+}
+
+._fc-zz {
+  background-image: -webkit-linear-gradient(left, #cd7f32, #d81159 10%, #ffbc42 20%, #75d701 30%, #30a9de 40%, #d81159 60%, #ffbc42 70%, #75d701 80%, #30a9de 90%, #cd7f32);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 100%;
+  -webkit-animation: flowlight 5s linear infinite;
+  animation: flowlight 5s linear infinite;
+  font-weight: 700;
+}
+
+@keyframes flowlight {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@-webkit-keyframes flowlight {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.pro-version{
+  color: #cd7f32!important;
+  font-weight: 600;
 }
 </style>

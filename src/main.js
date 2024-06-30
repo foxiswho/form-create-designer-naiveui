@@ -10,6 +10,7 @@ import {
     NLayoutHeader,
     NButton,
     NPopconfirm,
+    NDropdown,
     NSpace,
     NRow,
     NCol,
@@ -42,6 +43,7 @@ import {
     NCascader,
     NUpload,
     NText,
+    NTag,
     NP,
     NUploadDragger,
     NTransfer,
@@ -51,6 +53,7 @@ import {
     NTabs,
     NTabPane,
     NTab,
+    NDialog,
 } from 'naive-ui';
 
 const naive = create({
@@ -60,7 +63,7 @@ const naive = create({
         NPopover, NIcon, NGrid, NGridItem, NRadioButton, NDataTable, NCheckboxGroup,
         NCheckbox, NSkeleton, NTimePicker, NDatePicker, NConfigProvider, NSlider, NRate,
         NColorPicker, NCascader, NUpload, NText, NP, NUploadDragger, NTransfer, NTree,NNotificationProvider,
-        NAlert, NTooltip, NTabs, NTabPane, NTab]
+        NAlert, NTooltip, NTabs, NTabPane, NTab,NTag,NDialog,NDropdown]
 })
 
 const app = createApp(App);

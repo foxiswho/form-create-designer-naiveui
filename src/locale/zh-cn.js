@@ -80,6 +80,9 @@ const ZhCn = {
         main: '表单组件',
         aide: '辅助组件',
         layout: '布局组件',
+        component: '组件',
+        subform: '子表单组件',
+        tree: '大纲'
     },
     props: {
         required: '是否必填',

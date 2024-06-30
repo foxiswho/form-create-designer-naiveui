@@ -1,6 +1,6 @@
 import {useMessage} from 'naive-ui';
-const message = useMessage();
 const errorMessage = (msg) => {
+    const message = useMessage();
     return message.error(msg);
 };
 

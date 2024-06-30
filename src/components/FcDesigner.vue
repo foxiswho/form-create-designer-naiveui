@@ -57,27 +57,9 @@
                         }}</span>
                     </div>
                     <div class="_fc-tree-more" @click.stop v-if="!data.slot">
-<!--                      <n-dropdown trigger="click" size="default">-->
-<!--                        <i class="fc-icon icon-more"></i>-->
-<!--                        <template #dropdown>-->
-<!--&lt;!&ndash;                          <n-dropdown-menu>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <n-dropdown-item v-if="data.rule._fc_drag_tag !== '_'" key="1"&ndash;&gt;-->
-<!--&lt;!&ndash;                                              @click="toolHandle(data.rule ,'copy')">&ndash;&gt;-->
-<!--&lt;!&ndash;                              {{ t('props.copy') }}&ndash;&gt;-->
-<!--&lt;!&ndash;                            </n-dropdown-item>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <el-dropdown-item&ndash;&gt;-->
-<!--&lt;!&ndash;                                v-if="data.rule._menu && data.rule._menu.children && data.rule._fc_drag_tag !== '_'"&ndash;&gt;-->
-<!--&lt;!&ndash;                                key="2"&ndash;&gt;-->
-<!--&lt;!&ndash;                                @click="toolHandle(data.rule, 'addChild')">&ndash;&gt;-->
-<!--&lt;!&ndash;                              {{ t('form.appendChild') }}&ndash;&gt;-->
-<!--&lt;!&ndash;                            </el-dropdown-item>&ndash;&gt;-->
-<!--&lt;!&ndash;                            <el-dropdown-item key="3"&ndash;&gt;-->
-<!--&lt;!&ndash;                                              @click="toolHandle(data.rule, 'delete')">&ndash;&gt;-->
-<!--&lt;!&ndash;                              {{ t('props.delete') }}&ndash;&gt;-->
-<!--&lt;!&ndash;                            </el-dropdown-item>&ndash;&gt;-->
-<!--&lt;!&ndash;                          </n-dropdown-menu>&ndash;&gt;-->
-<!--                        </template>-->
-<!--                      </n-dropdown>-->
+                      <n-dropdown trigger="click" size="small" :options="optionsTresMore(data)">
+                        <i class="fc-icon icon-more"></i>
+                      </n-dropdown>
                     </div>
                   </div>
                 </template>
@@ -166,27 +148,22 @@
                 <n-popconfirm
                     :title="t('designer.clearWarn')"
                     width="200px"
-                    :confirm-button-text="t('props.clear')"
-                    :cancel-button-text="t('props.cancel')"
-                    @confirm="clearDragRule">
-                  <template #reference>
+                    :positive-text="t('props.clear')"
+                    :negative-text="t('props.cancel')"
+                    @positiveClick="clearDragRule">
+                  <template #trigger>
                     <n-button type="danger" plain size="small"><i
                         class="fc-icon icon-delete"></i>{{ t('props.clear') }}
                     </n-button>
                   </template>
                 </n-popconfirm>
-<!--                <n-dropdown trigger="click" size="default" v-if="handle && handle.length">-->
-<!--                  <n-button class="_fd-m-extend" plain size="small">-->
-<!--                    <i class="fc-icon icon-more"></i>-->
-<!--                  </n-button>-->
-<!--                  <template #dropdown>-->
-<!--&lt;!&ndash;                    <n-dropdown-menu>&ndash;&gt;-->
-<!--&lt;!&ndash;                      <n-dropdown-item v-for="item in handle" @click.stop="triggerHandle(item)">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <div>{{ item.label }}</div>&ndash;&gt;-->
-<!--&lt;!&ndash;                      </n-dropdown-item>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </n-dropdown-menu>&ndash;&gt;-->
-<!--                  </template>-->
-<!--                </n-dropdown>-->
+                <n-dropdown trigger="click" size="small" v-if="handle && handle.length"
+                :options="changeLange()"
+                >
+                  <n-button class="_fd-m-extend" plain size="small">
+                    <i class="fc-icon icon-more"></i>
+                  </n-button>
+                </n-dropdown>
 
               </template>
               <div class="line"></div>
@@ -255,9 +232,9 @@
                     v-if="(activeRule && activeRule.name)">
                   <p class="_fc-r-title">{{ t('designer.name') }}</p>
                   <n-input size="small" class="_fc-r-name-input"
-                            :model-value="activeRule.name"
+                           v-model:value="activeRule.name"
                             readonly>
-                    <template #append>
+                    <template #suffix>
                       <i class="fc-icon icon-auto" @click="updateName"></i>
                     </template>
                   </n-input>
@@ -308,8 +285,8 @@
         </n-layout-sider>
         <n-dialog v-model="preview.state" width="800px" class="_fd-preview-dialog" append-to-body>
           <n-tabs class="_fd-preview-tabs" v-model="previewStatus">
-            <n-tab-pane :label="t('form.formMode')" name="form"></n-tab-pane>
-            <n-tab-pane :label="t('form.componentMode')" name="component"></n-tab-pane>
+            <n-tab-pane :tab="t('form.formMode')" name="form"></n-tab-pane>
+            <n-tab-pane :tab="t('form.componentMode')" name="component"></n-tab-pane>
           </n-tabs>
           <template v-if="previewStatus === 'form'">
             <ViewForm :rule="preview.rule" :option="preview.option" v-model:api="preview.api"
@@ -322,7 +299,7 @@
   </n-layout>
 </template>
 <script>
-import { NTag,NDialog } from 'naive-ui';
+import { NTag,NDialog,NDivider } from 'naive-ui';
 import form from '../config/base/form';
 import field from '../config/base/field';
 import validate from '../config/base/validate';
@@ -375,8 +352,6 @@ export default defineComponent({
     DragForm: designerForm.$form(),
     ViewForm: viewForm.$form(),
     EventConfig,
-    NTag,
-    NDialog,
   },
   props: {
     menu: Array,
@@ -495,7 +470,7 @@ export default defineComponent({
         api: {},
         option: {
           form: {
-            labelPosition: 'top',
+            labelPlacement: 'top',
             size: 'small'
           },
           submitBtn: false
@@ -517,7 +492,7 @@ export default defineComponent({
             }
           },
           form: {
-            labelPosition: 'top',
+            labelPlacement: 'top',
             size: 'small'
           },
           submitBtn: false,
@@ -539,7 +514,7 @@ export default defineComponent({
             }
           },
           form: {
-            labelPosition: 'top',
+            labelPlacement: 'top',
             size: 'small'
           },
           submitBtn: false,
@@ -566,7 +541,7 @@ export default defineComponent({
             }
           },
           form: {
-            labelPosition: 'top',
+            labelPlacement: 'top',
             size: 'small'
           },
           submitBtn: false,
@@ -589,7 +564,7 @@ export default defineComponent({
             }
           },
           form: {
-            labelPosition: 'top',
+            labelPlacement: 'top',
             size: 'small'
           },
           submitBtn: false,
@@ -789,7 +764,7 @@ export default defineComponent({
           props: {
             rule: {
               props: {
-                tag: 'el-col',
+                tag: 'n-col',
                 group: group === true ? 'default' : group,
                 ghostClass: 'ghost',
                 animation: 150,
@@ -915,7 +890,7 @@ export default defineComponent({
         options.form = {
           inline: false,
           hideRequiredAsterisk: false,
-          labelPosition: 'right',
+          labelPlacement: 'right',
           size: 'default',
           labelWidth: '125px',
           ...options.form || {}
@@ -1274,7 +1249,7 @@ export default defineComponent({
             formData['formCreate' + upper(name) + '>' + k] = deepCopy(rule[name][k]);
           });
         });
-        if(is.Function(configRef.value.appendConfigData)){
+        if (is.Function(configRef.value.appendConfigData)) {
           formData = {...formData, ...configRef.value.appendConfigData(rule)};
         }
         const configAttrs = rule._menu.attrs || {};
@@ -1730,6 +1705,57 @@ export default defineComponent({
       triggerHandle(item) {
         item.handle();
       },
+      changeLange() {
+        let  arr= []
+        if (props.handle){
+          for(var i in  props.handle){
+            let item = props.handle[i];
+            arr.push({
+              label: item.label,
+              key: 'xx-'+i,
+              props: {
+                onClick: () => {
+                  this.triggerHandle(item)
+                }
+              }
+            })
+          }
+        }
+        return arr;
+      },
+      optionsTresMore(data){
+        return [
+          {
+            label: t('props.copy'),
+            key: 'copy',
+            disabled:data.rule._fc_drag_tag !== '_',
+            props: {
+              onClick: () => {
+                this.toolHandle(data.rule ,'copy')
+              }
+            }
+          },
+          {
+            label: t('form.appendChild'),
+            key: 'addChild',
+            disabled:data.rule._menu && data.rule._menu.children && data.rule._fc_drag_tag !== '_',
+            props: {
+              onClick: () => {
+                this.toolHandle(data.rule, 'addChild')
+              }
+            }
+          },
+          {
+            label: t('props.delete'),
+            key: 'delete',
+            props: {
+              onClick: () => {
+                this.toolHandle(data.rule, 'delete')
+              }
+            }
+          }
+        ]
+      }
     }
     data.dragForm.rule = methods.makeDragRule(methods.makeChildren(data.children));
     methods.setOption({});

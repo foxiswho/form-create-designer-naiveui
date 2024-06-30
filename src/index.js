@@ -13,6 +13,11 @@ import ColorPicker from './components/ColorPicker.vue'
 import CustomAlert from './components/CustomAlert.vue';
 import FcEditor from '@form-create/component-wangeditor';
 import TableOptions from './components/TableOptions.vue';
+import TableView from './components/table/TableView.vue';
+import Table from './components/table/Table.vue';
+import TableFormView from './components/tableForm/TableFormView.vue';
+import TableForm from './components/tableForm/TableForm.vue';
+import TableFormColumnView from './components/tableForm/TableFormColumnView.vue';
 import draggable from 'vuedraggable';
 import {compareVersion,makeOptionsRule} from './utils/index';
 import formCreate from './utils/form';
@@ -33,12 +38,15 @@ designerForm.component('Required', Required);
 designerForm.component('Validate', Validate);
 designerForm.component('Struct', Struct);
 designerForm.component('TableOptions', TableOptions);
+designerForm.component('TableFormColumn', TableFormColumnView);
 designerForm.component('ColorPicker', ColorPicker);
 designerForm.component('CustomAlert', CustomAlert);
 designerForm.component('FcEditor', FcEditor);
 designerForm.component('Fetch', Fetch);
 formCreate.component('FcEditor', FcEditor);
 addComponent('FcEditor', FcEditor);
+addComponent('TableForm', TableForm, TableFormView);
+addComponent('FcTable', Table, TableView);
 
 
 designerForm.register('_fc', {
