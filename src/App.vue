@@ -17,6 +17,21 @@
           </n-space>
         </div>
       </div>
+      <div class="_fc-top">
+        <div class="_fc-top-nav">
+          <div class="_fc-top-copyright">
+            <img class="_fc-t-logo" src="http://form-create.com/logo.png" alt="logo"/>
+            <div class="_fc-t-name"><span>FcDesigner</span></div>
+          </div>
+          <div class="_fc-top-link">
+            <a href="https://form-create.com/" target="_blank" class="item">官网</a>
+            <a href="https://pro.form-create.com/view" class="item pro-version">高级版🔥</a>
+            <a href="https://view.form-create.com/" target="_blank" class="item">文档</a>
+            <a href="https://form-create.com/designer" target="_blank" class="item">Vue2版本</a>
+            <a href="https://github.com/xaboy/form-create-designer" target="_blank" class="item">查看源码</a>
+          </div>
+        </div>
+      </div>
       <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
         <template #handle>
           <n-button size="small" ghost @click="setJson"> 导入JSON</n-button>
@@ -141,6 +156,7 @@ export default {
       lang: "cn",
       locale: null,
       config: {
+        showFormConfig: false,
         fieldReadonly: false,
         showSaveBtn: true,
       },
@@ -593,7 +609,7 @@ export default defineComponent({
     console.log('beforeMount', this.routerParam)
     // await this.loadData()
     let tmp=formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]')
-    this.$refs.designer.setRule(tmp)
+    //this.$refs.designer.setRule(tmp)
     const u = this.getCache();
     if (u) {
       //u.rule && this.$refs.designer.setRule(u.rule)
