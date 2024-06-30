@@ -1,9 +1,9 @@
-import formCreate from "@form-create/naive-ui";
+import formCreate from '@form-create/element-ui';
 
 const viewForm = formCreate;
 
 const designerForm = formCreate.factory();
 
-export default viewForm
+export default viewForm;
 
-export {designerForm}
+export {designerForm};
