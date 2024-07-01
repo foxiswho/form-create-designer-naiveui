@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     'env': {
         'browser': true,
         'node': true,
@@ -33,6 +33,9 @@ export default {
         ],
         'block-spacing': 'error',
         'no-unused-vars': 'warn',
+        'no-irregular-whitespace': 'warn',
+        'no-useless-escape': 'warn',
+        'no-empty': 'warn',
         'object-curly-spacing': 'error',
         'no-console': 'warn',
         'vue/valid-v-model': 'warn',
