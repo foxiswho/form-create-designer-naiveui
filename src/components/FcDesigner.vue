@@ -44,8 +44,8 @@
                   ref="treeRef"
                   :data="treeInfo"
                   default-expand-all
-                  :expand-on-click-node="false"
-                  @currentChange="treeChange"
+                  :expand-on-click="false"
+                  :node-props="treeChangeNodeProps"
               >
                 <template #default="{ node, data }">
                   <div class="_fc-tree-node" :class="{active: activeRule === data.rule}">
@@ -1317,6 +1317,12 @@ export default defineComponent({
         if (slot) {
           rule.slot = slot;
         }
+        const rule2 = methods.getJson();
+        const formData = deepCopy(data.inputForm.data);
+        console.log('dragMenu.formData',formData)
+        console.log('dragMenu.rule2',rule2)
+        console.log('dragMenu.children',children)
+        console.log('dragMenu.menu',menu)
         children.splice(index, 0, rule);
         methods.handleAddAfter({rule});
       },
@@ -1755,6 +1761,13 @@ export default defineComponent({
             }
           }
         ]
+      },
+      treeChangeNodeProps({ option }){
+        return {
+          onClick () {
+            console.log('treeChangeNodeProps',option)
+          },
+        }
       }
     }
     data.dragForm.rule = methods.makeDragRule(methods.makeChildren(data.children));
@@ -1913,6 +1926,9 @@ export default defineComponent({
 ._fc-m-drag > form,
 ._fc-m-drag > form > .n-row {
   height: 100%;
+}
+._fc-m-drag ._fd-drag-box {
+  width: 100%;
 }
 ._fc-designer .n-form-item {
   --n-label-height: auto !important;
