@@ -1,12 +1,18 @@
 <template>
     <div class="_fd-event">
         <n-badge :value="eventNum" type="warning" :hidden="eventNum < 1">
-            <el-button size="small" @click="visible=true">{{ t('event.title') }}</el-button>
+            <n-button size="small" @click="visible=true">{{ t('event.title') }}</n-button>
         </n-badge>
-        <n-dialog class="_fd-event-dialog" :title="t('event.title')" v-if="visible" destroy-on-close
+        <n-modal v-model:show="visible" class="_fd-event-dialog" :title="t('event.title')" preset="dialog" destroy-on-close
                    :maskClosable="false"
-                   append-to-body
-                   width="980px">
+                   width="980px" :show-icon="false">
+          <n-card
+              style="width: 600px;height:600px;background-color: #ffffff"
+              :bordered="false"
+              size="huge"
+              role="dialog"
+              aria-modal="true"
+          >
             <n-layout class="_fd-event-con" style="height: 600px">
                 <n-layout-sider style="width:300px;">
                     <n-layout class="_fd-event-l">
@@ -92,14 +98,15 @@
             </n-layout>
             <template #footer>
                 <div>
-                    <n-button size="default" @click="visible=false">{{ t('props.cancel') }}</n-button>
-                    <n-button type="primary" size="default" @click="submit" color="#2f73ff">{{
+                    <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
+                    <n-button type="primary" size="small" @click="submit" color="#2f73ff">{{
                             t('props.ok')
                         }}
                     </n-button>
                 </div>
             </template>
-        </n-dialog>
+          </n-card>
+        </n-modal>
     </div>
 </template>
 
