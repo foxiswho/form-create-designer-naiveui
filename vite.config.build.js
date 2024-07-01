@@ -21,7 +21,7 @@ function getBanner(banner, pkg) {
     const license = banner.license || '';
     return (
         '/*!\n' +
-        ' * form-create 可视化表单设计器\n' +
+        ' * FormCreate 可视化表单设计器\n' +
         ` * ${banner.name} v${banner.version}\n` +
         ` * (c) ${author || ''}\n` +
         (license && ` * Released under the ${license} License.\n`) +
@@ -30,7 +30,7 @@ function getBanner(banner, pkg) {
 }
 
 const __banner__ = {
-    author: `2021-${new Date().getFullYear()} ${author}\n * Github https://github.com/xaboy/form-create-designer`,
+    author: `2021-${new Date().getFullYear()} ${author}\n * Github https://github.com/xaboy/form-create-designer\n * Site https://form-create.com/`,
     license,
     name,
     version
