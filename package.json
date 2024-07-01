@@ -139,6 +139,7 @@
         "@form-create/naive-ui": "^3.1.29",
         "@form-create/utils": "^3.1.29",
         "@iconify/iconify": "^3.1.1",
+        "@iconify/vue": "^4.1.2",
         "vite-plugin-html": "^3.2.2",
         "vuedraggable": "^4.1.0"
     }

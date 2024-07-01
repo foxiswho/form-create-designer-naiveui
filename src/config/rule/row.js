@@ -4,10 +4,13 @@ const label = '栅格布局';
 const name = 'row';
 
 export default {
+  menu: 'layout',
   icon: 'icon-row',
   label,
   name,
   mask: false,
+  children: 'col',
+  childrenLen: 2,
   rule() {
     return {
       type: 'FcRow',
@@ -15,8 +18,6 @@ export default {
       children: []
     };
   },
-  children: 'col',
-  childrenLen: 2,
   props(_, { t }) {
     return localeProps(t, name + '.props', [
       {

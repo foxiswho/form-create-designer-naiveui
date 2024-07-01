@@ -4,16 +4,19 @@ const label = '提示';
 const name = 'CustomAlert';
 
 export default {
+  menu: 'aide',
   icon: 'icon-alert',
   label,
   name,
+  event: ['close'],
   rule({ t }) {
     return {
       type: name,
       props: {
-        title: t('components.n-alert.name'),
+        title: t('com.elAlert.name'),
+        description: t('com.elAlert.description'),
         type: 'success',
-        description: t('components.n-alert.description')
+        effect: 'dark',
       },
       children: []
     };
@@ -46,6 +49,7 @@ export default {
       {
         type: 'switch',
         field: 'closable',
+        value: true,
         title: '是否可关闭',
         props: {
           size: 'small'
@@ -64,9 +68,27 @@ export default {
         type: 'switch',
         field: 'center',
         title: '组件居中',
+        value: true,
         props: {
           size: 'small'
         }
+      },
+      {
+        type: 'input',
+        field: 'closeText',
+        value: true,
+        props: {
+          size: 'small'
+        }
+      },
+      {
+        type: 'select',
+        field: 'effect',
+        value: 'dark',
+        options: [
+          { label: 'light', value: 'light' },
+          { label: 'dark', value: 'dark' },
+        ]
       },
       {
         type: 'switch',

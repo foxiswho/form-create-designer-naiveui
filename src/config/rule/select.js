@@ -5,9 +5,12 @@ const label = '选择器';
 const name = 'select';
 
 export default {
+  menu: 'main',
   icon: 'icon-select',
   label,
   name,
+  event: ['change', 'visibleChange', 'removeTag', 'clear', 'blur', 'focus'],
+  validate: ['string', 'number', 'array'],
   rule({ t }) {
     const opt = t('props.option');
     return {

@@ -5,9 +5,12 @@ const label = '多选框'
 const name = 'checkbox'
 
 export default {
+  menu: 'main',
   icon: 'icon-checkbox',
   label,
   name,
+  event: ['change'],
+  validate: ['array'],
   rule({ t }) {
     const opt = t('props.option');
     return {

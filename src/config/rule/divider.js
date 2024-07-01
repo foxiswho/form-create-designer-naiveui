@@ -4,6 +4,7 @@ const label = '分割线';
 const name = 'n-divider';
 
 export default {
+  menu: 'aide',
   icon: 'icon-divider',
   label,
   name,

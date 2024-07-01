@@ -4,6 +4,7 @@ const label = '文字';
 const name = 'span';
 
 export default {
+    menu: 'aide',
     icon: 'icon-span',
     label,
     name,

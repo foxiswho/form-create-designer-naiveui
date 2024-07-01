@@ -1,13 +1,15 @@
-import { localeProps } from '../../utils';
+import { localeProps ,localeOptions} from '../../utils';
 
 const label = '按钮';
 const name = 'n-button';
 
 export default {
+  menu: 'aide',
   icon: 'icon-button',
   label,
   name,
-  mask: false,
+  mask: true,
+  event: ['click'],
   rule({ t }) {
     return {
       type: name,
@@ -27,12 +29,12 @@ export default {
         field: 'size',
         title: '按钮的尺寸',
         value: 'medium',
-        options: [
+        options: localeOptions(t,[
           { label: 'large', value: 'large' },
           { label: 'medium', value: 'medium' },
           { label: 'small', value: 'small' },
           { label: 'tiny', value: 'tiny' },
-        ]
+        ])
       },
       {
         type: 'select',

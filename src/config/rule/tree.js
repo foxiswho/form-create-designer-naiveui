@@ -5,9 +5,12 @@ const label = '树形控件';
 const name = 'tree';
 
 export default {
+  menu: 'main',
   icon: 'icon-tree',
   label,
   name,
+  event: ['nodeClick', 'nodeContextmenu', 'checkChange', 'check', 'currentChange', 'nodeExpand', 'nodeCollapse', 'nodeDragStart', 'nodeDragEnter', 'nodeDragLeave', 'nodeDragOver', 'nodeDragEnd', 'nodeDrop'],
+  validate: ['string', 'number', 'array'],
   rule({ t }) {
     const opt = t('props.option');
     return {

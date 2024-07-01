@@ -5,9 +5,12 @@ const label = '颜色选择器';
 const name = 'colorPicker';
 
 export default {
+  menu: 'main',
   icon: 'icon-color',
   label,
   name,
+  event: ['change', 'activeChange', 'focus', 'blur'],
+  validate: ['string'],
   rule({ t }) {
     return {
       type: name,

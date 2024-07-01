@@ -4,6 +4,7 @@ const label = '间距';
 const name = 'div';
 
 export default {
+  menu: 'layout',
   icon: 'icon-space',
   label,
   name,

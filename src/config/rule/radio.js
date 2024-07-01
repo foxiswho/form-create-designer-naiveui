@@ -1,13 +1,16 @@
 import uniqueId from '@form-create/utils/lib/unique';
 import { localeProps, makeOptionsRule, makeRequiredRule } from '../../utils/index';
 
-const lable = '单选框';
+const label = '单选框';
 const name = 'radio'
 
 export default {
+  menu: 'main',
   icon: 'icon-radio',
-  lable,
+  label,
   name,
+  event: ['change'],
+  validate: ['string', 'number'],
   rule({ t }) {
     const opt = t('props.option');
     return {

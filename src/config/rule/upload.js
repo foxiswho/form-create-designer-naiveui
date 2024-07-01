@@ -5,9 +5,12 @@ const label = '上传';
 const name = 'upload';
 
 export default {
+  menu: 'main',
   icon: 'icon-upload',
   label,
   name,
+  event: ['change', 'remove'],
+  validate: ['array'],
   rule({ t }) {
     return {
       type: name,

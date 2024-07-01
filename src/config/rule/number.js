@@ -5,9 +5,12 @@ const label = '计数器'
 const name = 'inputNumber'
 
 export default {
+  menu: 'main',
   icon: 'icon-number',
   label,
   name,
+  event: ['blur', 'focus', 'change'],
+  validate: ['number', 'integer', 'float'],
   rule({ t }) {
     return {
       type: name,

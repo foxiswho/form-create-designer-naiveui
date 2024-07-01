@@ -5,9 +5,12 @@ const label = '评分';
 const name = 'rate';
 
 export default {
+  menu: 'main',
   icon: 'icon-rate',
   label,
   name,
+  event: ['change'],
+  validate: ['number'],
   rule({ t }) {
     return {
       type: name,

@@ -5,9 +5,11 @@ const label = '日期选择器';
 const name = 'datePicker';
 
 export default {
+  menu: 'main',
   icon: 'icon-date',
   label,
   name,
+  event: ['change', 'blur', 'focus', 'calendarChange', 'panelChange', 'visibleChange'],
   rule({ t }) {
     return {
       type: name,

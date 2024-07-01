@@ -5,9 +5,12 @@ const label = '级联选择器';
 const name = 'cascader';
 
 export default {
+  menu: 'main',
   icon: 'icon-cascader',
   label,
   name,
+  event: ['change', 'expandChange', 'blur', 'focus', 'visibleChange', 'removeTag'],
+  validate: ['string', 'number', 'array'],
   rule({ t }) {
     const opt = t('props.option');
     return {

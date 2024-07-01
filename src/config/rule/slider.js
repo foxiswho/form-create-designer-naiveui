@@ -5,9 +5,12 @@ const label = '滑块';
 const name = 'slider';
 
 export default {
+  menu: 'main',
   icon: 'icon-slider',
   label,
   name,
+  event: ['change', 'input'],
+  validate: ['number', 'array'],
   rule({ t }) {
     return {
       type: name,

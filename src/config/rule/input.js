@@ -4,9 +4,12 @@ const label = '输入框';
 const name = 'input';
 
 export default {
+    menu: 'main',
   icon: 'icon-input',
   label,
   name,
+    event: ['blur', 'focus', 'change', 'input', 'clear'],
+    validate: ['string', 'url', 'email'],
   rule({ t }) {
     return {
       type: name,

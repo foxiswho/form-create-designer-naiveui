@@ -5,9 +5,11 @@ const label = '开关';
 const name = 'switch';
 
 export default {
+  menu: 'main',
   icon: 'icon-switch',
   label,
   name,
+  event: ['change'],
   rule({ t }) {
     return {
       type: name,

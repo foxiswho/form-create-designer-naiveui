@@ -32,6 +32,9 @@ importers:
       '@iconify/iconify':
         specifier: ^3.1.1
         version: 3.1.1
+      '@iconify/vue':
+        specifier: ^4.1.2
+        version: 4.1.2(vue@3.4.21(typescript@5.4.3))
       vite-plugin-html:
         specifier: ^3.2.2
         version: 3.2.2(vite@5.3.2(@types/node@20.11.30)(terser@5.29.2))
@@ -1250,6 +1253,11 @@ packages:
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
+
+  '@iconify/vue@4.1.2':
+    resolution: {integrity: sha512-CQnYqLiQD5LOAaXhBrmj1mdL2/NCJvwcC4jtW2Z8ukhThiFkLDkutarTOV2trfc9EXqUqRs0KqXOL9pZ/IyysA==}
+    peerDependencies:
+      vue: '>=3'
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -7641,6 +7649,11 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify/types@2.0.0': {}
+
+  '@iconify/vue@4.1.2(vue@3.4.21(typescript@5.4.3))':
+    dependencies:
+      '@iconify/types': 2.0.0
+      vue: 3.4.21(typescript@5.4.3)
 
   '@isaacs/cliui@8.0.2':
     dependencies:

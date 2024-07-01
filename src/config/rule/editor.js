@@ -5,6 +5,7 @@ const label = '富文本框';
 const name = 'fc-editor';
 
 export default {
+  menu: 'main',
   icon: 'icon-editor',
   label,
   name,
