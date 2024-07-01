@@ -283,8 +283,8 @@
             </n-layout-content>
           </n-layout>
         </n-layout-sider>
-        <n-dialog v-model="preview.state" width="800px" class="_fd-preview-dialog" append-to-body>
-          <n-tabs class="_fd-preview-tabs" v-model="previewStatus">
+        <n-dialog v-if="preview.state" width="800px" class="_fd-preview-dialog" append-to-body>
+          <n-tabs class="_fd-preview-tabs" :default-value="previewStatus">
             <n-tab-pane :tab="t('form.formMode')" name="form"></n-tab-pane>
             <n-tab-pane :tab="t('form.componentMode')" name="component"></n-tab-pane>
           </n-tabs>

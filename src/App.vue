@@ -40,7 +40,7 @@
       </fc-designer>
 
       <n-modal
-          v-model:show="state"
+          v-if="state"
           preset="dialog"
           :show-icon="false"
           :title="title[type]"
@@ -60,7 +60,7 @@
         </template>
       </n-modal>
       <n-modal
-          v-model:show="stateApi"
+          v-if="stateApi"
           preset="dialog"
           :show-icon="false"
           title="设置"
@@ -87,7 +87,7 @@
         </template>
       </n-modal>
       <n-modal
-          v-model:show="stateApiSave"
+          v-if="stateApiSave"
           preset="dialog"
           :show-icon="false"
           title="提示"

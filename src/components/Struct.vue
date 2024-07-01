@@ -4,7 +4,7 @@
       title || t("struct.title")
     }}</n-button>
     <n-modal
-      v-model:show="visible"
+      v-if="visible"
       preset="dialog"
       :show-icon="false"
       :title="title || t('struct.title')"
