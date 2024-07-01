@@ -281,24 +281,33 @@
                         </n-layout-content>
                     </n-layout>
                 </n-layout-sider>
-                <n-dialog v-if="preview.state" width="800px" class="_fd-preview-dialog" append-to-body>
-                    <n-tabs class="_fd-preview-tabs" :default-value="previewStatus">
-                        <n-tab-pane :tab="t('form.formMode')" name="form"></n-tab-pane>
-                        <n-tab-pane :tab="t('form.componentMode')" name="component"></n-tab-pane>
-                    </n-tabs>
-                    <template v-if="previewStatus === 'form'">
-                        <ViewForm :rule="preview.rule" :option="preview.option" v-model:api="preview.api"
-                                  v-if="preview.state"></ViewForm>
-                    </template>
-                    <pre class="_fd-preview-code" v-else><code v-html="preview.html"></code></pre>
-                </n-dialog>
+
             </n-layout>
         </n-layout-content>
     </n-layout>
+  <n-modal v-model:show="preview.state" width="800px" bordered title="预览" preset="dialog" :show-icon="false">
+    <n-card
+        style="width: 600px;height:600px;background-color: #ffffff"
+        :bordered="false"
+        size="huge"
+        role="dialog"
+        aria-modal="true"
+    >
+    <n-tabs class="_fd-preview-tabs" :default-value="previewStatus">
+      <n-tab-pane :tab="t('form.formMode')" name="form"></n-tab-pane>
+      <n-tab-pane :tab="t('form.componentMode')" name="component"></n-tab-pane>
+    </n-tabs>
+    <template v-if="previewStatus === 'form'">
+      <ViewForm :rule="preview.rule" :option="preview.option" v-model:api="preview.api"
+                v-if="preview.state"></ViewForm>
+    </template>
+    <pre class="_fd-preview-code" v-else><code v-html="preview.html"></code></pre>
+    </n-card>
+  </n-modal>
 </template>
 
 <script>
-import { NTag,NDialog,NDivider } from 'naive-ui';
+import { NTag,NDialog,NDivider,NModal } from 'naive-ui';
 import form from '../config/base/form';
 import field from '../config/base/field';
 import validate from '../config/base/validate';
@@ -450,6 +459,12 @@ export default defineComponent({
                 option: {},
                 api: {},
             },
+          preview2: {
+            state: true,
+            rule: formCreate.parseJson('[{"type":"input","field":"F6icly17jbifabc","title":"输入框","info":"","$required":false,"_fc_id":"id_Frvrly17jbifacc","name":"ref_F8bxly17jbifadc","display":true,"hidden":false,"_fc_drag_tag":"input"}]'),
+            option: formCreate.parseJson('{"form":{"inline":false,"hideRequiredAsterisk":false,"labelPosition":"right","size":"small","labelWidth":"125px"},"resetBtn":{"show":false,"innerText":"重置"},"submitBtn":{"show":false,"innerText":"提交"}}'),
+            api: {},
+          },
             inputForm: {
                 state: false,
                 rule: [],
@@ -491,7 +506,7 @@ export default defineComponent({
                         }
                     },
                     form: {
-                      labelPlacement: 'top',
+                        labelPlacement: 'top',
                         size: 'small'
                     },
                     submitBtn: false,
@@ -890,7 +905,7 @@ export default defineComponent({
                     inline: false,
                     hideRequiredAsterisk: false,
                   labelPlacement: 'right',
-                    size: 'default',
+                    size: 'small',
                     labelWidth: '125px',
                     ...options.form || {}
                 };
