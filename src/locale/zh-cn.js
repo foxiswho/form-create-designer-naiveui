@@ -6,6 +6,7 @@ const ZhCn = {
         info: '提示信息',
         control: '联动数据',
         labelPosition: '标签的位置',
+        labelPlacement: '标签的位置',
         labelStyle: '标签的样式',
         labelSuffix: '标签的后缀',
         size: '表单的尺寸',
