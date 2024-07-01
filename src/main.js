@@ -17,6 +17,7 @@ import {
     NForm,
     NDivider,
     NModal,
+    NCard,
     NFormItem,
     NRadio,
     NRadioGroup,
@@ -63,7 +64,7 @@ const naive = create({
         NPopover, NIcon, NGrid, NGridItem, NRadioButton, NDataTable, NCheckboxGroup,
         NCheckbox, NSkeleton, NTimePicker, NDatePicker, NConfigProvider, NSlider, NRate,
         NColorPicker, NCascader, NUpload, NText, NP, NUploadDragger, NTransfer, NTree,NNotificationProvider,
-        NAlert, NTooltip, NTabs, NTabPane, NTab,NTag,NDialog,NDropdown]
+        NAlert, NTooltip, NTabs, NTabPane, NTab,NTag,NDialog,NDropdown,NCard]
 })
 
 const app = createApp(App);
