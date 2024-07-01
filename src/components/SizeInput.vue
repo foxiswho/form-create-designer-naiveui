@@ -4,7 +4,7 @@
             <n-button :size="size" style="width: 150px;" @click="changeType()">{{ unit[idx] }}</n-button>
         </template>
         <template v-else>
-            <n-inputNumber :size="size" v-model="num" @change="submit" controls-position="right"/>
+            <n-inputNumber :size="size" v-model="num" @update:value="submit" controls-position="right"/>
             <n-dropdown trigger="click" size="small" :options="options">
                 <n-button :size="size">{{ unit[idx] }}</n-button>
 
@@ -43,6 +43,7 @@ export default defineComponent({
             idx: 1,
             num: 0,
             oldValue: this.modelValue || '',
+            options: this.getOptions()
         }
     },
     methods: {
@@ -85,19 +86,21 @@ export default defineComponent({
                 this.submit();
             }
         },
-      options(){
+      getOptions(){
           let arr =[]
-        for(var i in this.unit){
-          let name = this.unit[i]
-          arr.push({
-            label: name,
-            key: i,
-            props: {
-              onClick: () => {
-                this.changeType(i)
+        if(this.unit){
+          for(var i in this.unit){
+            let name = this.unit[i]
+            arr.push({
+              label: name,
+              key: i,
+              props: {
+                onClick: () => {
+                  this.changeType(i)
+                }
               }
-            }
-          })
+            })
+          }
         }
           return arr
       }

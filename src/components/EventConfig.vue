@@ -3,102 +3,92 @@
         <n-badge :value="eventNum" type="warning" :hidden="eventNum < 1">
             <el-button size="small" @click="visible=true">{{ t('event.title') }}</el-button>
         </n-badge>
-        <n-dialog class="_fd-event-dialog" :title="t('event.title')" v-model="visible" destroy-on-close
-                   :close-on-click-modal="false"
+        <n-dialog class="_fd-event-dialog" :title="t('event.title')" v-if="visible" destroy-on-close
+                   :maskClosable="false"
                    append-to-body
                    width="980px">
             <n-layout class="_fd-event-con" style="height: 600px">
                 <n-layout-sider style="width:300px;">
                     <n-layout class="_fd-event-l">
                         <n-layout-header class="_fd-event-head" height="40px">
-                            <n-dropdown popper-class="_fd-event-dropdown" size="default"
-                                         :placement="'bottom-start'">
+                            <n-dropdown popper-class="_fd-event-dropdown" size="small"
+                                         :placement="'bottom-start'"
+                            :options="options()"
+                            >
                               <span class="el-dropdown-link">
                                 <n-button link type="primary" size="default">
                                     {{ t('event.create') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </n-button>
                               </span>
-                                <template #dropdown>
-                                    <n-dropdown>
-                                        <n-dropdown-item v-for="name in eventName" :key="name" @click="add(name)">
-                                            <div class="_fd-event-item">
-                                                <span>{{ name }}</span>
-                                            </div>
-                                        </n-dropdown-item>
-                                        <el-dropdown-item :divided="eventName.length > 0" @click="cusEvent">
-                                            <div>{{ t('props.custom') }}</div>
-                                        </el-dropdown-item>
-                                    </n-dropdown>
-                                </template>
                             </n-dropdown>
                         </n-layout-header>
-                        <el-main>
-                            <el-menu
+                        <n-layout-content>
+                            <n-menu
                                 :default-active="defActive"
                                 v-model="activeData">
-                                <template v-for="(item, name) in event">
-                                    <template v-if="Array.isArray(item)">
-                                        <template v-for="(event, index) in item" :key="name + index">
-                                            <el-menu-item :index="name + index">
-                                                <div class="_fd-event-title"
-                                                     @click.stop="edit({name, item, index})">
-                                                    <div class="_fd-event-method">
-                                                        <span>function<span>{{
-                                                                name
-                                                            }}</span></span>
-                                                    </div>
-                                                    <i class="fc-icon icon-delete"
-                                                       @click.stop="rm({name, item, index})"></i>
-                                                </div>
-                                            </el-menu-item>
-                                        </template>
-                                    </template>
-                                    <el-menu-item v-else :index="name + 0">
-                                        <div class="_fd-event-title" @click.stop="edit({name})">
-                                            <div class="_fd-event-method">
-                                                        <span>function<span>{{
-                                                                name
-                                                            }}</span></span>
-                                            </div>
-                                            <i class="fc-icon icon-delete" @click.stop="rm({name})"></i>
-                                        </div>
-                                    </el-menu-item>
-                                </template>
-                                <el-menu-item v-if="cus" style="padding-left: 10px;" index="custom">
-                                    <div class="_fd-event-title" @click.stop>
-                                        <el-input type="text" v-model="cusValue" size="default"
-                                                  @keydown.enter="addCus"
-                                                  :placeholder="t('event.placeholder')">
-                                        </el-input>
-                                        <div>
-                                            <i class="fc-icon icon-add" @click.stop="addCus"></i>
-                                            <i class="fc-icon icon-delete" @click.stop="closeCus"></i>
-                                        </div>
-                                    </div>
-                                </el-menu-item>
-                            </el-menu>
-                        </el-main>
+<!--                                <template v-for="(item, name) in event">-->
+<!--                                    <template v-if="Array.isArray(item)">-->
+<!--                                        <template v-for="(event, index) in item" :key="name + index">-->
+<!--                                            <el-menu-item :index="name + index">-->
+<!--                                                <div class="_fd-event-title"-->
+<!--                                                     @click.stop="edit({name, item, index})">-->
+<!--                                                    <div class="_fd-event-method">-->
+<!--                                                        <span>function<span>{{-->
+<!--                                                                name-->
+<!--                                                            }}</span></span>-->
+<!--                                                    </div>-->
+<!--                                                    <i class="fc-icon icon-delete"-->
+<!--                                                       @click.stop="rm({name, item, index})"></i>-->
+<!--                                                </div>-->
+<!--                                            </el-menu-item>-->
+<!--                                        </template>-->
+<!--                                    </template>-->
+<!--                                    <el-menu-item v-else :index="name + 0">-->
+<!--                                        <div class="_fd-event-title" @click.stop="edit({name})">-->
+<!--                                            <div class="_fd-event-method">-->
+<!--                                                        <span>function<span>{{-->
+<!--                                                                name-->
+<!--                                                            }}</span></span>-->
+<!--                                            </div>-->
+<!--                                            <i class="fc-icon icon-delete" @click.stop="rm({name})"></i>-->
+<!--                                        </div>-->
+<!--                                    </el-menu-item>-->
+<!--                                </template>-->
+<!--                                <el-menu-item v-if="cus" style="padding-left: 10px;" index="custom">-->
+<!--                                    <div class="_fd-event-title" @click.stop>-->
+<!--                                        <el-input type="text" v-model="cusValue" size="default"-->
+<!--                                                  @keydown.enter="addCus"-->
+<!--                                                  :placeholder="t('event.placeholder')">-->
+<!--                                        </el-input>-->
+<!--                                        <div>-->
+<!--                                            <i class="fc-icon icon-add" @click.stop="addCus"></i>-->
+<!--                                            <i class="fc-icon icon-delete" @click.stop="closeCus"></i>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </el-menu-item>-->
+                            </n-menu>
+                        </n-layout-content>
                     </n-layout>
                 </n-layout-sider>
-                <el-main>
-                    <el-container class="_fd-event-r">
-                        <el-header class="_fd-event-head" height="40px" v-if="activeData">
+                <n-layout-content>
+                    <n-layout class="_fd-event-r">
+                        <n-layout-header class="_fd-event-head" height="40px" v-if="activeData">
                             <div><a target="_blank" href="https://form-create.com/v3/instance">{{t('form.document')}}</a></div>
                             <div>
-                                <el-button size="small" @click="close">{{ t('props.cancel') }}</el-button>
-                                <el-button size="small" type="primary" @click="save" color="#2f73ff">{{
+                                <n-button size="small" @click="close">{{ t('props.cancel') }}</n-button>
+                                <n-button size="small" type="primary" @click="save" color="#2f73ff">{{
                                         t('props.save')
                                     }}
-                                </el-button>
+                                </n-button>
                             </div>
-                        </el-header>
-                        <el-main v-if="activeData">
+                        </n-layout-header>
+                        <n-layout-content v-if="activeData">
                             <FnEditor ref="fn" v-model="eventStr" body :name="activeData.name"
                                       :args="fnArgs"
                                       style="height: 519px;"/>
-                        </el-main>
-                    </el-container>
-                </el-main>
+                        </n-layout-content>
+                    </n-layout>
+                </n-layout-content>
             </n-layout>
             <template #footer>
                 <div>
@@ -117,7 +107,7 @@
 import unique from '@form-create/utils/lib/unique';
 import deepExtend from '@form-create/utils/lib/deepextend';
 import is from '@form-create/utils/lib/type';
-import {defineComponent} from 'vue';
+import {defineComponent, h} from 'vue';
 import FnEditor from './FnEditor.vue';
 import errorMessage from '../utils/message';
 import {getInjectArg} from '../utils';
@@ -313,6 +303,38 @@ export default defineComponent({
             this.destroy();
             this.closeCus();
         },
+      options() {
+        let arr = []
+        if (this.eventName) {
+          for (var i in this.eventName) {
+            let name = this.eventName[i]
+            arr.push({
+              label: () => h('div', {class: '_fd-event-item'},
+                  h('span', name)
+              ),
+              key: i,
+              props: {
+                onClick: () => {
+                  this.add(name)
+                }
+              }
+            })
+          }
+        }
+          if (this.eventName.length > 0) {
+            arr.push({
+              label: () => h('div', t('props.custom')),
+              key: i,
+              props: {
+                onClick: () => {
+                  this.cusEvent()
+                }
+              }
+            })
+          }
+
+        return []
+      }
     },
     beforeCreate() {
         window.$inject = {
