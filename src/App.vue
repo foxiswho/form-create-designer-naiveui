@@ -1,122 +1,122 @@
 <template>
   <n-config-provider style="height: 100vh" :locale="naiveLanguage" :date-locale="dateLanguage">
-    <div id="app">
-      <div class="_fc-t-header">
-        <img class="_fc-t-logo" src="http://form-create.com/logo.png" />
-        <div class="_fc-t-name">form-create-designer-naiveui</div>
-        <div class="_fc-t-menu">
-          <n-space>
-            <n-button size="small" ghost @click="setJson"> 导入JSON</n-button>
-            <n-button size="small" ghost @click="setOption"> 导入Options</n-button>
-            <n-button size="small" secondary type="info" @click="showJson">生成JSON</n-button>
-            <n-button size="small" secondary type="success" @click="showOption">生成Options</n-button>
-            <n-button size="small" secondary type="error" @click="showTemplate">生成组件</n-button>
-            <n-button size="small" type="info" @click="showSaveData">保存</n-button>
-            <n-button size="small" ghost @click="showApiSetting">设置</n-button>
-            <n-button size="small" ghost @click="changeLocale">中英切换</n-button>
-          </n-space>
+  <div id="app">
+    <div class="_fc-top">
+      <div class="_fc-top-nav">
+        <div class="_fc-top-copyright">
+          <img class="_fc-t-logo" src="http://form-create.com/logo.png" alt="logo"/>
+          <div class="_fc-t-name"><span>FcDesigner</span></div>
+        </div>
+        <div class="_fc-top-link">
+          <a href="https://form-create.com/" target="_blank" class="item">官网</a>
+          <a href="https://pro.form-create.com/view" class="item pro-version">高级版🔥</a>
+          <a href="https://view.form-create.com/" target="_blank" class="item">文档</a>
+          <a href="https://form-create.com/designer" target="_blank" class="item">Vue2版本</a>
+          <a href="https://github.com/xaboy/form-create-designer" target="_blank" class="item">查看源码</a>
         </div>
       </div>
-      <div class="_fc-top">
-        <div class="_fc-top-nav">
-          <div class="_fc-top-copyright">
-            <img class="_fc-t-logo" src="http://form-create.com/logo.png" alt="logo"/>
-            <div class="_fc-t-name"><span>FcDesigner</span></div>
-          </div>
-          <div class="_fc-top-link">
-            <a href="https://form-create.com/" target="_blank" class="item">官网</a>
-            <a href="https://pro.form-create.com/view" class="item pro-version">高级版🔥</a>
-            <a href="https://view.form-create.com/" target="_blank" class="item">文档</a>
-            <a href="https://form-create.com/designer" target="_blank" class="item">Vue2版本</a>
-            <a href="https://github.com/xaboy/form-create-designer" target="_blank" class="item">查看源码</a>
-          </div>
+    </div>
+    <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
+      <template #handle>
+        <div class="handle">
+          <n-dropdown
+          :options="[
+              {
+                label:'导入JSON',
+                key:'导入JSON',
+                props:{
+                  onClick:()=>{
+                    setJson()
+                  }
+                },
+              },
+              {
+                label:'导入Options',
+                key:'导入Options',
+                props:{
+                  onClick:()=>{
+                    setOption()
+                  }
+                },
+              }
+          ]"
+          >
+            <div class="el-dropdown-link">
+              <span>导入</span>
+              <Icon icon="iconamoon:arrow-down-2"/>
+            </div>
+          </n-dropdown>
+          <n-dropdown
+              :options="[
+              {
+                label:'生成JSON',
+                key:'生成JSON',
+                props:{
+                  onClick:()=>{
+                    showJson()
+                  }
+                },
+              },
+              {
+                label:'生成Options',
+                key:'生成Options',
+                props:{
+                  onClick:()=>{
+                    showOption()
+                  }
+                },
+              }
+          ]"
+          >
+            <div class="el-dropdown-link">
+              <span>导出</span>
+              <Icon class="el-icon--right" icon="iconamoon:arrow-up-2"></Icon>
+            </div>
+          </n-dropdown>
         </div>
-      </div>
-      <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
-        <template #handle>
-          <n-button size="small" ghost @click="setJson"> 导入JSON</n-button>
-          <n-button size="small" ghost @click="setOption"> 导入Options</n-button>
-        </template>
-      </fc-designer>
-
-      <n-modal
-          v-if="state"
-          preset="dialog"
-          :show-icon="false"
-          :title="title[type]"
-          class="_fc-t-dialog"
-          style="width: 600px"
-      >
-        <template v-if="isLoading">
-          <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
-        </template>
-        <div ref="editor" v-if="state" v-show="isLoading === false"></div>
-        <span style="color: red;" v-if="err">输入内容格式有误!</span>
-        <template #action v-if="type > 2">
-          <n-space>
+      </template>
+    </fc-designer>
+    <n-dialog :title="title[type]" v-if="state" class="_fc-t-dialog">
+      <div ref="editor" v-if="state"></div>
+      <span style="color: red;" v-if="err">输入内容格式有误!</span>
+      <template #action v-if="type > 2">
+                <span slot="footer" class="dialog-footer">
             <n-button @click="state = false" size="small">取 消</n-button>
             <n-button type="primary" @click="onOk" size="small">确 定</n-button>
-          </n-space>
-        </template>
-      </n-modal>
-      <n-modal
-          v-if="stateApi"
-          preset="dialog"
-          :show-icon="false"
-          title="设置"
-          class="_fc-t-dialog"
-          style="width: 600px"
-      >
-        <template v-if="isLoading">
-          <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
-        </template>
-        <div ref="editor" v-if="stateApi" v-show="isLoading === false">
-          <form-create
-              v-model:api="apiUrlApi"
-              v-model="apiUrlData"
-              :rule="apiUrlRule"
-              :option="apiUrlOption"
-              @submit="onApiSubmit"
-          ></form-create>
-        </div>
-        <template #action >
-          <n-space>
-            <n-button @click="stateApi = false" size="small">取 消</n-button>
-            <n-button type="primary" @click="onApiSubmit2" size="small">确 定</n-button>
-          </n-space>
-        </template>
-      </n-modal>
-      <n-modal
-          v-if="stateApiSave"
-          preset="dialog"
-          :show-icon="false"
-          title="提示"
-          class="_fc-t-dialog"
-          style="width: 600px"
-      >
-        <template v-if="isLoading">
-          <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
-        </template>
-        <span style="color: red;" v-if="err">{{err}}</span>
-      </n-modal>
-    </div>
+          </span>
+      </template>
+    </n-dialog>
+  </div>
   </n-config-provider>
 </template>
 
 <script>
 import { enUS, NConfigProvider, dateZhCN, zhCN, } from 'naive-ui'
-import is from '@form-create/utils/lib/type';
-import jsonlint from "jsonlint-mod";
-import { javascript } from "@codemirror/lang-javascript";
-import { json } from '@codemirror/lang-json';
-import { basicSetup, EditorView } from "codemirror";
+import jsonlint from 'jsonlint-mod';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/addon/lint/lint.css';
+import CodeMirror from 'codemirror/lib/codemirror';
+import 'codemirror/addon/lint/lint';
+import 'codemirror/addon/lint/json-lint';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/vue/vue';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/css/css';
+import 'codemirror/addon/mode/overlay';
+import 'codemirror/addon/mode/simple';
+import 'codemirror/addon/selection/selection-pointer';
+import 'codemirror/mode/handlebars/handlebars';
+import 'codemirror/mode/htmlmixed/htmlmixed';
+import 'codemirror/mode/pug/pug';
 
-import formCreate from "@form-create/naive-ui";
-import ZhCn from "./locale/zh-cn";
-import En from "./locale/en";
+import is from '@form-create/utils/lib/type';
+import formCreate from '@form-create/naive-ui';
+import ZhCn from "../src/locale/zh-cn";
+import En from "../src/locale/en";
 import dateEnUs from 'naive-ui/es/locales/date/enUS';
 import { computed, defineComponent, ref } from 'vue'
 import { GetRequest } from './utils/tools'
+import { Icon } from '@iconify/vue';
 import {
   createDiscreteApi,
   lightTheme
@@ -133,18 +133,15 @@ const { message, notification, dialog, loadingBar, modal } = createDiscreteApi(
       configProviderProps: configProviderPropsRef
     }
 )
-const CACHE_KEY = "fc-config-$101"
-const TITLE = [
-  "生成规则",
-  "表单规则",
-  "生成组件",
-  "设置生成规则",
-  "设置表单规则",
-];
+const CACHE_KEY = 'fc-config-$101';
+const TITLE = ['生成规则', '表单规则', '生成组件', '设置生成规则', '设置表单规则'];
 
 export default {
-  name: "app",
-  components: [ NConfigProvider ],
+  name: 'app',
+  components: {
+    Icon,
+    NConfigProvider,
+  },
   data() {
     return {
       state: false,
@@ -153,8 +150,10 @@ export default {
       editor: null,
       err: false,
       type: -1,
-      lang: "cn",
+      autoSaveId: null,
+      lang:'cn',
       locale: null,
+      topImg: true,
       config: {
         showFormConfig: false,
         fieldReadonly: false,
@@ -179,7 +178,6 @@ export default {
       },
       naiveLanguage: zhCN,
       dateLanguage: dateZhCN,
-      autoSaveId: null,
       stateApi: false,
       stateApiSave: false,
       apiUrlApi: null,
@@ -202,13 +200,17 @@ export default {
     },
     value() {
       this.load();
-    },
+    }
   },
   methods: {
+    goPro(){
+      location.href = 'https://pro.form-create.com/view';
+    },
     getCache() {
       function def() {
         return {opt: null, rule: null};
       }
+
       try {
         let cache = localStorage.getItem(CACHE_KEY);
         if (!cache) {
@@ -222,11 +224,11 @@ export default {
         return def();
       }
     },
-    setCache({opt: u, rule: s}) {
+    setCache({opt, rule}) {
       localStorage.setItem(CACHE_KEY, JSON.stringify({
-        opt: u,
-        rule: formCreate.toJson(s)
-      }))
+        opt,
+        rule: formCreate.toJson(rule)
+      }));
     },
     loadAutoSave() {
       const s = this.autosave;
@@ -252,47 +254,26 @@ export default {
       let val;
       if (this.type === 2) {
         val = this.value;
-      } else if (this.type === 0) {
+      }else if(this.type === 0){
         val = formCreate.toJson(this.value, 2);
-      } else {
+      }else{
         val = JSON.stringify(this.value, null, 2);
       }
       this.$nextTick(() => {
-        this.initCodeContent(val);
-      });
-    },
-    initCodeContent(val) {
-      this.isLoading = true;
-      setTimeout(() => {
-        if (this.editor) {
-          this.editor.destroy();
-        }
-        this.editor = new EditorView({
-          doc: val || 'Press Ctrl-Space in here...\n',
-          extensions: [
-            basicSetup,
-            javascript(),
-            json(),
-          ],
-          parent: this.$refs.editor,
-          options: {
-            lineNumbers: true,
-            line: true,
-            //括号匹配
-            matchBrackets: true,
-          },
+        this.editor = CodeMirror(this.$refs.editor, {
+          lineNumbers: true,
+          mode: this.type === 2 ? {name: 'vue'} : 'application/json',
+          gutters: ['CodeMirror-lint-markers'],
+          lint: true,
+          line: true,
+          tabSize: 2,
+          lineWrapping: true,
+          value: val || ''
         });
-        this.isLoading = false;
-      }, 500);
-    },
-    insertCommandContent(val) {
-      this.editor.dispatch({
-        changes: {
-          from: 0,
-          to: this.editor.state.doc.length,
-          insert: val || "Press Ctrl-Space in here...\n"
-        },
-      })
+        this.editor.on('blur', () => {
+          this.err = this.editor.state.lint.marked.length > 0;
+        });
+      });
     },
     onValidationError(e) {
       this.err = e.length !== 0;
@@ -320,127 +301,11 @@ export default {
     setOption() {
       this.state = true;
       this.type = 4;
-      this.value = { form: {} };
-    },
-    showSaveData() {
-      //this.value = this.saveData();
-      //const notification = useNotification()
-      this.stateApiSave = false
-      const rule = this.$refs.designer.getRule();
-      const opt = this.$refs.designer.getOption();
-      const ruleJson= formCreate.toJson(rule).replaceAll("\\", "\\\\")
-      const optJson = JSON.stringify(opt)
-      console.log('rule',rule)
-      console.log('opt',opt)
-      // console.log('rule',ruleJson)
-      // console.log('opt',optJson)
-      this.initApiData()
-      if (!this.apiUrlData.url){
-        this.err ="接口地址不能为空"
-        this.stateApiSave = true
-        return
-      }
-      if(!this.routerParam.id){
-        notification.error({
-          content: "id 不能为空",
-          duration: 2500,
-          keepAliveOnHover: true
-        })
-        return;
-      }
-      const data={id:this.routerParam.id,data:{content:ruleJson,form:optJson,formSingle:false}}
-
-      let env= __APP_ENV__;
-      let headers = new Headers({
-        'Content-Type': 'application/json',
-      });
-      //根据 环境变量取 本地缓存数据
-      if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
-        let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
-        if(tokenKey){
-          //是否存在内部 键值，如果存在，则按内部键值取值
-          if(env.VITE_TOKEN_KEY_ACCESS){
-            let obj = JSON.parse(tokenKey)
-            if(obj){
-              headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
-            }
-          }else{
-            //直接填充值内容
-            headers.set(env.VITE_HEADER_KEY,tokenKey)
-          }
-        }
-      }
-
-      fetch(this.apiUrlData.url,{
-        method:"POST",
-        headers: headers,
-        body:JSON.stringify(data),
-      })
-          .then(response=>{
-            console.log('response',response)
-            if (response.ok) {
-              return response.json()
-            } else {
-              return Promise.reject({
-                status: response.status,
-                statusText: response.statusText
-              })
-            }
-          })
-          .then(data=>{
-            console.log('data',data)
-            if ('200' == data.code) {
-              notification.success({
-                content: '操作成功',
-                duration: 2500,
-                keepAliveOnHover: true
-              })
-            }else{
-              notification.error({
-                content: data.message,
-                duration: 2500,
-                keepAliveOnHover: true
-              })
-            }
-
-          })
-          .catch(error =>{
-            if (error.status === 404) {
-              notification.error({
-                content: '无法访问该地址 404',
-                duration: 2500,
-                keepAliveOnHover: true
-              })
-            }else{
-              notification.error({
-                content: error.statusText,
-                duration: 2500,
-                keepAliveOnHover: true
-              })
-            }
-          });
-    },
-    showApiSetting() {
-      this.stateApi = true;
-      this.type = 5;
-      this.initApiData()
-    },
-    initApiData(){
-      let url=localStorage.getItem('URL');
-      console.log('localStorage:URL',url)
-      if (url !== undefined&&url){
-        this.apiUrlData.url = url;
-      }else{
-        let env= __APP_ENV__;
-        this.apiUrlData.url = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL
-        this.apiUrlData.urlDetail = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DETAIL
-        this.apiUrlData.dictionary = env.VITE_WEBSITE_URL+env.VITE_DESIGNER_URL_DICTIONARY
-      }
-      console.log('__APP_ENV__',__APP_ENV__)
+      this.value = {form: {}};
     },
     onOk() {
       if (this.err) return;
-      const json = this.editor.state.doc;
+      const json = this.editor.getValue();
       let val = JSON.parse(json);
       if (this.type === 3) {
         if (!Array.isArray(val)) {
@@ -471,169 +336,50 @@ export default {
 
 <script>
 import formCreate from "@form-create/naive-ui";
-import { defineComponent, ref } from "vue";
 
-export default defineComponent({
-  setup() {
-    const fapi = ref(null);
-    const rule = ref(formCreate.parseJson('${formCreate.toJson(rule).replaceAll("\\", "\\\\")}'));
-    const option = ref(formCreate.parseJson('${JSON.stringify(opt)}'));
-
-    function onSubmit (formData) {
-      // TODO 提交表单
-    }
-
+export default {
+  data () {
     return {
-      fapi,
-      rule,
-      option,
-      onSubmit,
+        fapi: null,
+        rule: formCreate.parseJson('${formCreate.toJson(rule).replaceAll('\\', '\\\\')}'),
+        option: formCreate.parseJson('${JSON.stringify(opt)}')
     }
   },
-  })
-<\/script>`;
-    },
-    onApiSubmit(formData){
-      console.log('xxxx',formData)
-      localStorage.setItem('URL',formData.url);
-    },
-    onApiSubmit2(){
-      this.apiUrlApi.submit()
-    },
-    // 获取数据
-    async loadData(){
-      const that = this
-      if(this.routerParam.id){
-        this.initApiData()
-        let env= __APP_ENV__;
-        let headers = new Headers({
-          'Content-Type': 'application/json',
-        });
-        //根据 环境变量取 本地缓存数据
-        if(env.VITE_HEADER_KEY&&env.VITE_TOKEN_KEY){
-          let tokenKey=localStorage.getItem(env.VITE_TOKEN_KEY);
-          if(tokenKey){
-            //是否存在内部 键值，如果存在，则按内部键值取值
-            if(env.VITE_TOKEN_KEY_ACCESS){
-              let obj = JSON.parse(tokenKey)
-              if(obj){
-                headers.set(env.VITE_HEADER_KEY,obj[env.VITE_TOKEN_KEY_ACCESS])
-              }
-            }else{
-              //直接填充值内容
-              headers.set(env.VITE_HEADER_KEY,tokenKey)
-            }
-          }
-        }
-
-        await fetch(this.apiUrlData.urlDetail+'?id='+this.routerParam.id,{
-          method:"POST",
-          headers: headers,
-          body:JSON.stringify(this.routerParam),
-        })
-            .then(response=>{
-              console.log('response',response)
-              if (response.ok) {
-                return response.json()
-              } else {
-                return Promise.reject({
-                  status: response.status,
-                  statusText: response.statusText
-                })
-              }
-            })
-            .then(data=>{
-              console.log('data',data.data)
-              if ('200' === data.code) {
-                if(data.data &&data.data.data.content){
-                  const obj= data.data.data
-                  console.log('data.content',obj)
-                  let info={opt:{},rule:[]}
-
-                  let val = JSON.parse(obj.content);
-                  if (!Array.isArray(val)) {
-                    return;
-                  }
-                  info.rule = formCreate.parseJson(obj.content)
-                  if(obj.form){
-                    info.opt = JSON.parse(obj.form);
-                    if (!is.Object(info.opt) || !info.opt) {
-                      return;
-                    }
-                  }
-                  that.setCache(info)
-                }
-                notification.success({
-                  content: '获取成功',
-                  duration: 2500,
-                  keepAliveOnHover: true
-                })
-              }else{
-                notification.error({
-                  content: data.message,
-                  duration: 2500,
-                  keepAliveOnHover: true
-                })
-              }
-
-
-            })
-            .catch(error =>{
-              if (error.status === 404) {
-                notification.error({
-                  content: '无法访问该地址 404',
-                  duration: 2500,
-                  keepAliveOnHover: true
-                })
-              }else{
-                notification.error({
-                  content: error.statusText,
-                  duration: 2500,
-                  keepAliveOnHover: true
-                })
-              }
-            });
-      }
+  methods: {
+    onSubmit (formData) {
+      //todo 提交表单
     }
+  }
+}
+<\/script>`;
+    }
+  },
+  mounted() {
+    const cache = this.getCache();
+    if (cache.rule) {
+      //this.$refs.designer.setRule(cache.rule);
+    }
+    if (cache.opt) {
+      //this.$refs.designer.setOption(cache.opt);
+    }
+    this.$nextTick(() => {
+      this.loadAutoSave();
+    });
+  },
+  beforeDestroy() {
+    const id = this.autoSaveId;
+    id && clearInterval(id);
   },
   beforeCreate() {
     window.jsonlint = jsonlint;
-    this.routerParam = GetRequest('')
-    console.log('GetRequest',this.routerParam)
-  },
-  beforeMount() {
-
-  },
-  async mounted() {
-    this.routerParam = GetRequest('')
-    console.log('beforeMount', this.routerParam)
-    // await this.loadData()
-    let tmp=formCreate.parseJson('[{"type":"span","title":"例","native":false,"children":["https://fenbaoya.com/api/designer/naiveui"],"_fc_drag_tag":"span","hidden":false,"display":true},{"type":"input","field":"url","title":"保存地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"urlDetail","title":"详情地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]},{"type":"input","field":"dictionary","title":"数据字典地址","info":"","$required":true,"_fc_drag_tag":"input","hidden":false,"display":true,"validate":[{"trigger":"blur","mode":"required","message":"格式错误","required":true,"type":"url"}]}]')
-    //this.$refs.designer.setRule(tmp)
-    const u = this.getCache();
-    if (u) {
-      //u.rule && this.$refs.designer.setRule(u.rule)
-      u.opt && this.$refs.designer.setOption(u.opt)
-      // await this.$nextTick(() => {
-      //       this.loadAutoSave()
-      //     }
-      // )
-      setTimeout(()=>{
-        this.loadAutoSave()
-      }, 2000)
-    }
-
-
-  },
-  beforeDestroy(){
-    const u = this.autoSaveId;
-    u && clearInterval(u)
   }
 };
+
+
 </script>
 
 <style>
-#app {
+#app{
   height: 100%;
 }
 ._fc-top {
