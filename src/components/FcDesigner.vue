@@ -135,12 +135,12 @@
             <div class="_fc-m-tools-r">
               <template v-if="!inputForm.state">
                 <slot name="handle"></slot>
-                <n-button v-if="getConfig('showSaveBtn', false)" type="success" plain size="small"
+                <n-button v-if="getConfig('showSaveBtn', false)" type="success" strong secondary size="tiny"
                            @click="handleSave"><i class="fc-icon icon-save-online"></i> {{
                     t('props.save')
                   }}
                 </n-button>
-                <n-button type="primary" plain size="small"
+                <n-button type="info" strong secondary size="tiny"
                            @click="openPreview"><i class="fc-icon icon-preview"></i> {{
                     t('props.preview')
                   }}
@@ -152,7 +152,7 @@
                     :negative-text="t('props.cancel')"
                     @positiveClick="clearDragRule">
                   <template #trigger>
-                    <n-button type="danger" plain size="small"><i
+                    <n-button type="error" strong secondary size="tiny"><i
                         class="fc-icon icon-delete"></i>{{ t('props.clear') }}
                     </n-button>
                   </template>
