@@ -307,7 +307,6 @@
 </template>
 
 <script>
-import { NTag,NDialog,NDivider,NModal } from 'naive-ui';
 import form from '../config/base/form';
 import field from '../config/base/field';
 import validate from '../config/base/validate';

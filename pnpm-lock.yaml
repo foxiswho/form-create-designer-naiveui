@@ -24,11 +24,11 @@ importers:
         specifier: ^3.1
         version: 3.1.20
       '@form-create/naive-ui':
-        specifier: ^3.1.29
-        version: 3.1.29(vue@3.4.21(typescript@5.4.3))
+        specifier: ^3.2.0
+        version: 3.2.0(vue@3.4.21(typescript@5.4.3))
       '@form-create/utils':
-        specifier: ^3.1.29
-        version: 3.1.29
+        specifier: ^3.2.0
+        version: 3.2.0
       '@iconify/iconify':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1196,39 +1196,39 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@form-create/component-naive-checkbox@3.1.29':
-    resolution: {integrity: sha512-rO1U+rdwy0PnL2NqaOUJkYZZWxeaQZgPYczlrWCIyCKYdWSGoahYIqHBL9Sv5eqzUhYyaqAVDQLJtiDVFlkKhA==}
+  '@form-create/component-naive-checkbox@3.2.0':
+    resolution: {integrity: sha512-tRsaaa3wHmYa9GmEE1pS2ZaQoMkcuCTDeFGBGFqbV/DkK47+G5hVrrJC11+G8l3rRi96bch+yBjlpbih8U6ijA==}
 
-  '@form-create/component-naive-frame@3.1.29':
-    resolution: {integrity: sha512-7ZDGhVHg2lgWewRRDpySdcDOq08nx1NrSN0YQPZsbwmR/T5LzKAZft3AJequsmH57kjbkjmonFBr78UCJz9hZA==}
+  '@form-create/component-naive-frame@3.2.0':
+    resolution: {integrity: sha512-u4ExjB9ZPQ5n0OBHLLm2bOK56e+64bfvMKTOz28h+Zdbh/W7vpbfJwgfeCpuG1va7XBrq2PvJOLrRP66YSzAIw==}
 
-  '@form-create/component-naive-group@3.1.29':
-    resolution: {integrity: sha512-Sk6SLVvrcONp5M1txIJR7bwOL8mTJLX2euVVBxT4JmqhpnOb9bfYqszUEGsI/gH7smv26/aCs3K+U3Ub2zu3+w==}
+  '@form-create/component-naive-group@3.2.0':
+    resolution: {integrity: sha512-BlaaBxClKt5VRxpXni5J+sqL9iuZsN1gRL8alHhnh+g63mlEXkPob/KobHAwu4FiyB9c36QMp4ReoWBU6o5mCQ==}
 
-  '@form-create/component-naive-radio@3.1.29':
-    resolution: {integrity: sha512-cQ1mWEkq3xo5ix0QmwPHfdRQfH/nukWJRaipOobpJGO2E3snxskOuhfX/jIo7sY8JgWq5PEYIHLT6ytSxv2lQw==}
+  '@form-create/component-naive-radio@3.2.0':
+    resolution: {integrity: sha512-Jb3DNyKd+L4lIMeuqyopkEw6UXVBJeg0ZlIjIa3hsrgC7zKNx21tJnxiNvuysIPSfvpzeS1o7y8XErYYqbTKBA==}
 
-  '@form-create/component-naive-upload@3.1.29':
-    resolution: {integrity: sha512-CQticxQQt0VyzvKLdkfSmDHO6gEmr5sav2aKt+JyCttSe8e1v+FNemDN7KzPFxE0kXZltx38/ur29xWjV6J2qw==}
+  '@form-create/component-naive-upload@3.2.0':
+    resolution: {integrity: sha512-F8IyqbvDbmtlA2uZSKPVurbs+t7sIKZQ4qxA6irNt8INs2MCJlLGK1RrypScgm5l77cqIptqTM6k8p4XWru2Lg==}
 
-  '@form-create/component-subform@3.1.5':
-    resolution: {integrity: sha512-JHNEFGuwpnjGvCJ0I0GCqPL5al0qXoN4ymnRBpm+oL+6MMo5bz1kUyoqMX1MutuC96gHTqpeqc67hssi8g2mIw==}
+  '@form-create/component-subform@3.1.34':
+    resolution: {integrity: sha512-OJcFH/7MTHx7JLEjDK/weS27qfuFWAI+OK+gXTJ2jIt9aZkGWF/EWkjetiJLt5a0KMw4Z15wOS2XCY9pVK9vlA==}
 
   '@form-create/component-wangeditor@3.1.20':
     resolution: {integrity: sha512-lAjpltmYfr3a2AeXasCehGsZNL/1WB6vWqqV9TIsJ4pleTr0/D/oPwEYQjfv+gG+NoB2Sa25SRGhtlnephjyhg==}
 
-  '@form-create/core@3.1.29':
-    resolution: {integrity: sha512-nPFFdiEmATIKeocnP8pubKSwMSegc+tcN5PU+cSuXl5RJ1w3k0UZr80Dx2yPUmw8sv4XwSMmMUkHUojz10hqFg==}
+  '@form-create/core@3.2.0':
+    resolution: {integrity: sha512-Mp/rxbbvBN1SXfIgpmJeRAgzhlNebCjUnzOzmUg9BvpZeKoxCiBkqDnqRfohMoBNTjDjUtg37WoiyDuzi4L0DQ==}
     peerDependencies:
       vue: ^3.1.0
 
-  '@form-create/naive-ui@3.1.29':
-    resolution: {integrity: sha512-er0zyCfvLkpQV85fAMu8VpQpSQoh9UVa6xXiY5+rOWn3uF0E6HeFZR9mNsv8r3yM4dQ1YPNsqDyeJK9KibVPOg==}
+  '@form-create/naive-ui@3.2.0':
+    resolution: {integrity: sha512-vC0TDCNCi3xv6PFfdS6ctj3UsArLF/BXZBup8z97acX95iSbX7NDr1o88oASNFahvTT3PLpXjd7JjaeVaYYfBw==}
     peerDependencies:
       vue: ^3.1.0
 
-  '@form-create/utils@3.1.29':
-    resolution: {integrity: sha512-CsD3htq2qyuvqc3kJipUk2OFZA5eg+Fwna9zZPoi8T8UuEKBkfgR5fp2s0AgZ87i2a5NgwCk87kfVntijnxvPw==}
+  '@form-create/utils@3.2.0':
+    resolution: {integrity: sha512-fqc7/l+US76NhloxMF3xE7UafYgxA8jU+t5WrAhmjaIAJ0vUNp6ScL/kdwN4nfOvjByZ/Q8BFQT0wqrp4lcgtw==}
 
   '@hapi/hoek@9.3.0':
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -7581,50 +7581,50 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@form-create/component-naive-checkbox@3.1.29':
+  '@form-create/component-naive-checkbox@3.2.0':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
 
-  '@form-create/component-naive-frame@3.1.29':
+  '@form-create/component-naive-frame@3.2.0':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
 
-  '@form-create/component-naive-group@3.1.29':
+  '@form-create/component-naive-group@3.2.0':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
 
-  '@form-create/component-naive-radio@3.1.29':
+  '@form-create/component-naive-radio@3.2.0':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
 
-  '@form-create/component-naive-upload@3.1.29':
+  '@form-create/component-naive-upload@3.2.0':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
 
-  '@form-create/component-subform@3.1.5': {}
+  '@form-create/component-subform@3.1.34': {}
 
   '@form-create/component-wangeditor@3.1.20':
     dependencies:
       wangeditor: 4.7.15
 
-  '@form-create/core@3.1.29(vue@3.4.21(typescript@5.4.3))':
+  '@form-create/core@3.2.0(vue@3.4.21(typescript@5.4.3))':
     dependencies:
-      '@form-create/utils': 3.1.29
+      '@form-create/utils': 3.2.0
       vue: 3.4.21(typescript@5.4.3)
 
-  '@form-create/naive-ui@3.1.29(vue@3.4.21(typescript@5.4.3))':
+  '@form-create/naive-ui@3.2.0(vue@3.4.21(typescript@5.4.3))':
     dependencies:
-      '@form-create/component-naive-checkbox': 3.1.29
-      '@form-create/component-naive-frame': 3.1.29
-      '@form-create/component-naive-group': 3.1.29
-      '@form-create/component-naive-radio': 3.1.29
-      '@form-create/component-naive-upload': 3.1.29
-      '@form-create/component-subform': 3.1.5
-      '@form-create/core': 3.1.29(vue@3.4.21(typescript@5.4.3))
-      '@form-create/utils': 3.1.29
+      '@form-create/component-naive-checkbox': 3.2.0
+      '@form-create/component-naive-frame': 3.2.0
+      '@form-create/component-naive-group': 3.2.0
+      '@form-create/component-naive-radio': 3.2.0
+      '@form-create/component-naive-upload': 3.2.0
+      '@form-create/component-subform': 3.1.34
+      '@form-create/core': 3.2.0(vue@3.4.21(typescript@5.4.3))
+      '@form-create/utils': 3.2.0
       vue: 3.4.21(typescript@5.4.3)
 
-  '@form-create/utils@3.1.29': {}
+  '@form-create/utils@3.2.0': {}
 
   '@hapi/hoek@9.3.0': {}
 
