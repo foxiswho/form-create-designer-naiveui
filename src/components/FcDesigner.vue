@@ -215,16 +215,13 @@
                             </n-tab>
                           </n-tabs>
                         </n-layout-header>
-                        <n-layout-content class="_fc-r-tab-form"
-                                 v-if="!config || config.showFormConfig !== false">
+                        <n-layout-content class="_fc-r-tab-form" v-if="activeTab==='form'">
                             <DragForm :rule="form.rule" :option="form.option"
                                       :modelValue="form.value" @change="formOptChange"
                                       v-model:api="form.api"></DragForm>
                         </n-layout-content>
-                        <n-layout-content class="_fc-r-tab-props"
-                                 :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
-                            <template
-                                v-if="activeRule || (customForm.config && (customForm.config.name || customForm.config.label))">
+                        <n-layout-content class="_fc-r-tab-props" v-if="activeTab==='props'" :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
+                            <template v-if="activeRule || (customForm.config && (customForm.config.name || customForm.config.label))">
                                 <p class="_fc-r-title">{{ t('designer.type') }}</p>
                                 <n-tag type="success" effect="plain" disable-transitions>
                                     <template v-if="activeRule">
@@ -236,8 +233,7 @@
                                         }}
                                     </template>
                                 </n-tag>
-                                <template
-                                    v-if="(activeRule && activeRule.name)">
+                                <template v-if="(activeRule && activeRule.name)">
                                     <p class="_fc-r-title">{{ t('designer.name') }}</p>
                                     <n-input size="small" class="_fc-r-name-input"
                                              v-model:value="activeRule.name"
@@ -1845,5 +1841,9 @@ export default defineComponent({
 }
 ._fc-m-drag ._fd-drag-box {
   width: 100%;
+}
+._fc-r-tab-form{
+  padding: 0 20px;
+  margin-top: 15px;
 }
 </style>
