@@ -1,6 +1,6 @@
 <template>
   <div class="_fc_table_opt">
-    <n-data-table :data="value" :columns="columns" :size="size || 'small'" :single-line="false" />
+    <n-data-table :data="valueTable" :columns="columnsData" :size="size || 'small'" :single-line="false" style="width: 100%" />
     <n-button text @click="add">
       <template #icon>
         <i class="fc-icon icon-add"></i>
@@ -28,6 +28,9 @@ export default defineComponent({
     size: String,
   },
   inject: ['designer'],
+  components: {
+    NInput,
+  },
   watch: {
     modelValue() {
       this.value = this.tidyModelValue();
@@ -37,15 +40,65 @@ export default defineComponent({
     t() {
       return this.designer.setupState.t;
     },
+    valueTable(){
+      return this.value
+    }
   },
   data() {
+    console.log('this.tidyModelValue()',this.tidyModelValue())
     let that = this
+    const createColumns2=()=>[
+      {
+        title: '键名',
+        key: "label",
+        align: 'center',
+        render(row, index) {
+          //console.log(row, index)
+          return h('input',{type:'text',
+            value:row.label,
+            onBlur:(e)=>{
+              row.label= e.target.value
+
+              that.onInput(row)
+            }});
+        },
+      },
+      {
+        title: '键名',
+        key: "value",
+        align: 'center',
+        render(row, index) {
+          return h('input',{type:'text',
+            value:row.value,
+            onBlur:(e)=>{
+              row.value= e.target.value
+
+              that.onInput(row)
+            }});
+        },
+      },
+      {
+        title: "操作",
+        key: "action",
+        align: 'center',
+        render(_, index) {
+          return h(
+              NButton,
+              {
+                text: true,
+                size: "small",
+                onClick: () => that.del(index),
+              },
+              {
+                default: () =>
+                    h("i", { class: "fc-icon icon-delete" }),
+              }
+          );
+        },
+      },
+    ]
     return {
-      columns : this.createColumns({
-        del (index) {
-          that.del(index)
-        }
-      }),
+      columnsData : createColumns2(),
       value: this.tidyModelValue(),
     };
   },
@@ -107,40 +160,44 @@ export default defineComponent({
       this.$emit('change', value);
     },
     add() {
+      console.log('add',this.value)
+      console.log('add.column',this.column)
       this.value.push(this.column.reduce((initial, v) => {
         initial[v.key] = '';
         return initial;
       }, {}));
+      console.log('add',this.value)
     },
     del(idx) {
       this.value.splice(idx, 1);
       this.input();
     },
-    createColumns({ del }){
+    createColumns({ del,t }){
+      const that = this
       return [
         {
-          title: "label",
+          title: '键名',
           key: "label",
           render(row, index) {
             return h(NInput, {
               value: row.label,
               onUpdateValue(v) {
-                modelValue[index].label = v;
-                onInput(row);
+                that.modelValue[index].label = v;
+                that.onInput(row);
               },
             });
           },
         },
         {
-          title: "value",
+          title: '值',
           key: "value",
           render(row, index) {
             return h(NInput, {
               value: row.value.toString(),
               showButton: false,
               onUpdateValue(v) {
-                modelValue[index].value = Number(v);
-                onInput(row);
+                that.modelValue[index].value = Number(v);
+                that.onInput(row);
               },
             });
           },
@@ -171,7 +228,7 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-._td-table-opt {
+._td-table-opt,._fc_table_opt {
   width: 100%;
 }
 

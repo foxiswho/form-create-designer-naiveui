@@ -3,7 +3,7 @@
         <n-badge :value="eventNum" type="warning" :show="eventNum < 1">
             <n-button @click="visible=true" size="small">{{ t('event.title') }}</n-button>
         </n-badge>
-        <n-modal class="_fd-fn-list-dialog" :title="t('event.title')" v-if="visible" destroy-on-close
+        <n-modal class="_fd-fn-list-dialog" :title="t('event.title')" v-model:show="visible" destroy-on-close
                    :close-on-click="false"
                    :style="{width:'980px'}">
             <n-layout class="_fd-fn-list-con" style="height: 600px">

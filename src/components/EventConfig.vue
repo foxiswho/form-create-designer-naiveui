@@ -8,7 +8,7 @@
                     style="width: 980px"
                    :show-icon="false">
             <n-layout has-sider class="_fd-event-con" style="height: 600px">
-                <n-layout-sider style="width:300px;">
+                <n-layout-sider style="width:300px;max-width: 300px">
                     <n-layout class="_fd-event-l">
                         <n-layout-header class="_fd-event-head" height="40px">
                             <n-dropdown popper-class="_fd-event-dropdown" size="small"
@@ -22,51 +22,49 @@
                               </span>
                             </n-dropdown>
                         </n-layout-header>
-                        <n-layout-content>
-                            <n-menu
-                                :default-active="defActive"
-                                v-model="activeData">
-<!--                                <template v-for="(item, name) in event">-->
-<!--                                    <template v-if="Array.isArray(item)">-->
-<!--                                        <template v-for="(event, index) in item" :key="name + index">-->
-<!--                                            <el-menu-item :index="name + index">-->
-<!--                                                <div class="_fd-event-title"-->
-<!--                                                     @click.stop="edit({name, item, index})">-->
-<!--                                                    <div class="_fd-event-method">-->
-<!--                                                        <span>function<span>{{-->
-<!--                                                                name-->
-<!--                                                            }}</span></span>-->
-<!--                                                    </div>-->
-<!--                                                    <i class="fc-icon icon-delete"-->
-<!--                                                       @click.stop="rm({name, item, index})"></i>-->
-<!--                                                </div>-->
-<!--                                            </el-menu-item>-->
-<!--                                        </template>-->
-<!--                                    </template>-->
-<!--                                    <el-menu-item v-else :index="name + 0">-->
-<!--                                        <div class="_fd-event-title" @click.stop="edit({name})">-->
-<!--                                            <div class="_fd-event-method">-->
-<!--                                                        <span>function<span>{{-->
-<!--                                                                name-->
-<!--                                                            }}</span></span>-->
-<!--                                            </div>-->
-<!--                                            <i class="fc-icon icon-delete" @click.stop="rm({name})"></i>-->
-<!--                                        </div>-->
-<!--                                    </el-menu-item>-->
-<!--                                </template>-->
-<!--                                <el-menu-item v-if="cus" style="padding-left: 10px;" index="custom">-->
-<!--                                    <div class="_fd-event-title" @click.stop>-->
-<!--                                        <el-input type="text" v-model="cusValue" size="default"-->
-<!--                                                  @keydown.enter="addCus"-->
-<!--                                                  :placeholder="t('event.placeholder')">-->
-<!--                                        </el-input>-->
-<!--                                        <div>-->
-<!--                                            <i class="fc-icon icon-add" @click.stop="addCus"></i>-->
-<!--                                            <i class="fc-icon icon-delete" @click.stop="closeCus"></i>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </el-menu-item>-->
-                            </n-menu>
+                        <n-layout-content class="event-menu">
+                          <n-list hoverable clickable>
+                            <template v-for="(item, name) in event">
+                              <template v-if="Array.isArray(item)">
+                                <template v-for="(event, index) in item" :key="name + index">
+                                    <n-list-item :index="name + index" style="padding: 0px;padding-left: 10px;padding-right: 5px" :class="{'is-active':defActive===(name + index)}">
+                                        <div class="_fd-event-title"
+                                             @click.stop="edit({name, item, index})">
+                                            <div class="_fd-event-method">
+                                                <span>function<span>{{
+                                                        name
+                                                    }}</span></span>
+                                            </div>
+                                            <i class="fc-icon icon-delete"
+                                               @click.stop="rm({name, item, index})"></i>
+                                        </div>
+                                    </n-list-item>
+                                </template>
+                              </template>
+                              <n-list-item v-else :index="name + 0" style="padding: 0px;padding-left: 10px;padding-right: 5px" :class="{'is-active':defActive===(name + 0)}">
+                                  <div class="_fd-event-title" @click.stop="edit({name})">
+                                      <div class="_fd-event-method">
+                                                  <span>function<span>{{
+                                                          name
+                                                      }}</span></span>
+                                      </div>
+                                      <i class="fc-icon icon-delete" @click.stop="rm({name})"></i>
+                                  </div>
+                              </n-list-item>
+                            </template>
+                            <n-list-item v-if="cus" style="padding: 0px;padding-left: 10px;padding-right: 0px" index="custom">
+                                <div class="_fd-event-title" @click.stop>
+                                    <n-input type="text" v-model:value="cusValue" size="small"
+                                              @keydown.enter="addCus"
+                                              :placeholder="t('event.placeholder')">
+                                    </n-input>
+                                    <div style="display: flex;">
+                                        <i class="fc-icon icon-add" @click.stop="addCus"></i>
+                                        <i class="fc-icon icon-delete" @click.stop="closeCus"></i>
+                                    </div>
+                                </div>
+                            </n-list-item>
+                          </n-list>
                         </n-layout-content>
                     </n-layout>
                 </n-layout-sider>
@@ -268,6 +266,7 @@ export default defineComponent({
             if (!this.$refs.fn.save()) {
                 return;
             }
+
             const str = this.eventStr;
 
             if (this.activeData.item) {
@@ -335,6 +334,10 @@ export default defineComponent({
           }
 
         return arr
+      },
+      menuOptions(){
+          let arr=[];
+          return []
       }
     },
     beforeCreate() {
@@ -503,5 +506,20 @@ export default defineComponent({
 
 ._fd-event-con .CodeMirror-wrap pre.CodeMirror-line {
     padding-left: 20px;
+}
+.event-menu ul{
+  padding: 0 10px 5px;
+}
+.event-menu ul li.n-list-item{
+  height: auto;
+  line-height: 1em;
+  border: 1px solid #ECECEC;
+  border-radius: 5px;
+  padding: 0;
+  margin-top: 5px;
+}
+._fd-event-l .n-list-item.is-active {
+  background: #e4e7ed;
+  color: #303133;
 }
 </style>

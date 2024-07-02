@@ -5,11 +5,14 @@
             <div class="cm-keyword"><span>function {{ name }}(<template
                 v-for="(item, idx) in argList">{{ idx > 0 ? ', ' : '' }}<template v-if="item.type === 'string'">
 <span>{{ item.name }}</span>
-</template><template v-else><n-popover placement="top-start" :width="400" trigger="click"
-                                        :title="item.name"
-                                        :content="item.info || ''"
-            ><template #reference><span class="_fd-fn-arg">{{ item.name }}<i
-                class="fc-icon icon-question"></i></span></template>
+</template>
+              <template v-else>
+                <n-popover placement="top-start" :width="400" trigger="click"
+                                        :title="item.name">
+                  <template #trigger>
+                    <span class="_fd-fn-arg">{{ item.name }}<i class="fc-icon icon-question"></i>
+                    </span>
+                  </template>
                             <template v-if="item.columns">
                                 <n-data-table :data="item.columns" border
                                               :columns="[
@@ -29,6 +32,7 @@
                                 >
                           </n-data-table>
                             </template>
+              {{item.info || ''}}
                         </n-popover>
                     </template>
                     </template>) {</span></div>
@@ -72,7 +76,7 @@ export default defineComponent({
     },
     watch: {
         modelValue(n) {
-            if (n != this.value &&this.editor) {
+            if (n != this.value) {
               this.initCodeContent(this.tidyValue())
             }
         },
@@ -108,7 +112,12 @@ export default defineComponent({
     },
     methods: {
         save() {
-            const str = this.editor.state.doc || '';
+            let str;
+            if (this.editor){
+              str = this.editor.state.doc.toString() || '';
+            }else{
+              str= ''
+            }
             if (str.trim() === '') {
                 this.fn = '';
             } else {
@@ -151,16 +160,7 @@ export default defineComponent({
         load() {
             this.$nextTick(() => {
                 let value = this.tidyValue();
-                // this.editor = markRaw(CodeMirror(this.$refs.editor, {
-                //     lineNumbers: true,
-                //     mode: {name: 'javascript', globalVars: true},
-                //     extraKeys: {'Ctrl-Space': 'autocomplete'},
-                //     line: true,
-                //     tabSize: 2,
-                //     lineWrapping: true,
-                //     value,
-                // }));
-              this.initCodeContent(value);
+                this.initCodeContent(value);
                 // this.editor.on('inputRead', (cm, event) => {
                 //     if (event.keyCode === 32 && event.ctrlKey) { // 检测 Ctrl + Space 快捷键
                 //         CodeMirror.showHint(cm, CodeMirror.hint.javascript); // 触发代码提示

@@ -55,7 +55,7 @@ export default defineComponent({
             });
         },
         save() {
-            const str = this.editor.state.doc;
+            const str = this.editor.state.doc.toString();
             let val;
             try {
                 val = (new Function('return ' + str))();

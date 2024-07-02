@@ -1,41 +1,40 @@
 <template>
     <div class="_fd-gfc">
-        <n-badge type="warning" is-dot :show="!configured">
+        <n-badge type="warning" dot :show="!configured">
             <n-button @click="visible=true" size="small">{{ t('struct.title') }}</n-button>
         </n-badge>
-        <n-modal class="_fd-gfc-dialog" :title="t('fetch.optionsType.fetch')" v-show="visible" destroy-on-close
-                   :mask-closable="false"
-                   append-to-body
-                   style="width: 980px">
-            <n-layout class="_fd-gfc-con" style="height: 450px;">
-                <n-tabs model-value="first" class="_fc-tabs" style="width: 100%">
-                    <n-tab-pane :tab="t('fetch.config')" name="first">
-                        <DragForm v-model:api="form.api" v-model="form.formData" :rule="form.rule"
-                                  :option="form.options"></DragForm>
-                    </n-tab-pane>
-                    <n-tab-pane lazy :tab="t('fetch.parse')" name="second">
-                        <FnEditor style="height: 415px;" v-model="form.parse" name="parse"
-                                  :args="[{name:'res', info: t('fetch.response')}]"
-                                  ref="parse"></FnEditor>
-                    </n-tab-pane>
-                    <n-tab-pane lazy :tab="t('fetch.onError')" name="third">
-                        <FnEditor style="height: 415px;" v-model="form.onError" name="onError"
-                                  :args="['e']"
-                                  ref="error"></FnEditor>
-                    </n-tab-pane>
-                </n-tabs>
-            </n-layout>
-            <template #action>
-                <div>
-                    <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
-                    <n-button type="primary" size="small" @click="save" color="#2f73ff">{{
-                            t('props.ok')
-                        }}
-                    </n-button>
-                </div>
-            </template>
-        </n-modal>
     </div>
+      <n-modal class="_fd-gfc-dialog" preset="dialog" :title="t('fetch.optionsType.fetch')" v-model:show="visible"
+               :mask-closable="false"
+               style="width: 980px">
+        <n-layout style="height: 450px;">
+          <n-tabs v-model:value="activeTab" class="_fc-tabs" style="width: 100%">
+            <n-tab-pane :tab="t('fetch.config')" name="first">
+              <DragForm v-model:api="form.api" v-model="form.formData" :rule="form.rule" class="req"
+                        :option="form.options"></DragForm>
+            </n-tab-pane>
+            <n-tab-pane display-directive="show:lazy" :tab="t('fetch.parse')" name="second">
+                                      <FnEditor style="height: 415px;" v-model="form.parse" name="parse"
+                                                :args="[{name:'res', info: t('fetch.response')}]"
+                                                ref="parse"></FnEditor>
+            </n-tab-pane>
+            <n-tab-pane display-directive="show:lazy" :tab="t('fetch.onError')" name="third">
+                                      <FnEditor style="height: 415px;" v-model="form.onError" name="onError"
+                                                :args="['e']"
+                                                ref="error"></FnEditor>
+            </n-tab-pane>
+          </n-tabs>
+        </n-layout>
+        <template #action>
+          <div>
+            <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
+            <n-button type="primary" size="small" @click="save" color="#2f73ff">{{
+                t('props.ok')
+              }}
+            </n-button>
+          </div>
+        </template>
+      </n-modal>
 </template>
 
 <script>
@@ -55,7 +54,7 @@ const makeRule = (t) => {
             title: t('fetch.action'),
             value: '',
             $required: true,
-            props: {size: 'default'},
+            props: {size: 'small'},
             validate: [{type: 'url', message: t('fetch.actionRequired'), trigger: 'blur'}]
         },
         {
@@ -64,7 +63,7 @@ const makeRule = (t) => {
             title: t('fetch.method'),
             value: 'GET',
             props: {
-                size: 'default'
+                size: 'medium'
             },
             options: [
                 {label: 'GET', value: 'GET'},
@@ -80,7 +79,7 @@ const makeRule = (t) => {
             props: {
                 column: [{label: t('props.key'), key: 'label'}, {label: t('props.value'), key: 'value'}],
                 valueType: 'object',
-                size: 'default'
+                size: 'small'
             },
         },
         {
@@ -91,9 +90,10 @@ const makeRule = (t) => {
             props: {
                 column: [{label: t('props.key'), key: 'label'}, {label: t('props.value'), key: 'value'}],
                 valueType: 'object',
-                size: 'default'
+                size: 'small'
             },
-        }];
+        }
+        ];
 }
 
 export default defineComponent({
@@ -111,6 +111,7 @@ export default defineComponent({
     inject: ['designer'],
     data() {
         return {
+          activeTab: 'first',
             visible: false,
             value: deepCopy(this.modelValue || {}),
             form: {
@@ -182,24 +183,17 @@ export default defineComponent({
 });
 </script>
 
-<style>
-._fd-gfc, ._fd-gfc .el-badge {
-    width: 100%;
-}
-
-._fd-gfc .el-button {
-    font-weight: 400;
-    width: 100%;
-    border-color: #2E73FF;
-    color: #2E73FF;
-}
-
+<style scoped>
 ._fd-gfc-dialog .el-tabs__header {
     margin-bottom: 0;
 }
 
 ._fd-gfc-dialog .form-create {
     margin-top: 15px;
+}
+
+._fd-gfc-dialog .req .n-col {
+   line-height: 30px;
 }
 
 ._fd-gfc-con .CodeMirror {

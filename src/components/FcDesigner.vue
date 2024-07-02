@@ -215,12 +215,12 @@
                             </n-tab>
                           </n-tabs>
                         </n-layout-header>
-                        <n-layout-content class="_fc-r-tab-form" v-if="activeTab==='form'">
+                        <n-layout class="_fc-r-tab-form" v-show="activeTab==='form'">
                             <DragForm :rule="form.rule" :option="form.option"
                                       :modelValue="form.value" @change="formOptChange"
                                       v-model:api="form.api"></DragForm>
-                        </n-layout-content>
-                        <n-layout-content class="_fc-r-tab-props" v-if="activeTab==='props'" :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
+                        </n-layout>
+                        <n-layout class="_fc-r-tab-props" v-show="activeTab==='props'" :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
                             <template v-if="activeRule || (customForm.config && (customForm.config.name || customForm.config.label))">
                                 <p class="_fc-r-title">{{ t('designer.type') }}</p>
                                 <n-tag type="success" effect="plain" disable-transitions>
@@ -284,7 +284,7 @@
                                           @change="validateChange"
                                           :key="activeRule._fc_id"></DragForm>
                             </template>
-                        </n-layout-content>
+                        </n-layout>
                     </n-layout>
                 </n-layout-sider>
 
@@ -1349,12 +1349,6 @@ export default defineComponent({
                 if (slot) {
                     rule.slot = slot;
                 }
-              const rule2 = methods.getJson();
-              const formData = deepCopy(data.inputForm.data);
-              console.log('dragMenu.formData',formData)
-              console.log('dragMenu.rule2',rule2)
-              console.log('dragMenu.children',children)
-              console.log('dragMenu.menu',menu)
                 children.splice(index, 0, rule);
                 methods.handleAddAfter({rule});
             },
@@ -1803,7 +1797,6 @@ export default defineComponent({
             }
           }
         }
-      console.log('data.children',data.children)
         data.dragForm.rule = methods.makeDragRule(methods.makeChildren(data.children));
         methods.setOption({});
         methods.addComponent(ruleList);

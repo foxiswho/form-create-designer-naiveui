@@ -6,9 +6,9 @@
             :expand-on-click-node="false">
             <template #default="{ node, data }">
                 <div class="_fd-tree-opt-node">
-                    <el-input class="_fd-tree-opt-first" v-model="data[overColumns.label]"
+                    <n-input class="_fd-tree-opt-first" v-model="data[overColumns.label]"
                               @blur="change"/>
-                    <el-input class="_fd-tree-opt-last" v-model="data[overColumns.value]" @blur="change">
+                    <n-input class="_fd-tree-opt-last" v-model="data[overColumns.value]" @blur="change">
                         <template #append>
                             <div class="_fd-tree-opt-btn" @click="add(node, data)">
                                 <i class="fc-icon icon-add"></i>
@@ -20,7 +20,7 @@
                                 <i class="fc-icon icon-delete"></i>
                             </div>
                         </template>
-                    </el-input>
+                    </n-input>
                 </div>
             </template>
         </n-tree>

@@ -1,5 +1,6 @@
 <template>
   <n-config-provider style="height: 100vh" :locale="naiveLanguage" :date-locale="dateLanguage" :theme="theme">
+    <n-message-provider>
     <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
       <template #handle>
         <div class="handle">
@@ -70,6 +71,7 @@
           </span>
       </template>
     </n-modal>
+    </n-message-provider>
   </n-config-provider>
 </template>
 
@@ -124,7 +126,6 @@ export default {
       locale: null,
       topImg: true,
       config: {
-        showFormConfig: false,
         fieldReadonly: false,
         showSaveBtn: true,
       },
@@ -256,7 +257,6 @@ export default {
       this.state = true;
       this.type = 1;
       this.value = this.$refs.designer.getOption();
-      //this.value = "this.$refs.designer.getOption()";
     },
     showTemplate() {
       this.state = true;

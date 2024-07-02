@@ -1,6 +1,6 @@
-import {useMessage} from 'naive-ui';
+import { createDiscreteApi } from "naive-ui";
+const { message } = createDiscreteApi(["message"]);
 const errorMessage = (msg) => {
-    const message = useMessage();
     return message.error(msg);
 };
 
