@@ -197,22 +197,28 @@
                 <n-layout-sider class="_fc-r" width="320px" v-if="!config || config.showConfig !== false">
                     <n-layout style="height: 100%;">
                         <n-layout-header height="40px" class="_fc-r-tabs">
-                            <div class="_fc-r-tab" :class="{active: activeTab==='props'}"
-                                 v-if="!!activeRule || customForm.isShow || (config && config.showFormConfig === false)"
-                                 @click="activeTab='props'"> {{ t('designer.component') }}
-                            </div>
-                            <div class="_fc-r-tab" v-if="!config || config.showFormConfig !== false"
-                                 :class="{active: activeTab==='form' && (!!activeRule || customForm.isShow)}"
-                                 @click="activeTab='form'">{{ t('designer.form') }}
-                            </div>
+                          <n-tabs
+                              type="line"
+                              tab-style="height: 39px"
+                              justify-content="space-evenly"
+                              v-model:value="activeTab"
+                              :class="!!activeRule|| customForm.isShow || (config && config.showFormConfig === false) ? '' : 'single'"
+                          >
+                            <n-tab name="props" v-if="!!activeRule || (config && config.showFormConfig === false) ">
+                              {{ t("designer.component") }}
+                            </n-tab>
+                            <n-tab name="form">
+                              {{ t("designer.form") }}
+                            </n-tab>
+                          </n-tabs>
                         </n-layout-header>
-                        <n-layout-content class="_fc-r-tab-form" v-show="activeTab==='form'"
+                        <n-layout-content class="_fc-r-tab-form"
                                  v-if="!config || config.showFormConfig !== false">
                             <DragForm :rule="form.rule" :option="form.option"
                                       :modelValue="form.value" @change="formOptChange"
                                       v-model:api="form.api"></DragForm>
                         </n-layout-content>
-                        <n-layout-content class="_fc-r-tab-props" v-show="activeTab==='props'"
+                        <n-layout-content class="_fc-r-tab-props"
                                  :key="activeRule ? activeRule._fc_id: (customForm.config ? customForm.key : '')">
                             <template
                                 v-if="activeRule || (customForm.config && (customForm.config.name || customForm.config.label))">
