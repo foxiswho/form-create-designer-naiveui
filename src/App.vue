@@ -1,21 +1,5 @@
 <template>
-  <n-config-provider style="height: 100vh" :locale="naiveLanguage" :date-locale="dateLanguage">
-  <div id="app">
-    <div class="_fc-top">
-      <div class="_fc-top-nav">
-        <div class="_fc-top-copyright">
-          <img class="_fc-t-logo" src="http://form-create.com/logo.png" alt="logo"/>
-          <div class="_fc-t-name"><span>FcDesigner</span></div>
-        </div>
-        <div class="_fc-top-link">
-          <a href="https://form-create.com/" target="_blank" class="item">官网</a>
-          <a href="https://pro.form-create.com/view" class="item pro-version">高级版🔥</a>
-          <a href="https://view.form-create.com/" target="_blank" class="item">文档</a>
-          <a href="https://form-create.com/designer" target="_blank" class="item">Vue2版本</a>
-          <a href="https://github.com/xaboy/form-create-designer" target="_blank" class="item">查看源码</a>
-        </div>
-      </div>
-    </div>
+  <n-config-provider style="height: 100vh" :locale="naiveLanguage" :date-locale="dateLanguage" :theme="theme">
     <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
       <template #handle>
         <div class="handle">
@@ -76,7 +60,7 @@
         </div>
       </template>
     </fc-designer>
-    <n-dialog :title="title[type]" v-if="state" class="_fc-t-dialog">
+    <n-modal :title="title[type]" v-show="state" class="_fc-t-dialog">
       <div ref="editor" v-if="state"></div>
       <span style="color: red;" v-if="err">输入内容格式有误!</span>
       <template #action v-if="type > 2">
@@ -85,8 +69,7 @@
             <n-button type="primary" @click="onOk" size="small">确 定</n-button>
           </span>
       </template>
-    </n-dialog>
-  </div>
+    </n-modal>
   </n-config-provider>
 </template>
 
@@ -144,6 +127,7 @@ export default {
   },
   data() {
     return {
+      theme: lightTheme,
       state: false,
       value: null,
       title: TITLE,
@@ -379,9 +363,6 @@ export default {
 </script>
 
 <style>
-#app{
-  height: 100%;
-}
 ._fc-top {
   width: 100%;
   display: flex;

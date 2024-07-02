@@ -10,55 +10,52 @@
       :title="title || t('struct.title')"
       style="width: 500px"
     >
-      <template v-if="isLoading">
-        <n-skeleton text :repeat="2" /> <n-skeleton text style="width: 60%" />
-      </template>
-      <div ref="editor" v-if="visible" v-show="!isLoading"></div>
-      <span class="_fc_err" v-if="err">
-        {{ t("struct.error") }}{{ err !== true ? err : "" }}
-      </span>
+      <div ref="editor" v-if="visible"></div>
       <template #action>
-        <span class="dialog-footer">
           <n-space>
-            <n-button @click="visible = false" size="small">{{
-              t("struct.cancel")
-            }}</n-button>
-            <n-button type="primary" @click="onOk" size="small">{{
-              t("struct.submit")
-            }}</n-button>
+            <n-button @click="visible = false" size="small">{{ t('props.cancel') }}</n-button>
+            <n-button type="primary" @click="onOk" size="small" color="#2f73ff">{{ t('props.ok') }}</n-button>
           </n-space>
-        </span>
       </template>
     </n-modal>
   </div>
 </template>
+
 <script>
-import { javascript } from "@codemirror/lang-javascript";
-import { json } from "@codemirror/lang-json";
-import { basicSetup, EditorView } from "codemirror";
-import { deepParseFn, toJSON } from "../utils/index";
-import { deepCopy } from "@form-create/utils/lib/deepextend";
-import { defineComponent } from "vue";
+import 'codemirror/lib/codemirror.css';
+import CodeMirror from 'codemirror/lib/codemirror';
+import 'codemirror/mode/javascript/javascript';
+import {deepParseFn, toJSON} from '../utils/index';
+import {deepCopy} from '@form-create/utils/lib/deepextend';
+import {defineComponent, markRaw} from 'vue';
+import is from '@form-create/utils/lib/type';
+import errorMessage from '../utils/message';
 
 export default defineComponent({
-  name: "Struct",
+  name: 'Struct',
+  emits: ['update:modelValue'],
   props: {
     modelValue: [Object, Array, Function],
     title: String,
     defaultValue: {
-      require: false,
+      require: false
     },
     validate: Function,
   },
-  inject: ["designer"],
+  inject: ['designer'],
+  computed: {
+    t() {
+      return this.designer.setupState.t;
+    },
+    configured() {
+      return !is.empty(this.modelValue);
+    },
+  },
   data() {
     return {
       editor: null,
       visible: false,
-      err: false,
       oldVal: null,
-      t: this.designer.setupState.t,
-      isLoading: false,
     };
   },
   watch: {
@@ -68,78 +65,79 @@ export default defineComponent({
     visible(n) {
       if (n) {
         this.load();
-      } else {
-        this.err = false;
       }
     },
   },
   methods: {
     load() {
-      const val = toJSON(
-        this.modelValue
-          ? deepParseFn(deepCopy(this.modelValue))
-          : this.defaultValue
-      );
+      const val = toJSON(deepParseFn(this.modelValue ? deepCopy(this.modelValue) : this.defaultValue));
       this.oldVal = val;
       this.$nextTick(() => {
-        this.initCodeContent(val);
+        this.editor = markRaw(CodeMirror(this.$refs.editor, {
+          lineNumbers: true,
+          mode: 'javascript',
+          lint: true,
+          line: true,
+          tabSize: 2,
+          lineWrapping: true,
+          value: val || ''
+        }));
       });
     },
-    initCodeContent(val) {
-      this.isLoading = true;
-      setTimeout(() => {
-        if (this.editor) {
-          this.editor.destroy();
-        }
-        this.editor = new EditorView({
-          doc: val || 'Press Ctrl-Space in here...\n',
-          extensions: [
-            basicSetup,
-            javascript(),
-            json(),
-          ],
-          parent: this.$refs.editor,
-          options: {
-            lineNumbers: true,
-            line: true,
-            //括号匹配
-            matchBrackets: true,
-          },
-        });
-        this.isLoading = false;
-      }, 500);
-    },
     onOk() {
-      const str = this.editor.state.doc;
+      const str = this.editor.getValue();
       let val;
       try {
-        val = eval("(function (){return " + str + "}())");
+        val = (new Function('return ' + str))();
       } catch (e) {
-        this.err = ` (${e})`;
-        return;
+        console.error(e);
+        errorMessage(this.t('struct.errorMsg'));
+        return false;
       }
-      console.log(this.validate);
       if (this.validate && false === this.validate(val)) {
-        this.err = true;
-        return;
+        errorMessage(this.t('struct.errorMsg'));
+        return false;
       }
       this.visible = false;
       if (toJSON(val, null, 2) !== this.oldVal) {
-        this.$emit("update:modelValue", val);
+        this.$emit('update:modelValue', val);
       }
+      return true;
     },
-  },
+  }
 });
 </script>
 
 <style>
-._fc_struct {
+._fd-struct {
   width: 100%;
 }
-._fc_err {
-  color: red;
-  float: left;
-  text-align: left;
-  width: 65%;
+
+._fd-struct .el-badge {
+  width: 100%;
+}
+
+._fd-struct .el-button {
+  font-weight: 400;
+  width: 100%;
+  border-color: #2E73FF;
+  color: #2E73FF;
+}
+
+._fd-struct .CodeMirror {
+  height: 450px;
+}
+
+._fd-struct .CodeMirror-line {
+  line-height: 16px !important;
+  font-size: 13px !important;
+}
+
+._fd-struct-con .CodeMirror-lint-tooltip {
+  z-index: 2021 !important;
+}
+
+._fd-struct-con .el-dialog__body {
+  padding: 0px 20px;
 }
 </style>

@@ -3,10 +3,9 @@
         <n-badge :value="eventNum" type="warning" :show="eventNum < 1">
             <n-button @click="visible=true" size="small">{{ t('event.title') }}</n-button>
         </n-badge>
-        <n-dialog class="_fd-fn-list-dialog" :title="t('event.title')" v-if="visible" destroy-on-close
-                   :close-on-click-modal="false"
-                   append-to-body
-                   width="980px">
+        <n-modal class="_fd-fn-list-dialog" :title="t('event.title')" v-if="visible" destroy-on-close
+                   :close-on-click="false"
+                   :style="{width:'980px'}">
             <n-layout class="_fd-fn-list-con" style="height: 600px">
                 <n-layout-sider style="width:300px;">
                     <n-layout class="_fd-fn-list-l">
@@ -48,7 +47,7 @@
                     </n-button>
                 </div>
             </template>
-        </n-dialog>
+        </n-modal>
     </div>
 </template>
 
@@ -209,6 +208,7 @@ export default defineComponent({
 
 ._fd-fn-list-dialog .el-dialog__body {
     padding: 10px 20px;
+  width: 980px;
 }
 
 ._fd-fn-list-con .el-main {

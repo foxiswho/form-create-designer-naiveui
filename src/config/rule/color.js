@@ -15,7 +15,7 @@ export default {
     return {
       type: name,
       field: uniqueId(),
-      title: t('components.colorPicker.name'),
+      title: t('com.colorPicker.name'),
       info: '',
       $required: false,
       props: {
@@ -61,15 +61,15 @@ export default {
           multiple: true
         },
         options: [
-          { label: t('components.colorPicker.props.confirm'), value: 'confirm' },
-          { label: t('components.colorPicker.props.clear'), value: 'clear' },
+          { label: t('com.colorPicker.props.confirm'), value: 'confirm' },
+          { label: t('com.colorPicker.props.clear'), value: 'clear' },
         ]
       },
       {
         type: 'select',
         field: 'modes',
         title: '颜色选择器支持颜色的格式',
-        info: t('components.colorPicker.props.modesInfo'),
+        info: t('com.colorPicker.props.modesInfo'),
         value: ['rgb','hex','hsl'],
         props: {
           multiple: true,

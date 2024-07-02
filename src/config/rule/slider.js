@@ -16,7 +16,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'integer',
-      title: t('components.slider.name'),
+      title: t('com.slider.name'),
       info: '',
       $required: false,
       props: {},
@@ -97,7 +97,7 @@ export default {
         type: 'switch',
         field: 'showTooltip',
         title: '是否一直显示 tooltip',
-        info: t('components.slider.props.showTooltipInfo'),
+        info: t('com.slider.props.showTooltipInfo'),
         value: false,
         props: {
           size: 'small'

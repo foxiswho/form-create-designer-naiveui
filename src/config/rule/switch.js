@@ -15,7 +15,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'integer',
-      title: t('components.switch.name'),
+      title: t('com.switch.name'),
       info: '',
       $required: false,
       props: {
@@ -39,7 +39,7 @@ export default {
         type: 'radio',
         field: 'size',
         title: '尺寸',
-        info: t('components.switch.props.sizeInfo'),
+        info: t('com.switch.props.sizeInfo'),
         value: 'medium',
         options: [
           { value: 'small', label: 'small' },

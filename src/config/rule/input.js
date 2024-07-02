@@ -15,7 +15,7 @@ export default {
       type: name,
       dbType: 'string',
       field: uniqueId(),
-      title: t('components.input.name'),
+      title: t('com.input.name'),
       info: '',
       $required: false,
       props: {
@@ -26,7 +26,6 @@ export default {
   props(_, { t }) {
     return localeProps(t, name + '.props',
       [
-        makeRequiredRule(),
         { type: 'switch', field: 'round', title: '输入框是否圆角', props: { size: "small" } },
         {
           type: 'select',
@@ -51,7 +50,7 @@ export default {
         {
           type: 'inputNumber',
           field: 'rows',
-          info: t('components.input.props.rowsInfo'),
+          info: t('com.input.props.rowsInfo'),
           title: '输入框行数',
           props: { min: 0 }
         },

@@ -1,5 +1,5 @@
 import uniqueId from '@form-create/utils/lib/unique';
-import { localeProps, makeOptionsRule, makeRequiredRule } from '../../utils/index';
+import { localeProps, makeOptionsRule, makeRequiredRule,makeTreeOptions } from '../../utils/index';
 
 const label = '树形控件';
 const name = 'tree';
@@ -17,7 +17,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'integer',
-      title: t('components.tree.name'),
+      title: t('com.tree.name'),
       info: '',
       effect: {
         fetch: ''
@@ -28,24 +28,12 @@ export default {
           label: 'label',
         },
         nodeKey: 'key',
-        data: [1, 2].map(value => {
-          return {
-            label: opt + value,
-            key: value,
-            children: [
-              {
-                label: opt + value + value,
-                key: value + "" + value,
-              }
-            ],
-          }
-        }),
+        data: makeTreeOptions(t('props.option'), {label: 'label', value: 'id'}, 3),
       },
     };
   },
   props(_, { t }) {
     return localeProps(t, name + '.props', [
-      makeRequiredRule(),
       makeOptionsRule(t, 'props.data', false),
       {
         type: 'switch',
@@ -112,18 +100,18 @@ export default {
         field: 'checkStrategy',
         title: '勾选策略',
         value: 'all',
-        info: t('components.tree.props.checkStrategyInfo'),
+        info: t('com.tree.props.checkStrategyInfo'),
         options: [
-          { label: t('components.tree.props.all'), value: 'all' },
-          { label: t('components.tree.props.parent'), value: 'parent' },
-          { label: t('components.tree.props.child'), value: 'child' }
+          { label: t('com.tree.props.all'), value: 'all' },
+          { label: t('com.tree.props.parent'), value: 'parent' },
+          { label: t('com.tree.props.child'), value: 'child' }
         ]
       },
       {
         type: 'input',
         field: 'childrenField',
         title: '自定义 children 字段名',
-        info: t('components.tree.props.customInfo'),
+        info: t('com.tree.props.customInfo'),
         props: {
           placeholder: 'children'
         }

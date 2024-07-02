@@ -38,6 +38,7 @@ import {
     NDatePicker,
     NConfigProvider,
     NNotificationProvider,
+    NGlobalStyle,
     NSlider,
     NRate,
     NColorPicker,
@@ -66,7 +67,7 @@ const naive = create({
         NPopover, NIcon, NGrid, NGridItem, NRadioButton, NDataTable, NCheckboxGroup,
         NCheckbox, NSkeleton, NTimePicker, NDatePicker, NConfigProvider, NSlider, NRate,
         NColorPicker, NCascader, NUpload, NText, NP, NUploadDragger, NTransfer, NTree,NNotificationProvider,
-        NAlert, NTooltip, NTabs, NTabPane, NTab,NTag,NDialog,NDropdown,NCard,NBadge,NMenu]
+        NAlert, NTooltip, NTabs, NTabPane, NTab,NTag,NDialog,NDropdown,NCard,NBadge,NMenu,NGlobalStyle]
 })
 
 const app = createApp(App);

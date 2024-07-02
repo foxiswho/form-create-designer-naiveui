@@ -8,13 +8,13 @@ export default {
   icon: 'icon-divider',
   label,
   name,
-  rule() {
+  rule({ t }) {
     return {
       type: name,
       props: {},
       wrap: { show: false },
       native: false,
-      children: [''],
+      children: [t('com.elDivider.name')],
     };
   },
   props(_, { t }) {

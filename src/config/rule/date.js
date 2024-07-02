@@ -15,7 +15,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'datetime',
-      title: t('components.datePicker.name'),
+      title: t('com.datePicker.name'),
       info: '',
       $required: false,
       props: {
@@ -36,7 +36,7 @@ export default {
         type: 'switch',
         field: 'inputReadonly',
         title: '设置输入框为只读',
-        info: t('components.datePicker.props.inputReadonlyInfo'),
+        info: t('com.datePicker.props.inputReadonlyInfo'),
         props: {
           size: 'small'
         }

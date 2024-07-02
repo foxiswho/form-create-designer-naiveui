@@ -1,7 +1,7 @@
 <template>
     <div class="_fd-field-input">
         <n-input
-            v-model="value"
+            v-model:value="value"
             :readonly="fieldReadonly"
             :disabled="fieldReadonly"
             @focus="onFocus"
@@ -23,7 +23,7 @@ import is from '@form-create/utils/lib/type';
 export default defineComponent({
     name: 'FieldInput',
     inject: ['designer'],
-    emits: ['update:modelValue'],
+    emits: ['update:value'],
     props: {
         modelValue: String,
     },
@@ -107,7 +107,7 @@ export default defineComponent({
             if (this.value !== this.modelValue) {
                 this.value = this.checkValue();
                 if (this.value !== this.modelValue) {
-                    this.$emit('update:modelValue', this.value);
+                    this.$emit('update:value', this.value);
                 }
             }
         },

@@ -11,9 +11,9 @@ export default {
     rule({t}) {
         return {
             type: name,
-            title: t('components.span.name'),
+            title: t('com.span.name'),
             native: false,
-            children: [t('components.span.name')],
+            children: [t('com.span.name')],
         };
     },
     props(_, {t}) {

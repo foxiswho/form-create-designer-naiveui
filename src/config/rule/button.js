@@ -14,7 +14,7 @@ export default {
     return {
       type: name,
       props: {},
-      children: [t('components.n-button.name')],
+      children: [t('com.n-button.name')],
     };
   },
   props(_, { t }) {

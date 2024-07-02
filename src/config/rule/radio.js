@@ -1,5 +1,5 @@
 import uniqueId from '@form-create/utils/lib/unique';
-import { localeProps, makeOptionsRule, makeRequiredRule } from '../../utils/index';
+import { localeProps, makeOptionsRule, makeRequiredRule,makeTreeOptions } from '../../utils/index';
 
 const label = '单选框';
 const name = 'radio'
@@ -17,7 +17,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'integer',
-      title: t('components.radio.name'),
+      title: t('com.radio.name'),
       info: '',
       effect: {
         fetch: ''
@@ -26,17 +26,11 @@ export default {
       props: {
         type:'default',
       },
-      options: [1, 2].map(value => {
-        return {
-          label: opt + value,
-          value,
-        }
-      })
+      options: makeTreeOptions(t('props.option'), {label: 'label', value: 'value'}, 1)
     };
   },
   props(_, {t}) {
     return localeProps(t, name + '.props', [
-      makeRequiredRule(),
       makeOptionsRule(t, 'options'),
       {
         type: 'switch', 

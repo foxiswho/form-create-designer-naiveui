@@ -4,7 +4,7 @@
             <n-button :size="size" style="width: 150px;" @click="changeType()">{{ unit[idx] }}</n-button>
         </template>
         <template v-else>
-            <n-inputNumber :size="size" v-model="num" @update:value="submit" controls-position="right"/>
+            <n-inputNumber :size="size" v-model:value="num" @update:value="submit" controls-position="right"/>
             <n-dropdown trigger="click" size="small" :options="options">
                 <n-button :size="size">{{ unit[idx] }}</n-button>
 

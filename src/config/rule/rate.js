@@ -16,7 +16,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'number',
-      title: t('components.rate.name'),
+      title: t('com.rate.name'),
       info: '',
       $required: false,
       props: {
@@ -35,7 +35,7 @@ export default {
         field: 'size',
         value: 'medium',
         title: '图标尺寸',
-        info: t('components.rate.props.sizeInfo'),
+        info: t('com.rate.props.sizeInfo'),
         options: [
           { value: 'large', label: 'large' },
           { value: 'medium', label: 'medium' },
@@ -72,7 +72,7 @@ export default {
         type: 'switch',
         field: 'clearable',
         title: '是否可清空',
-        info: t('components.rate.props.clearableInfo'),
+        info: t('com.rate.props.clearableInfo'),
         props: {
           size: 'small',
         }

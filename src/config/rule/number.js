@@ -16,7 +16,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'number',
-      title: t('components.inputNumber.name'),
+      title: t('com.inputNumber.name'),
       info: '',
       $required: false,
       props: {

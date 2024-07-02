@@ -14,7 +14,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'string',
-      title: t('components.fc-editor.name'),
+      title: t('com.fcEditor.name'),
       info: '',
       $required: false,
       props: {},

@@ -28,7 +28,7 @@ export default {
         type: 'input',
         field: 'defaultValue',
         title: '默认展示标签页的标识',
-        info: t('components.tab.props.defaultValueInfo')
+        info: t('com.tab.props.defaultValueInfo')
       },
       {
         type: 'radio',
@@ -71,7 +71,7 @@ export default {
               type: 'switch',
               field: 'closable',
               title: '标签是否可关闭',
-              info: t('components.tab.props.closableInfo')
+              info: t('com.tab.props.closableInfo')
             }]
           },
           {
@@ -82,7 +82,7 @@ export default {
               type: 'select',
               field: 'justifyContent',
               title: 'flex 布局下主轴的排列方式',
-              info: t('components.tab.props.justifyContentInfo'),
+              info: t('com.tab.props.justifyContentInfo'),
               props: {
                 clearable: true,
               },

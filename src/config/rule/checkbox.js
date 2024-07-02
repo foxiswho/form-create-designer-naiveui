@@ -1,5 +1,5 @@
 import { uniqueId } from "@form-create/utils";
-import { localeProps, makeOptionsRule, makeRequiredRule } from "../../utils";
+import {localeProps, makeOptionsRule, makeTreeOptions} from '../../utils/index';
 
 const label = '多选框'
 const name = 'checkbox'
@@ -17,24 +17,19 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'array[integer]',
-      title: t('components.checkbox.name'),
+      title: t('com.checkbox.name'),
       info: '',
       effect: {
         fetch: ''
       },
       $required: false,
       props: {},
-      options: [1, 2].map(value => {
-        return {
-          label: opt + value,
-          value,
-        }
-      })
+      options: makeTreeOptions(t('props.option'), {label: 'label', value: 'value'}, 1)
     };
   },
   props(_, { t }) {
     return localeProps(t, name + '.props', [
-      makeRequiredRule(), makeOptionsRule(t, 'options'),
+      makeOptionsRule(t, 'options'),
       {
         type: 'switch', 
         field: 'disabled', 

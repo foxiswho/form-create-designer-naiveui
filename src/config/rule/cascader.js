@@ -1,5 +1,5 @@
 import uniqueId from '@form-create/utils/lib/unique';
-import { localeProps, makeOptionsRule, makeRequiredRule } from '../../utils/index';
+import { localeProps, makeOptionsRule, makeTreeOptionsRule,makeTreeOptions } from '../../utils/index';
 
 const label = '级联选择器';
 const name = 'cascader';
@@ -16,27 +16,20 @@ export default {
     return {
       type: name,
       field: uniqueId(),
-      title: t('components.cascader.name'),
+      title: t('com.cascader.name'),
       info: '',
       effect: {
         fetch: ''
       },
       $required: false,
       props: {
-        options: [1, 2].map(value => {
-          return {
-            label: opt + value,
-            value,
-            children: [],
-          }
-        }),
+        options: makeTreeOptions(t('props.option'), {label: 'label', value: 'value'}, 3)
       }
     };
   },
   props(_, { t }) {
     return localeProps(t, name + '.props', [
-      makeRequiredRule(),
-      makeOptionsRule(t, 'props.options', false),
+      makeTreeOptionsRule({t, to: 'props.options'}),
       {
         type: 'input',
         field: 'placeholder',
@@ -62,7 +55,7 @@ export default {
         type: 'switch',
         field: 'filterable',
         title: '是否可搜索',
-        info: t('components.cascader.props.filterableInfo'),
+        info: t('com.cascader.props.filterableInfo'),
         props: {
           size: 'small'
         }
@@ -97,11 +90,11 @@ export default {
         field: 'checkStrategy',
         title: '勾选策略',
         value: 'all',
-        info: t('components.cascader.props.checkStrategyInfo'),
+        info: t('com.cascader.props.checkStrategyInfo'),
         options: [
-          { label: t('components.cascader.props.all'), value: 'all' },
-          { label: t('components.cascader.props.parent'), value: 'parent' },
-          { label: t('components.cascader.props.child'), value: 'child' } 
+          { label: t('com.cascader.props.all'), value: 'all' },
+          { label: t('com.cascader.props.parent'), value: 'parent' },
+          { label: t('com.cascader.props.child'), value: 'child' } 
         ]
       },
       {
@@ -136,7 +129,7 @@ export default {
         type: 'input',
         field: 'labelField',
         title: '自定义 label 字段名',
-        info: t('components.cascader.props.customInfo'),
+        info: t('com.cascader.props.customInfo'),
         props: {
           placeholder: 'label'
         }

@@ -16,7 +16,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'string',
-      title: t('components.upload.name'),
+      title: t('com.upload.name'),
       info: '',
       $required: false,
       props: {
@@ -73,7 +73,7 @@ export default {
       {
         type: 'input',
         field: 'accept',
-        info: t('components.upload.props.acceptInfo'),
+        info: t('com.upload.props.acceptInfo'),
         title: '接受的文件类型（thumbnail-mode 模式下此参数无效）'
       }, 
       {
@@ -149,7 +149,7 @@ export default {
         type: 'switch',
         field: 'showPreviewButton',
         title: '是否允许显示预览按钮',
-        info: t('components.upload.props.showPreviewButtonInfo'),
+        info: t('com.upload.props.showPreviewButtonInfo'),
         value: true,
         props: {
           size: 'small'

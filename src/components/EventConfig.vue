@@ -3,26 +3,20 @@
         <n-badge :value="eventNum" type="warning" :hidden="eventNum < 1">
             <n-button size="small" @click="visible=true">{{ t('event.title') }}</n-button>
         </n-badge>
-        <n-modal v-model:show="visible" class="_fd-event-dialog" :title="t('event.title')" preset="dialog" destroy-on-close
+        <n-modal v-model:show="visible" class="_fd-event-dialog" :title="t('event.title')" preset="dialog"
                    :maskClosable="false"
-                   width="980px" :show-icon="false">
-          <n-card
-              style="width: 600px;height:600px;background-color: #ffffff"
-              :bordered="false"
-              size="huge"
-              role="dialog"
-              aria-modal="true"
-          >
-            <n-layout class="_fd-event-con" style="height: 600px">
+                    style="width: 980px"
+                   :show-icon="false">
+            <n-layout has-sider class="_fd-event-con" style="height: 600px">
                 <n-layout-sider style="width:300px;">
                     <n-layout class="_fd-event-l">
                         <n-layout-header class="_fd-event-head" height="40px">
                             <n-dropdown popper-class="_fd-event-dropdown" size="small"
                                          :placement="'bottom-start'"
-                            :options="options()"
+                            :options="options"
                             >
                               <span class="el-dropdown-link">
-                                <n-button link type="primary" size="default">
+                                <n-button quaternary type="info" size="small">
                                     {{ t('event.create') }}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </n-button>
                               </span>
@@ -96,16 +90,15 @@
                     </n-layout>
                 </n-layout-content>
             </n-layout>
-            <template #footer>
-                <div>
-                    <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
-                    <n-button type="primary" size="small" @click="submit" color="#2f73ff">{{
-                            t('props.ok')
-                        }}
-                    </n-button>
-                </div>
-            </template>
-          </n-card>
+          <template #action>
+            <div>
+              <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
+              <n-button type="primary" size="small" @click="submit" color="#2f73ff">{{
+                  t('props.ok')
+                }}
+              </n-button>
+            </div>
+          </template>
         </n-modal>
     </div>
 </template>
@@ -150,6 +143,7 @@ export default defineComponent({
             cus: false,
             cusValue: '',
             eventStr: '',
+            options: this.getOptions(),
         };
     },
     computed: {
@@ -310,7 +304,7 @@ export default defineComponent({
             this.destroy();
             this.closeCus();
         },
-      options() {
+      getOptions() {
         let arr = []
         if (this.eventName) {
           for (var i in this.eventName) {
@@ -330,7 +324,7 @@ export default defineComponent({
         }
           if (this.eventName.length > 0) {
             arr.push({
-              label: () => h('div', t('props.custom')),
+              label: () => h('div', this.t('props.custom')),
               key: i,
               props: {
                 onClick: () => {
@@ -340,7 +334,7 @@ export default defineComponent({
             })
           }
 
-        return []
+        return arr
       }
     },
     beforeCreate() {
@@ -368,7 +362,6 @@ export default defineComponent({
 ._fd-event .el-badge {
     width: 100%;
 }
-
 ._fd-event-dialog .el-dialog__body {
     padding: 10px 20px;
 }

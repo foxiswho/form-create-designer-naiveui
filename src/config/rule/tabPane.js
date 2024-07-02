@@ -15,7 +15,7 @@ export default {
     return {
       type: 'n-tab-pane',
       props: {
-        tab: t('components.tab.name'),
+        tab: t('com.tab.name'),
         name: String(tabname()),
       },
       children: []
@@ -32,7 +32,7 @@ export default {
         type: 'switch',
         field: 'closable',
         title: '是否允许关闭标签',
-        info: t('components.tab-pane.props.closableInfo'),
+        info: t('com.tab-pane.props.closableInfo'),
       },
       {
         type: 'switch',
@@ -43,7 +43,7 @@ export default {
         type: 'input',
         field: 'name',
         title: '标签页标识',
-        info: t('components.tab-pane.props.nameInfo')
+        info: t('com.tab-pane.props.nameInfo')
       },
       {
         type: 'select',
@@ -51,9 +51,9 @@ export default {
         title: '选择性渲染使用的指令',
         value: 'if',
         options: [
-          { label: t('components.tab-pane.props.if'), value: 'if' },
-          { label: t('components.tab-pane.props.show'), value: 'show' },
-          { label: t('components.tab-pane.props.showLazy'), value: 'show:lazy' },
+          { label: t('com.tab-pane.props.if'), value: 'if' },
+          { label: t('com.tab-pane.props.show'), value: 'show' },
+          { label: t('com.tab-pane.props.showLazy'), value: 'show:lazy' },
         ]
       }
     ]);

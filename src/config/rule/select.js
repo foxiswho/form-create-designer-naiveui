@@ -1,5 +1,5 @@
 import uniqueId from '@form-create/utils/lib/unique';
-import { localeProps, makeOptionsRule, makeRequiredRule } from '../../utils/index';
+import { localeProps, makeOptionsRule, makeRequiredRule,makeTreeOptions } from '../../utils/index';
 
 const label = '选择器';
 const name = 'select';
@@ -17,19 +17,14 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'integer',
-      title: t('components.select.name'),
+      title: t('com.select.name'),
       info: '',
       effect: {
         fetch: ''
       },
       $required: false,
       props: {},
-      options: [1, 2].map(value => {
-        return {
-          label: opt + value,
-          value,
-        }
-      })
+      options: makeTreeOptions(t('props.option'), {label: 'label', value: 'value'}, 1)
     };
   },
   watch: {
@@ -39,7 +34,6 @@ export default {
   },
   props(_, { t }) {
     return localeProps(t, name + '.props', [
-      makeRequiredRule(),
       makeOptionsRule(t, 'options'),
       {
         type: 'switch', 
@@ -99,7 +93,7 @@ export default {
         type: 'switch',
         field: 'remote',
         title: '是否要异步获取选项',
-        info: t('components.select.props.remoteInfo'),
+        info: t('com.select.props.remoteInfo'),
         props: {
           size: 'small'
         }

@@ -13,7 +13,7 @@ export default {
       type: name,
       field: uniqueId(),
       dbType: 'string',
-      title: t('components.timePicker.name'),
+      title: t('com.timePicker.name'),
       info: '',
       $required: false,
       props: {
@@ -34,7 +34,7 @@ export default {
         type: 'switch',
         field: 'inputReadonly',
         title: '设置输入框为只读',
-        info: t('components.timePicker.props.inputReadonlyInfo'),
+        info: t('com.timePicker.props.inputReadonlyInfo'),
         props: {
           size: 'small'
         }
