@@ -4,13 +4,13 @@
       title || t("struct.title")
     }}</n-button>
     <n-modal
-      v-if="visible"
+      v-model:show="visible"
       preset="dialog"
       :show-icon="false"
       :title="title || t('struct.title')"
-      style="width: 500px"
+      style="width: 800px;min-height: 600px"
     >
-      <div ref="editor" v-if="visible"></div>
+      <div ref="editor" v-if="visible" style="min-height: 600px"></div>
       <template #action>
           <n-space>
             <n-button @click="visible = false" size="small">{{ t('props.cancel') }}</n-button>
@@ -109,7 +109,7 @@ export default defineComponent({
           this.editor.destroy();
         }
         //创建编辑器
-        this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+        this.editor = EditorViewNew(this.$refs.editor,val)
       }, 500);
     },
   }

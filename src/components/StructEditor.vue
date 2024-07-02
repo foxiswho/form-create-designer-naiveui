@@ -51,7 +51,7 @@ export default defineComponent({
                 //     lineWrapping: true,
                 //     value: val || ''
                 // }));
-              this.initCodeContent(val);
+              this.initCodeContent(val|| '');
             });
         },
         save() {
@@ -80,7 +80,7 @@ export default defineComponent({
             this.editor.destroy();
           }
           //创建编辑器
-          this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+          this.editor = EditorViewNew(this.$refs.editor,val)
         }, 500);
       },
     }
