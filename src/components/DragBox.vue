@@ -11,6 +11,7 @@ export default defineComponent({
         if (!Object.keys(ctx.$slots).length) {
             _class += ' drag-holder';
         }
+        attrs.style = {padding:''};
         attrs.class = _class;
         attrs.modelValue = ctx.$props.list || [...ctx.$props.formCreateInject.children];
 
