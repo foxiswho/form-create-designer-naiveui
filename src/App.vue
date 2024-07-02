@@ -60,7 +60,7 @@
         </div>
       </template>
     </fc-designer>
-    <n-modal :title="title[type]" v-show="state" class="_fc-t-dialog">
+    <n-modal :title="title[type]" class="_fc-t-dialog" preset="dialog"  v-model:show="state" style="width: 800px">
       <div ref="editor" v-if="state"></div>
       <span style="color: red;" v-if="err">输入内容格式有误!</span>
       <template #action v-if="type > 2">
@@ -76,22 +76,6 @@
 <script>
 import { enUS, NConfigProvider, dateZhCN, zhCN, } from 'naive-ui'
 import jsonlint from 'jsonlint-mod';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/lint/lint.css';
-import CodeMirror from 'codemirror/lib/codemirror';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/addon/lint/json-lint';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/vue/vue';
-import 'codemirror/mode/xml/xml';
-import 'codemirror/mode/css/css';
-import 'codemirror/addon/mode/overlay';
-import 'codemirror/addon/mode/simple';
-import 'codemirror/addon/selection/selection-pointer';
-import 'codemirror/mode/handlebars/handlebars';
-import 'codemirror/mode/htmlmixed/htmlmixed';
-import 'codemirror/mode/pug/pug';
-
 import is from '@form-create/utils/lib/type';
 import formCreate from '@form-create/naive-ui';
 import ZhCn from "../src/locale/zh-cn";
@@ -104,6 +88,7 @@ import {
   createDiscreteApi,
   lightTheme
 } from 'naive-ui'
+import {EditorViewNew} from "./utils/editor";
 
 const themeRef = ref<'light' | 'dark'>('dark')
 const configProviderPropsRef = computed(() => ({
@@ -244,20 +229,19 @@ export default {
         val = JSON.stringify(this.value, null, 2);
       }
       this.$nextTick(() => {
-        this.editor = CodeMirror(this.$refs.editor, {
-          lineNumbers: true,
-          mode: this.type === 2 ? {name: 'vue'} : 'application/json',
-          gutters: ['CodeMirror-lint-markers'],
-          lint: true,
-          line: true,
-          tabSize: 2,
-          lineWrapping: true,
-          value: val || ''
-        });
-        this.editor.on('blur', () => {
-          this.err = this.editor.state.lint.marked.length > 0;
-        });
+        this.initCodeContent(val);
       });
+    },
+    initCodeContent(val) {
+      this.isLoading = true;
+      setTimeout(() => {
+        if (this.editor) {
+          this.editor.destroy();
+        }
+        //创建编辑器
+        this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+        this.isLoading = false;
+      }, 500);
     },
     onValidationError(e) {
       this.err = e.length !== 0;
@@ -268,9 +252,11 @@ export default {
       this.value = this.$refs.designer.getRule();
     },
     showOption() {
+      console.log('showOption',this.$refs.designer.getOption())
       this.state = true;
       this.type = 1;
       this.value = this.$refs.designer.getOption();
+      //this.value = "this.$refs.designer.getOption()";
     },
     showTemplate() {
       this.state = true;
@@ -289,7 +275,7 @@ export default {
     },
     onOk() {
       if (this.err) return;
-      const json = this.editor.getValue();
+      const json = this.editor.state.doc;
       let val = JSON.parse(json);
       if (this.type === 3) {
         if (!Array.isArray(val)) {
@@ -341,10 +327,10 @@ export default {
   mounted() {
     const cache = this.getCache();
     if (cache.rule) {
-      //this.$refs.designer.setRule(cache.rule);
+      this.$refs.designer.setRule(cache.rule);
     }
     if (cache.opt) {
-      //this.$refs.designer.setOption(cache.opt);
+      this.$refs.designer.setOption(cache.opt);
     }
     this.$nextTick(() => {
       this.loadAutoSave();

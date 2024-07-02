@@ -1,7 +1,7 @@
 <template>
     <div class="_fd-html-editor">
         <n-button @click="visible=true" style="width: 100%;">{{ title || t('struct.title') }}</n-button>
-        <n-dialog class="_fd-html-editor-con" :title="title || t('struct.title')" v-model="visible"
+        <n-modal class="_fd-html-editor-con" :title="title || t('struct.title')" v-show="visible"
                   :mask-closable="false" append-to-body
           :negativeText="t('props.cancel')"
           :positiveText="t('props.ok')"
@@ -9,15 +9,14 @@
                   @negative-click="visible = false"
         >
             <div ref="editor" v-if="visible"></div>
-        </n-dialog>
+        </n-modal>
     </div>
 </template>
 
 <script>
-import 'codemirror/lib/codemirror.css';
-import CodeMirror from 'codemirror/lib/codemirror';
 import {defineComponent, markRaw} from 'vue';
 import errorMessage from '../utils/message';
+import {EditorViewNew} from "../utils/editor";
 
 export default defineComponent({
     name: 'HtmlEditor',
@@ -66,15 +65,16 @@ export default defineComponent({
         load() {
             this.oldVal = this.modelValue;
             this.$nextTick(() => {
-                this.editor = markRaw(CodeMirror(this.$refs.editor, {
-                    lineNumbers: true,
-                    mode: 'xml',
-                    lint: true,
-                    line: true,
-                    tabSize: 2,
-                    lineWrapping: true,
-                    value: this.modelValue || ''
-                }));
+                // this.editor = markRaw(CodeMirror(this.$refs.editor, {
+                //     lineNumbers: true,
+                //     mode: 'xml',
+                //     lint: true,
+                //     line: true,
+                //     tabSize: 2,
+                //     lineWrapping: true,
+                //     value: this.modelValue || ''
+                // }));
+              this.initCodeContent(this.modelValue || '');
             });
         },
         onOk() {
@@ -89,6 +89,15 @@ export default defineComponent({
             }
             return true;
         },
+      initCodeContent(val) {
+        setTimeout(() => {
+          if (this.editor) {
+            this.editor.destroy();
+          }
+          //创建编辑器
+          this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+        }, 500);
+      },
     }
 });
 </script>

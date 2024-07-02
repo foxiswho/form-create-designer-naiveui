@@ -146,7 +146,6 @@
                                     }}
                                 </n-button>
                                 <n-popconfirm
-                                    :title="t('designer.clearWarn')"
                                     width="200px"
                                     :positive-text="t('props.clear')"
                                     :negative-text="t('props.cancel')"
@@ -156,6 +155,7 @@
                                             class="fc-icon icon-delete"></i>{{ t('props.clear') }}
                                         </n-button>
                                     </template>
+                                  {{t('designer.clearWarn')}}
                                 </n-popconfirm>
                                 <n-dropdown trigger="click" size="small" v-if="handle && handle.length" :options="changeLange()">
                                     <n-button class="_fd-m-extend" plain size="small">
@@ -292,15 +292,8 @@
             </n-layout>
         </n-layout-content>
     </n-layout>
-  <n-modal v-model:show="preview.state" width="800px" bordered title="预览" preset="dialog" :show-icon="false">
-    <n-card
-        style="width: 600px;height:600px;background-color: #ffffff"
-        :bordered="false"
-        size="huge"
-        role="dialog"
-        aria-modal="true"
-    >
-    <n-tabs class="_fd-preview-tabs" :default-value="previewStatus">
+  <n-modal v-model:show="preview.state" bordered preset="dialog" :show-icon="false" style="width:800px">
+    <n-tabs class="_fd-preview-tabs" v-model:value="previewStatus">
       <n-tab-pane :tab="t('form.formMode')" name="form"></n-tab-pane>
       <n-tab-pane :tab="t('form.componentMode')" name="component"></n-tab-pane>
     </n-tabs>
@@ -309,7 +302,6 @@
                 v-if="preview.state"></ViewForm>
     </template>
     <pre class="_fd-preview-code" v-else><code v-html="preview.html"></code></pre>
-    </n-card>
   </n-modal>
 </template>
 

@@ -3,10 +3,10 @@
         <n-badge type="warning" is-dot :show="!configured">
             <n-button @click="visible=true" size="small">{{ t('struct.title') }}</n-button>
         </n-badge>
-        <n-dialog class="_fd-gfc-dialog" :title="t('fetch.optionsType.fetch')" v-if="visible" destroy-on-close
+        <n-modal class="_fd-gfc-dialog" :title="t('fetch.optionsType.fetch')" v-show="visible" destroy-on-close
                    :mask-closable="false"
                    append-to-body
-                   width="980px">
+                   style="width: 980px">
             <n-layout class="_fd-gfc-con" style="height: 450px;">
                 <n-tabs model-value="first" class="_fc-tabs" style="width: 100%">
                     <n-tab-pane :tab="t('fetch.config')" name="first">
@@ -25,16 +25,16 @@
                     </n-tab-pane>
                 </n-tabs>
             </n-layout>
-            <template #footer>
+            <template #action>
                 <div>
-                    <n-button size="default" @click="visible=false">{{ t('props.cancel') }}</n-button>
-                    <n-button type="primary" size="default" @click="save" color="#2f73ff">{{
+                    <n-button size="small" @click="visible=false">{{ t('props.cancel') }}</n-button>
+                    <n-button type="primary" size="small" @click="save" color="#2f73ff">{{
                             t('props.ok')
                         }}
                     </n-button>
                 </div>
             </template>
-        </n-dialog>
+        </n-modal>
     </div>
 </template>
 

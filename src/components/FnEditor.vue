@@ -43,15 +43,10 @@
 </template>
 
 <script>
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/hint/show-hint.css';
-import CodeMirror from 'codemirror/lib/codemirror';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/addon/hint/show-hint';
-import 'codemirror/addon/hint/javascript-hint';
 import {defineComponent, markRaw} from 'vue';
 import {addAutoKeyMap, toJSON} from '../utils';
 import errorMessage from '../utils/message';
+import {EditorViewNew} from "../utils/editor";
 
 const PREFIX = '[[FORM-CREATE-PREFIX-';
 const SUFFIX = '-FORM-CREATE-SUFFIX]]';
@@ -77,8 +72,8 @@ export default defineComponent({
     },
     watch: {
         modelValue(n) {
-            if (n != this.value) {
-                this.editor && this.editor.setValue(this.tidyValue());
+            if (n != this.value &&this.editor) {
+              this.initCodeContent(this.tidyValue())
             }
         },
     },
@@ -113,7 +108,7 @@ export default defineComponent({
     },
     methods: {
         save() {
-            const str = this.editor.getValue() || '';
+            const str = this.editor.state.doc || '';
             if (str.trim() === '') {
                 this.fn = '';
             } else {
@@ -156,26 +151,36 @@ export default defineComponent({
         load() {
             this.$nextTick(() => {
                 let value = this.tidyValue();
-                this.editor = markRaw(CodeMirror(this.$refs.editor, {
-                    lineNumbers: true,
-                    mode: {name: 'javascript', globalVars: true},
-                    extraKeys: {'Ctrl-Space': 'autocomplete'},
-                    line: true,
-                    tabSize: 2,
-                    lineWrapping: true,
-                    value,
-                }));
-                this.editor.on('inputRead', (cm, event) => {
-                    if (event.keyCode === 32 && event.ctrlKey) { // 检测 Ctrl + Space 快捷键
-                        CodeMirror.showHint(cm, CodeMirror.hint.javascript); // 触发代码提示
-                    }
-                });
-                this.editor.on('change', () => {
-                    this.visible = true;
-                });
-                addAutoKeyMap(this.editor);
+                // this.editor = markRaw(CodeMirror(this.$refs.editor, {
+                //     lineNumbers: true,
+                //     mode: {name: 'javascript', globalVars: true},
+                //     extraKeys: {'Ctrl-Space': 'autocomplete'},
+                //     line: true,
+                //     tabSize: 2,
+                //     lineWrapping: true,
+                //     value,
+                // }));
+              this.initCodeContent(value);
+                // this.editor.on('inputRead', (cm, event) => {
+                //     if (event.keyCode === 32 && event.ctrlKey) { // 检测 Ctrl + Space 快捷键
+                //         CodeMirror.showHint(cm, CodeMirror.hint.javascript); // 触发代码提示
+                //     }
+                // });
+                // this.editor.on('change', () => {
+                //     this.visible = true;
+                // });
+                //addAutoKeyMap(this.editor);
             });
         },
+      initCodeContent(val) {
+        setTimeout(() => {
+          if (this.editor) {
+            this.editor.destroy();
+          }
+          //创建编辑器
+          this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+        }, 500);
+      },
     }
 });
 </script>

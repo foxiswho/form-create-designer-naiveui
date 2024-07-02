@@ -5,12 +5,10 @@
 </template>
 
 <script>
-import 'codemirror/lib/codemirror.css';
-import CodeMirror from 'codemirror/lib/codemirror';
-import 'codemirror/mode/javascript/javascript';
 import {toJSON} from '../utils/index';
 import {defineComponent, markRaw} from 'vue';
 import errorMessage from '../utils/message';
+import {EditorViewNew} from "../utils/editor";
 
 export default defineComponent({
     name: 'StructEditor',
@@ -44,19 +42,20 @@ export default defineComponent({
             const val = this.modelValue ? toJSON(this.modelValue) : '';
             this.oldVal = val;
             this.$nextTick(() => {
-                this.editor = markRaw(CodeMirror(this.$refs.editor, {
-                    lineNumbers: true,
-                    mode: 'javascript',
-                    lint: true,
-                    line: true,
-                    tabSize: 2,
-                    lineWrapping: true,
-                    value: val || ''
-                }));
+                // this.editor = markRaw(CodeMirror(this.$refs.editor, {
+                //     lineNumbers: true,
+                //     mode: 'javascript',
+                //     lint: true,
+                //     line: true,
+                //     tabSize: 2,
+                //     lineWrapping: true,
+                //     value: val || ''
+                // }));
+              this.initCodeContent(val);
             });
         },
         save() {
-            const str = this.editor.getValue();
+            const str = this.editor.state.doc;
             let val;
             try {
                 val = (new Function('return ' + str))();
@@ -75,6 +74,15 @@ export default defineComponent({
             }
             return true;
         },
+      initCodeContent(val) {
+        setTimeout(() => {
+          if (this.editor) {
+            this.editor.destroy();
+          }
+          //创建编辑器
+          this.editor = EditorViewNew(this.$refs.editor,val || 'Press Ctrl-Space in here...\n')
+        }, 500);
+      },
     }
 });
 </script>
