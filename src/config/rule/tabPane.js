@@ -2,7 +2,7 @@ import { localeProps } from '../../utils';
 import tabname from '../../utils/tabname';
 
 const label = '标签页';
-const name = 'tab-pane';
+const name = 'nTabPane';
 
 export default {
   label,
@@ -13,9 +13,9 @@ export default {
   mask: false,
   rule({ t }) {
     return {
-      type: 'n-tab-pane',
+      type: name,
       props: {
-        tab: t('com.tab.name'),
+        tab: t('com.nTabPane.name'),
         name: String(tabname()),
       },
       children: []
@@ -32,7 +32,7 @@ export default {
         type: 'switch',
         field: 'closable',
         title: '是否允许关闭标签',
-        info: t('com.tab-pane.props.closableInfo'),
+        info: t('com.nTabPane.props.closableInfo'),
       },
       {
         type: 'switch',
@@ -43,7 +43,7 @@ export default {
         type: 'input',
         field: 'name',
         title: '标签页标识',
-        info: t('com.tab-pane.props.nameInfo')
+        info: t('com.nTabPane.props.nameInfo')
       },
       {
         type: 'select',
@@ -51,9 +51,9 @@ export default {
         title: '选择性渲染使用的指令',
         value: 'if',
         options: [
-          { label: t('com.tab-pane.props.if'), value: 'if' },
-          { label: t('com.tab-pane.props.show'), value: 'show' },
-          { label: t('com.tab-pane.props.showLazy'), value: 'show:lazy' },
+          { label: t('com.nTabPane.props.if'), value: 'if' },
+          { label: t('com.nTabPane.props.show'), value: 'show' },
+          { label: t('com.nTabPane.props.showLazy'), value: 'show:lazy' },
         ]
       }
     ]);

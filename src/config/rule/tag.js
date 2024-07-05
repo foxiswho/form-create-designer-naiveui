@@ -1,7 +1,7 @@
 import {localeOptions, localeProps} from '../../utils';
 
 const label = '标签';
-const name = 'elTag';
+const name = 'nTag';
 
 export default {
     menu: 'aide',
@@ -46,7 +46,7 @@ export default {
                 options: [{label: 'primary', value: 'primary'}, {
                     label: 'success',
                     value: 'success'
-                }, {label: 'warning', value: 'warning'}, {label: 'danger', value: 'danger'}, {
+                }, {label: 'warning', value: 'warning'}, {label: 'error', value: 'error'}, {
                     label: 'info',
                     value: 'info'
                 }]
@@ -54,17 +54,19 @@ export default {
                 type: 'select',
                 field: 'size',
                 options: localeOptions(t, [{label: 'large', value: 'large'}, {
-                    label: 'default',
-                    value: 'default'
+                    label: 'medium',
+                    value: 'medium'
                 }, {label: 'small', value: 'small'}])
-            }, {
-                type: 'select',
-                field: 'effect',
-                options: [{label: 'dark', value: 'dark'}, {
-                    label: 'light',
-                    value: 'light'
-                }, {label: 'plain', value: 'plain'}]
-            }, {
+            },
+            // {
+            //     type: 'select',
+            //     field: 'effect',
+            //     options: [{label: 'dark', value: 'dark'}, {
+            //         label: 'light',
+            //         value: 'light'
+            //     }, {label: 'plain', value: 'plain'}]
+            // },
+            {
                 type: 'switch', field: 'closable'
             }, {
                 type: 'switch', field: 'disableTransitions'

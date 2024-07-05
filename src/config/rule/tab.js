@@ -1,7 +1,7 @@
 import { localeProps } from '../../utils';
 import tabname from '../../utils/tabname';
 
-const label = '标签页';
+const label = '标签页2';
 const name = 'tab';
 
 export default {

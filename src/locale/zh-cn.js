@@ -353,16 +353,21 @@ const ZhCn = {
                 contentPosition: '设置分割线文案的位置'
             }
         },
-        elTabPane: {
+        nTabPane: {
             name: '选项卡',
             props: {
                 label: '选项卡标题',
                 disabled: '是否禁用',
                 name: '选项卡的标识符',
-                lazy: '标签是否延迟渲染'
+                lazy: '标签是否延迟渲染',
+                closableInfo: '只在标签的 type 为 card 时生效',
+                nameInfo: '标签的名称',
+                if: 'v-if 指令',
+                show: 'v-show 指令,使用 show 的时候标签页状态切换后不会被重置',
+                showLazy: 'v-show 指令，使用 show:lazy 的时候显示效果跟 show 一致，不过内容会进行延迟加载',
             }
         },
-        elTabs: {
+        nTabs: {
             name: '标签页',
             event: {
                 tabClick: 'tab 被选中时触发',
@@ -378,7 +383,7 @@ const ZhCn = {
                 stretch: '标签的宽度是否自撑开'
             }
         },
-        elTag: {
+        nTag: {
             name: '标签',
             props: {
                 formCreateNative: '是否显示标题',

@@ -1,7 +1,7 @@
 import {localeOptions, localeProps} from '../../utils';
 
 const label = '标签页';
-const name = 'elTabs';
+const name = 'nTabs';
 
 export default {
     menu: 'layout',
@@ -10,7 +10,7 @@ export default {
     name,
     mask: false,
     event: ['tabClick', 'tabChange', 'tabRemove', 'tabAdd', 'edit'],
-    children: 'elTabPane',
+    children: 'nTabPane',
     rule() {
         return {
             type: name,
@@ -25,11 +25,13 @@ export default {
             options: [{
                 label: 'card',
                 value: 'card'
-            }, {label: 'border-card', value: 'border-card'}]
+            }, {label: 'bar', value: 'bar'}]
         }, {type: 'switch', field: 'closable'}, {
             type: 'select',
-            field: 'tabPosition',
-            options: localeOptions(t, [{label: 'top', value: 'top'}, {label: 'right', value: 'right'}, {
+            field: 'placement',
+            options: localeOptions(t, [
+                {label: 'top', value: 'top'},
+                {label: 'right', value: 'right'}, {
                 label: 'left',
                 value: 'left'
             }])
