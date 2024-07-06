@@ -12,7 +12,6 @@ export default {
   event: ['change', 'visibleChange', 'removeTag', 'clear', 'blur', 'focus'],
   validate: ['string', 'number', 'array'],
   rule({ t }) {
-    const opt = t('props.option');
     return {
       type: name,
       field: uniqueId(),

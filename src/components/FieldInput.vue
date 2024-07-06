@@ -8,7 +8,10 @@
             @blur="onInput"
         >
             <template #suffix v-if="!fieldReadonly">
-                <i class="fc-icon icon-auto" @click="makeField"></i>
+                <i class="fc-icon icon-auto" @click="makeField" style="background-color: lavender;
+    padding-right: 4px;
+    padding-left: 4px;
+    margin-right: -9px;cursor: pointer;"></i>
             </template>
         </n-input>
     </div>
@@ -23,7 +26,7 @@ import is from '@form-create/utils/lib/type';
 export default defineComponent({
     name: 'FieldInput',
     inject: ['designer'],
-    emits: ['update:value'],
+    emits: ['update:modelValue'],
     props: {
         modelValue: String,
     },
@@ -107,7 +110,7 @@ export default defineComponent({
             if (this.value !== this.modelValue) {
                 this.value = this.checkValue();
                 if (this.value !== this.modelValue) {
-                    this.$emit('update:value', this.value);
+                    this.$emit('update:modelValue', this.value);
                 }
             }
         },

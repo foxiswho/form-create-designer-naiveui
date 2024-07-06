@@ -239,7 +239,10 @@
                                              v-model:value="activeRule.name"
                                               readonly>
                                         <template #suffix>
-                                            <i class="fc-icon icon-auto" @click="updateName"></i>
+                                            <i class="fc-icon icon-auto" @click="updateName" style="background-color: lavender;
+    padding-right: 4px;
+    padding-left: 4px;
+    margin-right: -9px;cursor: pointer;"></i>
                                         </template>
                                     </n-input>
                                 </template>
